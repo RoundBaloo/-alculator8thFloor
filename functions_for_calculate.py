@@ -3,16 +3,14 @@ import math
 class Machine:
     names = []
     minutes_in_hour = 50
+
     def __init__(self, name, hours_in_day, days_in_month, productivity, value_dict):
         self.name = name
         Machine.names.append(name)
-        self.hours_in_day = hours_in_day
-        self.days_in_month = days_in_month
-        self.productivity = productivity
-        self.files_in_a_day = round(self.hours_in_day * Machine.minutes_in_hour / self.productivity * 0.85)
+        self.files_in_a_day = round(hours_in_day * Machine.minutes_in_hour / productivity * 0.85)
 
         value_dict[self.name] = dict()
-        value_dict[self.name]['month_files'] = self.files_in_a_day * self.days_in_month
+        value_dict[self.name]['month_files'] = self.files_in_a_day * days_in_month
 
 
 class Calculator:
@@ -26,12 +24,30 @@ class Calculator:
 
     def __init__(self, number_day_180hour_machines, number_day_168hour_machines, number_day_79hour_machines, number_night_machines):
         key = 'number'
+
         self.value_dict['day_180hour'][key] = number_day_180hour_machines
         self.value_dict['day_168hour'][key] = number_day_168hour_machines
         self.value_dict['day_79hour'][key] = number_day_79hour_machines
         self.value_dict['night'][key] = number_night_machines
         self.value_dict['weekends'][key] = number_night_machines
 
+
+    def set_new_machines_numbers(self, number_day_180hour_machines, number_day_168hour_machines, number_day_79hour_machines, number_night_machines):
+        self.value_dict = dict()
+        key = 'number'
+
+        day_machine_180hour = Machine('day_180hour', 11, 15, 8, self.value_dict)
+        day_machine_168hour = Machine('day_168hour', 8, 20, 8, self.value_dict)
+        day_machine_79hour = Machine('day_79hour', 4, 20, 8, self.value_dict)
+        weekends_machine = Machine('weekends', 11, 15, 6, self.value_dict)
+        night_machine = Machine('night', 11, 15, 6, self.value_dict)
+
+        self.value_dict['day_180hour'][key] = number_day_180hour_machines
+        self.value_dict['day_168hour'][key] = number_day_168hour_machines
+        self.value_dict['day_79hour'][key] = number_day_79hour_machines
+        self.value_dict['night'][key] = number_night_machines
+        self.value_dict['weekends'][key] = number_night_machines
+    
 
     def get_machines_month_files(self):
         month_files_dict = dict()
@@ -154,5 +170,6 @@ class Calculator:
 # check
 calc = Calculator(2, 3, 3, 2)
 print(calc.get_machines_scarcity('fact', 6539, 1143, 833, 600))
-print(calc.value_dict)
+calc.set_new_machines_numbers(2, 4, 3, 2)
+print(calc.get_machines_scarcity('fact', 6539, 1143, 833, 600))
 print()
