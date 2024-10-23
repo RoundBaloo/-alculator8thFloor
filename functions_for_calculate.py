@@ -1,94 +1,158 @@
 import math
 
-
 class Machine:
-    def __init__(self, name, hours_in_day, days_in_month, productivity):
+    names = []
+    minutes_in_hour = 50
+    def __init__(self, name, hours_in_day, days_in_month, productivity, value_dict):
         self.name = name
+        Machine.names.append(name)
         self.hours_in_day = hours_in_day
         self.days_in_month = days_in_month
         self.productivity = productivity
+        self.files_in_a_day = round(self.hours_in_day * Machine.minutes_in_hour / self.productivity * 0.85)
 
-
-    def calculate_max_files_number(self, result_dict, machines_number):
-        files_in_a_day = round(self.hours_in_day * Calculator.minutes_in_hour / self.productivity * 0.85)
-        if self.name not in result_dict:
-            result_dict[self.name] = dict()
-        result_dict[self.name]['month_files'] = files_in_a_day * self.days_in_month
-        result_dict[self.name]['max_files'] = machines_number * result_dict[self.name]['month_files']
+        value_dict[self.name] = dict()
+        value_dict[self.name]['month_files'] = self.files_in_a_day * self.days_in_month
 
 
 class Calculator:
-    minutes_in_hour = 50
+    value_dict = dict()
 
-    day_machine_180hour = Machine('day_180hour', 11, 15, 8)
-    day_machine_168hour = Machine('day_168hour', 8, 20, 8)
-    day_machine_79hour = Machine('day_79hour', 4, 20, 8)
-    weekends_machine = Machine('weekends', 11, 15, 6)
-    night_machine = Machine('night', 11, 15, 6)
-
+    day_machine_180hour = Machine('day_180hour', 11, 15, 8, value_dict)
+    day_machine_168hour = Machine('day_168hour', 8, 20, 8, value_dict)
+    day_machine_79hour = Machine('day_79hour', 4, 20, 8, value_dict)
+    weekends_machine = Machine('weekends', 11, 15, 6, value_dict)
+    night_machine = Machine('night', 11, 15, 6, value_dict)
 
     def __init__(self, number_day_180hour_machines, number_day_168hour_machines, number_day_79hour_machines, number_night_machines):
-        self.number_day_180hour_machines = number_day_180hour_machines
-        self.number_day_168hour_machines = number_day_168hour_machines
-        self.number_day_79hour_machines = number_day_79hour_machines
-        self.number_weekends_machines = number_night_machines
-        self.number_night_machines = number_night_machines
+        key = 'number'
+        self.value_dict['day_180hour'][key] = number_day_180hour_machines
+        self.value_dict['day_168hour'][key] = number_day_168hour_machines
+        self.value_dict['day_79hour'][key] = number_day_79hour_machines
+        self.value_dict['night'][key] = number_night_machines
+        self.value_dict['weekends'][key] = number_night_machines
 
 
-    def calculate_machines_scarcity(self, workload, files_number, result_dict, machine_name):
-        machine_record = result_dict[machine_name]
-        if workload < 0.86:
-            return 0
-        elif machine_name == 'day_168hour':
-            machine_record['scarcity'] = round(files_number * (workload - 0.86) / 0.86 / machine_record['month_files'])
-        else:
-            machine_record['scarcity'] = math.ceil(files_number * (workload - 0.86) / 0.86 / machine_record['month_files'])
+    def get_machines_month_files(self):
+        month_files_dict = dict()
+        key = 'month_files'
+
+        for name in Machine.names:
+            month_files_dict[name] = self.value_dict[name][key]
+
+        return month_files_dict
 
 
-    def fact_calculate(self, avg_fact_files_number_day, avg_fact_files_number_weekends, avg_fact_files_number_night, result_dict):
-        self.day_machine_180hour.calculate_max_files_number(result_dict, self.number_day_180hour_machines)
-        self.day_machine_168hour.calculate_max_files_number(result_dict, self.number_day_168hour_machines)
-        self.day_machine_79hour.calculate_max_files_number(result_dict, self.number_day_79hour_machines)
+    def calculate_machines_max_files(self):
+        key = 'max_files'
+
+        for name in Machine.names:
+            self.value_dict[name][key] = self.value_dict[name]['month_files'] * self.value_dict[name]['number']
+
+
+    def get_machines_max_files(self):
+        max_files_dict = dict()
+        key = 'max_files'
+
+        if key not in self.value_dict[self.day_machine_180hour.name]:
+            self.calculate_machines_max_files()
+
+        for name in Machine.names:
+            max_files_dict[name] = self.value_dict[name][key]
+
+        return max_files_dict
+
+
+    def calculate_workloads(self, type, avg_day_files, avg_night_files, avg_weekends_files, new_users_number): #type = plan or fact
+        self.value_dict[type] = dict()
+
+        if 'max_files' not in self.value_dict[self.day_machine_180hour.name]:
+            self.calculate_machines_max_files()
+        
+        if type == 'plan':
+            new_night_files = round(new_users_number * 1.3 * 0.27)
+            avg_night_files += new_night_files
+            new_weekends_files = round(new_users_number * 1.3 * 0.15)
+            avg_weekends_files += new_weekends_files
+            avg_day_files += round(new_users_number * 1.3) - new_night_files - new_weekends_files
 
         key = 'max_files'
-        day_files_number = result_dict['day_180hour'][key] + result_dict['day_168hour'][key] + result_dict['day_79hour'][key]
-        result_dict['day_workload'] = avg_fact_files_number_day / day_files_number
-        self.calculate_machines_scarcity(day_files_number, result_dict['day_workload'], result_dict, 'day_168hour')
+        day_files = self.value_dict['day_180hour'][key] + self.value_dict['day_168hour'][key] + self.value_dict['day_79hour'][key]
 
-        new_day_files_number = day_files_number + result_dict['day_168hour']['scarcity'] * result_dict['day_168hour']['month_files']
-        new_day_workload = avg_fact_files_number_day / new_day_files_number
-        result_dict['day_79hour']['scarcity'] = 0 if new_day_workload <= 0.86 else 1
+        self.value_dict[type]['day'] = avg_day_files / day_files
+        self.value_dict[type]['night'] = avg_night_files / self.value_dict['night'][key]
+        self.value_dict[type]['weekends'] = avg_weekends_files / self.value_dict['weekends'][key]
 
-        self.night_machine.calculate_max_files_number(result_dict, self.number_night_machines)
-        self.weekends_machine.calculate_max_files_number(result_dict, self.number_weekends_machines)
 
-        result_dict['night_workload'] = avg_fact_files_number_night / result_dict['night']['max_files']
-        self.calculate_machines_scarcity(result_dict['night']['max_files'], result_dict['night_workload'], result_dict, 'night')
+    def get_workloads(self, type, avg_day_files, avg_night_files, avg_weekends_files, new_users_number): #type = plan or fact
+        workloads_dict = dict()
+
+        if type not in self.value_dict:
+            self.calculate_workloads(type, avg_day_files, avg_night_files, avg_weekends_files, new_users_number)
+
+        workloads_dict['day'] = self.value_dict[type]['day']
+        workloads_dict['night'] = self.value_dict[type]['night']
+        workloads_dict['weekends'] = self.value_dict[type]['weekends']
+
+        return workloads_dict
+
+
+    def calculate_machines_scarcity(self, type, avg_day_files, avg_night_files, avg_weekends_files, new_users_number): #type = plan or fact
+        scarcity_key = type + '_scarcity'
+
+        if type not in self.value_dict:
+            self.calculate_workloads(type, avg_day_files, avg_night_files, avg_weekends_files, new_users_number)
         
-        result_dict['weekend_workload'] = avg_fact_files_number_weekends / result_dict['night']['max_files']
-        self.calculate_machines_scarcity(result_dict['night']['max_files'], result_dict['weekend_workload'], result_dict, 'weekends')
+        self.value_dict['day_180hour'][scarcity_key] = '-'
+        machine_168hour = self.value_dict['day_168hour']
+        machine_79hour = self.value_dict['day_79hour']
+        if self.value_dict[type]['day'] <= 0.86:
+            machine_168hour[scarcity_key] = 0
+            machine_79hour[scarcity_key] = 0
+        else:
+            key = 'max_files'
+            day_files = self.value_dict['day_180hour'][key] + self.value_dict['day_168hour'][key] + self.value_dict['day_79hour'][key]
+            machine_168hour[scarcity_key] = round(day_files * (self.value_dict[type]['day'] - 0.86) / 0.86 / machine_168hour['month_files'])
 
-        result_dict['night']['scarcity'] = max((result_dict['night']['scarcity'], result_dict['weekends']['scarcity']))
-        result_dict['weekends']['scarcity'] = max((result_dict['night']['scarcity'], result_dict['weekends']['scarcity']))
+            new_workload = avg_day_files / (day_files +  machine_168hour[scarcity_key] * machine_168hour['month_files'])
+            if new_workload <= 0.86:
+                machine_79hour[scarcity_key] = 0
+            else:
+                machine_79hour[scarcity_key] = 1
+        
+        night_machine = self.value_dict['night']
+        if self.value_dict[type]['night'] <= 0.86:
+            night_machine[scarcity_key] = 0
+        else:
+            night_machine[scarcity_key] = math.ceil(night_machine['max_files'] * (self.value_dict[type]['night'] - 0.86) / 0.86 / night_machine['month_files'])
+        
+        weekends_machine = self.value_dict['weekends']
+        if self.value_dict[type]['weekends'] <= 0.86:
+            weekends_machine[scarcity_key] = 0
+        else:
+            weekends_machine[scarcity_key] = math.ceil(weekends_machine['max_files'] * (self.value_dict[type]['weekends'] - 0.86) / 0.86 / weekends_machine['month_files'])
+        
+        need_night_machines = max(night_machine[scarcity_key], weekends_machine[scarcity_key])
+        night_machine[scarcity_key] = need_night_machines
+        weekends_machine[scarcity_key] = need_night_machines
+        
+    
+    def get_machines_scarcity(self, type, avg_day_files, avg_night_files, avg_weekends_files, new_users_number): #type = plan or fact
+        scarcities_dict = dict()
+        scarcity_key = type + '_scarcity'
 
-        result_dict['avg_month_day_files_number'] = avg_fact_files_number_day
-        result_dict['avg_month_weekends_files_number'] = avg_fact_files_number_weekends
-        result_dict['avg_month_night_files_number'] = avg_fact_files_number_night
+        if scarcity_key not in self.value_dict['day_168hour']:
+            self.calculate_machines_scarcity(type, avg_day_files, avg_night_files, avg_weekends_files, new_users_number)
+        
+        for name in Machine.names:
+            scarcities_dict[name] = self.value_dict[name][scarcity_key]
+        
+        return scarcities_dict
 
-        return (result_dict)
 
 
-    def plan_calculate(self, new_users_number, avg_fact_files_number_day, avg_fact_files_number_weekends, avg_fact_files_number_night):
-        new_files_number_night = int(new_users_number * 1.3 * 0.27)
-        new_files_number_weekends = int(new_users_number * 1.3 * 0.15)
-        new_files_number_day = round(new_users_number * 1.3) - new_files_number_night - new_files_number_weekends
-
-        avg_plan_files_number_night = new_files_number_night + avg_fact_files_number_night
-        avg_plan_files_number_weekends = new_files_number_weekends + avg_fact_files_number_weekends
-        avg_plan_files_number_day = new_files_number_day + avg_fact_files_number_day
-
-        return self.fact_calculate(avg_plan_files_number_day, avg_plan_files_number_weekends, avg_plan_files_number_night, {})
-#base_check
-calc = Calculator(2, 3, 4, 1)
-print(calc.fact_calculate(6539, 833, 1143, {}))
-print(calc.plan_calculate(600, 6539, 833, 1143))
+# check
+calc = Calculator(2, 3, 3, 2)
+print(calc.get_machines_scarcity('fact', 6539, 1143, 833, 600))
+print(calc.value_dict)
+print()
