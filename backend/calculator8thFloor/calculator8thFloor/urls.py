@@ -14,11 +14,14 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+from django.urls import include, path
 from django.contrib import admin
 from django.urls import path
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
+from rest_framework import routers
 
+from calculatorFactPlan import views
 
 schema_view = get_schema_view(
        openapi.Info(
@@ -32,7 +35,17 @@ schema_view = get_schema_view(
    )
 
 
+router = routers.DefaultRouter()
+router1 = routers.DefaultRouter()
+router1.register(r'users', views.UserViewSet)
+router1.register(r'groups', views.GroupViewSet)
+router.register(r'', views.HomeViewSet, basename='home')
+
+
 urlpatterns = [
+    path('home/', include(router.urls)),
+    path('r/', include(router.urls)),
+    path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     path('admin/', admin.site.urls),
     path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
     path('redoc/', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
