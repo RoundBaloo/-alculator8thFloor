@@ -20,14 +20,13 @@ function App() {
         '180h': 2,
         '168h': 3,
         '79h': 6,
-        '180h night': 2
       },
-      max_files: {
-        '180h day': 6539,
+      avg_fact_files_per_month: {
+        '180h_day': 6539,
         '168h': 6539,
         '79h': 6539,
-        '180h weekend': 1143,
-        '180h night': 833,
+        '180h_weekend': 1143,
+        '180h_night': 833,
       },
       cnt_UZ: 600
     };
