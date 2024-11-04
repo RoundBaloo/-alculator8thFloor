@@ -14,6 +14,36 @@ function App() {
       });
   };
 
+  const a =() => {
+    const inputData = {
+      cnt_machines: {
+        '180h': 2,
+        '168h': 3,
+        '79h': 6,
+        '180h night': 2
+      },
+      max_files: {
+        '180h day': 6539,
+        '168h': 6539,
+        '79h': 6539,
+        '180h weekend': 1143,
+        '180h night': 833,
+      },
+      cnt_UZ: 600
+    };
+
+    axios.post('http://127.0.0.1:8000/data/input/', 
+      JSON.stringify(inputData), 
+      {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+      .catch(error => {
+        console.error('ABOBA ERROR')
+      })
+  }
+
   return (
     <div className="App">
       <header className="App-header">
@@ -30,6 +60,7 @@ function App() {
           Learn React
         </a>
         <button onClick={fetchHomeData}>Fetch Home Data</button> {/* Добавьте этот кнопку */}
+        <button onClick={a}>update</button> {/* Добавьте этот кнопку */}
       </header>
     </div>
   );

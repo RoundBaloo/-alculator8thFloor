@@ -177,7 +177,7 @@ machines_numbers_dict1 = {
 }
 
 calc = Calculator(machines_numbers_dict1)
-print(calc.get_workloads('fact', 6539, 1143, 833, 600))
+# print(calc.get_workloads('fact', 6539, 1143, 833, 600))
 machines_numbers_dict2 = {
     'day_180hour': 2,
     'day_168hour': 5,
@@ -185,5 +185,7 @@ machines_numbers_dict2 = {
     'night': 3
 }
 calc.set_new_machines_numbers(machines_numbers_dict2)
-print(calc.get_workloads('fact', 6539, 1143, 833, 600))
-print('a')
+# print(calc.get_workloads('fact', 6539, 1143, 833, 600))
+# print('a')
+print('180h night'.split())
+print('180hnight'.split())

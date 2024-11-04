@@ -45,7 +45,7 @@ routerData.register(r'input', views.InputedDataViewSet, basename='inputed-data')
 
 
 urlpatterns = [
-    path('home', include(router.urls)),
+    path('home/', include(router.urls)),
     path('data/', include(routerData.urls)),
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     path('admin/', admin.site.urls),

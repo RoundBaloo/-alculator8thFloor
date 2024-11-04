@@ -6,6 +6,7 @@ from .serializers import HomeEmptySerializer, DataSerializer, InputedFieldsDataS
 from .models import Data
 from rest_framework.decorators import action
 from drf_yasg.utils import swagger_auto_schema
+from .components.data_updater import DataUpdater
 # Create your views here.
 
 
@@ -43,3 +44,12 @@ class InputedDataViewSet (viewsets.ModelViewSet):
         queryset = self.get_queryset()
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
+    
+    
+    def create(self, request, *args, **kwargs):
+        # Получаем данные из запроса
+        data = request.data
+        data_updater = DataUpdater(data)
+        data_updater.update_inputed_data()
+        
+        return Response({"message": "All Data objects have been updated"}, status=status.HTTP_200_OK)
