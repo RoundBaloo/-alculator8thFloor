@@ -1,27 +1,12 @@
 from django.shortcuts import render
-from django.contrib.auth.models import Group, User
-from rest_framework import permissions, viewsets, status
+from django.contrib.auth.models import User
+from rest_framework import viewsets, status
 from rest_framework.response import Response
-from .serializers import GroupSerializer, UserSerializer, HomeEmptySerializer
+from .serializers import HomeEmptySerializer, DataSerializer, InputedFieldsDataSerializer
+from .models import Data
+from rest_framework.decorators import action
+from drf_yasg.utils import swagger_auto_schema
 # Create your views here.
-
-
-class UserViewSet(viewsets.ModelViewSet):
-    """
-    API endpoint that allows users to be viewed or edited.
-    """
-    queryset = User.objects.all().order_by('-date_joined')
-    serializer_class = UserSerializer
-    permission_classes = [permissions.IsAuthenticated]
-
-
-class GroupViewSet(viewsets.ModelViewSet):
-    """
-    API endpoint that allows groups to be viewed or edited.
-    """
-    queryset = Group.objects.all().order_by('name')
-    serializer_class = GroupSerializer
-    permission_classes = [permissions.IsAuthenticated]
 
 
 class HomeViewSet(viewsets.ModelViewSet):
@@ -33,3 +18,28 @@ class HomeViewSet(viewsets.ModelViewSet):
 
     def retrieve(self, request, pk=None):
         return Response({"detail": "This is a detail view"})
+    
+class DataViewSet(viewsets.ModelViewSet):
+    queryset = Data.objects.all()
+    serializer_class = DataSerializer
+    
+    @swagger_auto_schema(operation_summary="Get all calculated data",
+                         operation_description="Returns a list of all calculated data entries")
+    
+    def list(self, request, *args, **kwargs):
+        queryset = self.get_queryset()
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
+
+
+class InputedDataViewSet (viewsets.ModelViewSet):
+    queryset = Data.objects.all()
+    serializer_class = InputedFieldsDataSerializer
+    
+    @swagger_auto_schema(operation_summary="Get data that user can input",
+                         operation_description="Returns a list of input data")
+    
+    def list(self, request, *args, **kwargs):
+        queryset = self.get_queryset()
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
