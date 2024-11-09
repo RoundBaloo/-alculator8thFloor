@@ -29,7 +29,8 @@ class DataUpdater:
             '168h': cnt_machines[1],
             '79h': cnt_machines[2],
         })
-        avg_fact_files_per_month = list(dict.fromkeys(Data.objects.values_list('avg_fact_files_per_month', flat=True)))
+        avg_fact_files_per_month = list(Data.objects.values_list('avg_fact_files_per_month', flat=True))
+        print(avg_fact_files_per_month)
         for obj in Data.objects.all():
             # for all data
             obj.month_files = self.calculator.get_machines_month_files()[f'{obj.machine_type}']

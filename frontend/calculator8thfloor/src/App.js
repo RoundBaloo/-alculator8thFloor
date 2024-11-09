@@ -2,18 +2,9 @@ import logo from './logo.svg';
 import './App.css';
 import axios from 'axios';
 
-function App() {
-  const fetchHomeData = () => {
-    axios.get('http://127.0.0.1:8000/home/')
-      .then(response => {
-        console.log(response.data);
-        // Здесь вы можете обновить состояние или отобразить данные
-      })
-      .catch(error => {
-        console.error('Ошибка:', error);
-      });
-  };
+var access;
 
+function App1() {
   const a =() => {
     const inputData = {
       cnt_machines: {
@@ -35,8 +26,85 @@ function App() {
       JSON.stringify(inputData), 
       {
         headers: {
+          'Authorization': `Bearer ${access}`,
           'Content-Type': 'application/json'
         }
+      })
+      .then(response => {
+        console.log(response.data)
+      })
+      .catch(error => {
+        console.error('ABOBA ERROR')
+      })
+  }
+
+  const b =() => {
+    const inputData = {
+      "username": "a@a.com",
+      "password": "12345",
+    };
+
+    axios.post('http://127.0.0.1:8000/api/token/', 
+      JSON.stringify(inputData), 
+      {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+      .then(response => {
+        access = response.data.access
+        console.log(access)
+      })
+      .catch(error => {
+        console.error('ABOBA ERROR')
+      })
+  }
+
+  const c =() => {
+    axios.get('http://127.0.0.1:8000/data/all/', 
+      {
+        headers: {
+          'Authorization': `Bearer ${access}`,
+        }
+      })
+      .then(response => {
+        console.log(response.data)
+      })
+      .catch(error => {
+        console.error('ABOBA ERROR')
+      })
+  }
+
+  const d =() => {
+    axios.get('http://127.0.0.1:8000/head/', 
+      {
+        headers: {
+          'Authorization': `Bearer ${access}`,
+        }
+      })
+      .then(response => {
+        console.log(response.data)
+      })
+      .catch(error => {
+        console.error('ABOBA ERROR')
+      })
+  }
+
+  const e =() => {
+    var newUserData = {
+      'email': 'a@a.com',
+      'password': '12345',
+    }
+
+    axios.post('http://127.0.0.1:8000/head/', 
+      newUserData,
+      {
+        headers: {
+          'Authorization': `Bearer ${access}`,
+        }
+      })
+      .then(response => {
+        console.log(response.data)
       })
       .catch(error => {
         console.error('ABOBA ERROR')
@@ -58,11 +126,14 @@ function App() {
         >
           Learn React
         </a>
-        <button onClick={fetchHomeData}>Fetch Home Data</button> {/* Добавьте этот кнопку */}
         <button onClick={a}>update</button> {/* Добавьте этот кнопку */}
+        <button onClick={b}>auth</button> {/* Добавьте этот кнопку */}
+        <button onClick={c}>data</button> {/* Добавьте этот кнопку */}
+        <button onClick={d}>head</button> {/* Добавьте этот кнопку */}
+        <button onClick={e}>reg</button> {/* Добавьте этот кнопку */}
       </header>
     </div>
   );
 }
 
-export default App;
+export default App1;

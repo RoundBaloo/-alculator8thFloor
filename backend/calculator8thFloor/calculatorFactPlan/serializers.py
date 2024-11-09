@@ -20,9 +20,10 @@ class InputedFieldsDataSerializer(serializers.HyperlinkedModelSerializer):
         model = Data
         fields = ['machine_type', 'cnt_machines', 'max_files', 'cnt_UZ']
         extra_kwargs = {
-            'url': {'view_name': 'calculated-data-detail'},
+            'url': {'view_name': 'input-data'},
         }
     
-@swagger_auto_schema(operation_description="Get group details", responses={200: "ABOBA"})
-class HomeEmptySerializer(serializers.Serializer):
-    pass
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = '__all__'
