@@ -177,8 +177,8 @@ calc = Calculator(machines_numbers_dict1)
 print(calc.get_machines_scarcity('fact', 6539, 1143, 833, 600))
 machines_numbers_dict2 = {
     '180h': 2,
-    '168h': 3,
-    '79h': 6
+    '168h': 4,
+    '79h': 4
 }
 calc.set_new_machines_numbers(machines_numbers_dict2)
 print(calc.get_machines_scarcity('fact', 6539, 1143, 833, 600))

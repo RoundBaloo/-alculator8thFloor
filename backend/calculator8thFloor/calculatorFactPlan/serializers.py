@@ -18,7 +18,7 @@ class DataSerializer(serializers.HyperlinkedModelSerializer):
 class InputedFieldsDataSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Data
-        fields = ['machine_type', 'cnt_machines', 'max_files', 'cnt_UZ']
+        fields = ['machine_type', 'cnt_machines', 'avg_fact_files_per_month', 'cnt_UZ']
         extra_kwargs = {
             'url': {'view_name': 'input-data'},
         }

@@ -4,6 +4,7 @@ from .functions_for_calculate import Calculator
 class DataUpdater:
     def __init__(self, input_data):
         self.input_data = input_data
+        print(input_data)
         self.cnt_machines = list(Data.objects.values_list('cnt_machines', flat=True))
         self.calculator = Calculator({
             '180h': input_data['cnt_machines']['180h'],
@@ -30,7 +31,6 @@ class DataUpdater:
             '79h': cnt_machines[2],
         })
         avg_fact_files_per_month = list(Data.objects.values_list('avg_fact_files_per_month', flat=True))
-        print(avg_fact_files_per_month)
         for obj in Data.objects.all():
             # for all data
             obj.month_files = self.calculator.get_machines_month_files()[f'{obj.machine_type}']
@@ -38,26 +38,26 @@ class DataUpdater:
             obj.load_fact = self.calculator.get_workloads(
                 'fact', 
                 avg_fact_files_per_month[0], 
-                avg_fact_files_per_month[1], 
-                avg_fact_files_per_month[2], 
+                avg_fact_files_per_month[3], 
+                avg_fact_files_per_month[4], 
                 self.input_data['cnt_UZ'])[f'{obj.machine_type}']
             obj.scarcity_fact = self.calculator.get_machines_scarcity(
                 'fact', 
                 avg_fact_files_per_month[0], 
-                avg_fact_files_per_month[1], 
-                avg_fact_files_per_month[2], 
+                avg_fact_files_per_month[3], 
+                avg_fact_files_per_month[4], 
                 self.input_data['cnt_UZ'])[f'{obj.machine_type}']
             # for plan
             obj.load_plan = self.calculator.get_workloads(
                 'plan', 
                 avg_fact_files_per_month[0], 
-                avg_fact_files_per_month[1], 
-                avg_fact_files_per_month[2], 
+                avg_fact_files_per_month[3], 
+                avg_fact_files_per_month[4], 
                 self.input_data['cnt_UZ'])[f'{obj.machine_type}']
             obj.scarcity_plan = self.calculator.get_machines_scarcity(
                 'plan', 
                 avg_fact_files_per_month[0], 
-                avg_fact_files_per_month[1], 
-                avg_fact_files_per_month[2], 
+                avg_fact_files_per_month[3], 
+                avg_fact_files_per_month[4], 
                 self.input_data['cnt_UZ'])[f'{obj.machine_type}']
             obj.save()
