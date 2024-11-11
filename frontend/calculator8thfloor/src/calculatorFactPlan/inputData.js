@@ -5,23 +5,6 @@ import { Navigate } from 'react-router-dom';
 import { ApiDirectory } from '../apiDir';
 import '../styles/styles.css';
 
-const updateInputData = (token, inputData, apiDir) => {
-    axios.post(`${apiDir}/data/input/`, 
-        JSON.stringify(inputData), 
-        {
-            headers: {
-                'Authorization': `Bearer ${token}`,
-                'Content-Type': 'application/json'
-            }
-        })
-        .then(response => {
-            console.log(response.data)
-        })
-        .catch(error => {
-            console.error('ABOBA ERROR')
-        })
-}
-
 
 const InputData = (props) => {
     const api = new ApiDirectory()
@@ -36,7 +19,8 @@ const InputData = (props) => {
     const [files180w, setFiles180w] = useState(0);
     const [files180n, setFiles180n] = useState(0);
     const [cntUZ, setCntUZ] = useState(0);
-    const [isCalculated, setIsCalculated] = useState(false)
+    const [isCalculated, setIsCalculated] = useState(false);
+    const [isError, setIsError] = useState(true);
     
 
     function getInputData(token) {
@@ -62,8 +46,31 @@ const InputData = (props) => {
                 setCntUZ(data[0]['cnt_UZ']);
             })
             .catch(error => {
-                console.error('ABOBA ERROR')
+                if (error.response && (error.response.status === 401 || error.response.status === 403)) {
+                        window.location.href = '/';
+                } else {
+                    console.error('ABOBA ERROR', error);
+                }
             })
+    }
+
+
+    function callUpdateInputData(table) {
+        updateInputData(token, {
+            cnt_machines: {
+                '180h': cnt180,
+                '168h': cnt168,
+                '79h': cnt79,
+            },
+            avg_fact_files_per_month: {
+                '180h_day': files180d,
+                '168h': files168,
+                '79h': files79,
+                '180h_weekend': files180w,
+                '180h_night': files180n,
+            },
+            'cnt_UZ': cntUZ
+        }, apiDir, table);
     }
 
 
@@ -72,8 +79,36 @@ const InputData = (props) => {
         getInputData(token);
     }, []);
 
+    const updateInputData = (token, inputData, apiDir, table) => {
+        axios.post(`${apiDir}/data/input/`, 
+            null, 
+            {
+                params: {
+                    'data': JSON.stringify(inputData),
+                    'table': table, 
+                },
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => {
+                console.log('я вызвался 2 раза')
+                console.log(response.data)
+                setIsError(false);
+            })
+            .catch(error => {
+                if (error.response && (error.response.status === 401 || error.response.status === 403)) {
+                        setIsError(true);
+                        window.location.href = '/';
+                } else {
+                    console.error('ABOBA ERROR', error);
+                }
+            })
+    }
 
-    if (isCalculated) {
+
+    if (isCalculated && !isError) {
         return <Navigate to='/calculatorFactPlan' />
     }
 
@@ -96,22 +131,16 @@ const InputData = (props) => {
             <input type="number" value={cntUZ} onChange={e => setCntUZ(parseInt(e.target.value))} />
             <button type='button' onClick={() => {
                 setIsCalculated(true);
-                updateInputData(token, {
-                    cnt_machines: {
-                        '180h': cnt180,
-                        '168h': cnt168,
-                        '79h': cnt79,
-                    },
-                    avg_fact_files_per_month: {
-                        '180h_day': files180d,
-                        '168h': files168,
-                        '79h': files79,
-                        '180h_weekend': files180w,
-                        '180h_night': files180n,
-                    },
-                    'cnt_UZ': cntUZ
-                }, apiDir);
-            }}>Рассчитать</button>
+                callUpdateInputData('fact');
+            }}>Рассчитать факт</button>
+            {/* <button type='button' onClick={() => {
+                setIsCalculated(true);
+                callUpdateInputData('plan');
+            }}>Рассчитать план</button> */}
+            <button type='button' onClick={() => {
+                setIsCalculated(true);
+                callUpdateInputData('both');
+            }}>Рассчитать обе таблицы</button>
         </>
     )
 }

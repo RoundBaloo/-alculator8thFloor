@@ -4,7 +4,6 @@ from .functions_for_calculate import Calculator
 class DataUpdater:
     def __init__(self, input_data):
         self.input_data = input_data
-        print(input_data)
         self.cnt_machines = list(Data.objects.values_list('cnt_machines', flat=True))
         self.calculator = Calculator({
             '180h': input_data['cnt_machines']['180h'],
@@ -14,16 +13,17 @@ class DataUpdater:
         self.files = list(Data.objects.values_list('avg_fact_files_per_month', flat=True))
     
     
-    def update_inputed_data(self):
+    def update_inputed_data(self, table):
         for obj in Data.objects.all():
             obj.cnt_machines = self.input_data['cnt_machines'][f'{obj.machine_type}'.split('_')[0]]
             obj.avg_fact_files_per_month = self.input_data['avg_fact_files_per_month'][f'{obj.machine_type}']
-            obj.cnt_UZ = self.input_data['cnt_UZ']
+            if (table == 'plan' or table == 'both'):
+                obj.cnt_UZ = self.input_data['cnt_UZ']
             obj.save()
-        self.update_calculated_data()
+        self.update_calculated_fact_data(table)
     
         
-    def update_calculated_data(self):
+    def update_calculated_fact_data(self, table):
         cnt_machines = Data.objects.values_list('cnt_machines', flat=True)
         self.calculator.set_new_machines_numbers({
             '180h': cnt_machines[0],
@@ -61,8 +61,13 @@ class DataUpdater:
         for obj in Data.objects.all():
             obj.month_files = month_files[f'{obj.machine_type}']
             obj.max_files = max_files[f'{obj.machine_type}']
-            obj.load_fact = load_fact[f'{obj.machine_type}']
-            obj.scarcity_fact = scarcity_fact[f'{obj.machine_type}']
-            obj.load_plan = load_plan[f'{obj.machine_type}']
-            obj.scarcity_plan = scarcity_plan[f'{obj.machine_type}']
+            if (table == 'fact' or table == 'both'):
+                obj.load_fact = load_fact[f'{obj.machine_type}']
+                obj.scarcity_fact = scarcity_fact[f'{obj.machine_type}']
+            if (table == 'plan' or table == 'both'):
+                # obj.avg_fact_files_with_new = ...
+                obj.load_plan = load_plan[f'{obj.machine_type}']
+                obj.scarcity_plan = scarcity_plan[f'{obj.machine_type}']
             obj.save()
+            
+            

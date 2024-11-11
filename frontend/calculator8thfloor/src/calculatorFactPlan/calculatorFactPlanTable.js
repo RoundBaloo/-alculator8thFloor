@@ -16,7 +16,7 @@ export default function CalculatorFactPlanTable(props) {
     useEffect(() => {
         const getCalculatedData = () => {
             setIsLoading(true);
-            axios.get(`${apiDir}/data/all/`, {
+            axios.get(`${apiDir}/data/fact/`, {
                 headers: {
                     'Authorization': `Bearer ${token}`,
                     'Content-Type': 'application/json',
@@ -29,9 +29,13 @@ export default function CalculatorFactPlanTable(props) {
                 setIsLoading(false);
             })
             .catch(error => {
-                console.error('Error fetching data:', error);
-                setIsLoading(false);
-            });
+                if (error.response && (error.response.status === 401 || error.response.status === 403)) {
+                        setIsLoading(false);
+                        window.location.href = '/';
+                } else {
+                    console.error('ABOBA ERROR', error);
+                }
+            })
         };
 
         getCalculatedData();
