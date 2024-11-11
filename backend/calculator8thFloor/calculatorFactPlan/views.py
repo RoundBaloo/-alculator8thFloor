@@ -23,7 +23,10 @@ class DataViewSet(viewsets.ModelViewSet):
     def list(self, request, *args, **kwargs):
         queryset = self.get_queryset()
         serializer = self.get_serializer(queryset, many=True)
-        return Response(serializer.data)
+        
+        response = Response(serializer.data)
+        response['ngrok-skip-browser-warning'] = 'skip-browser-warning'
+        return response
 
 
 class InputedDataViewSet (viewsets.ModelViewSet):
@@ -38,7 +41,10 @@ class InputedDataViewSet (viewsets.ModelViewSet):
     def list(self, request, *args, **kwargs):
         queryset = self.get_queryset()
         serializer = self.get_serializer(queryset, many=True)
-        return Response(serializer.data)
+        
+        response = Response(serializer.data)
+        response['ngrok-skip-browser-warning'] = 'skip-browser-warning'
+        return response
     
     
     def create(self, request, *args, **kwargs):
@@ -47,7 +53,10 @@ class InputedDataViewSet (viewsets.ModelViewSet):
         data_updater = DataUpdater(data)
         data_updater.update_inputed_data()
         
-        return Response({"message": "All Data objects have been updated"}, status=status.HTTP_200_OK)
+        response = Response({"message": "All Data objects have been updated"}, status=status.HTTP_200_OK)
+        response['ngrok-skip-browser-warning'] = 'skip-browser-warning'
+        
+        return response
     
     
 class HeadViewSet(viewsets.ModelViewSet):
@@ -60,7 +69,11 @@ class HeadViewSet(viewsets.ModelViewSet):
             return Response(status=status.HTTP_404_NOT_FOUND)
         queryset = self.get_queryset()
         serializer = self.get_serializer(queryset, many=True)
-        return Response(serializer.data)
+        
+        response = Response(serializer.data)
+        response['ngrok-skip-browser-warning'] = 'skip-browser-warning'
+        
+        return response
     
     def create(self, request, *args, **kwargs):
         username = request.data.get('email')
@@ -70,9 +83,15 @@ class HeadViewSet(viewsets.ModelViewSet):
         # Проверка на наличие обязательных полей
         if not email or not password:
             print(email, password)
-            return Response({"error": "Email and password are required."}, status=status.HTTP_400_BAD_REQUEST)
+            response = Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+            response['ngrok-skip-browser-warning'] = 'skip-browser-warning'
+            return response
         try:
             user = User.objects.create_user(username=username, email=email, password=password)
-            return Response({"message": "User  created successfully.", "user_id": user.id}, status=status.HTTP_201_CREATED)
+            response = Response({"message": "User  created successfully.", "user_id": user.id}, status=status.HTTP_201_CREATED)
+            response['ngrok-skip-browser-warning'] = 'skip-browser-warning'
+            return response
         except Exception as e:
-            return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+            response = Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+            response['ngrok-skip-browser-warning'] = 'skip-browser-warning'
+            return response

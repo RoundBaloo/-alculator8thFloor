@@ -2,8 +2,13 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { getToken } from '../tokenService';
 import { Link } from 'react-router-dom';
+import { ApiDirectory } from '../apiDir';
+import '../styles/styles.css';
+
 
 export default function CalculatorFactPlanTable(props) {
+    const api = new ApiDirectory()
+    const apiDir = api.getApiUrl()
     const token = getToken();
     const [data, setData] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
@@ -11,12 +16,15 @@ export default function CalculatorFactPlanTable(props) {
     useEffect(() => {
         const getCalculatedData = () => {
             setIsLoading(true);
-            axios.get('http://127.0.0.1:8000/data/all/', {
+            axios.get(`${apiDir}/data/all/`, {
                 headers: {
                     'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json',
+                    'ngrok-skip-browser-warning': 'awd',
                 }
             })
             .then(response => {
+                console.log(response)
                 setData(response.data);
                 setIsLoading(false);
             })

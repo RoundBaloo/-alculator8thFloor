@@ -2,9 +2,11 @@ import React, {useEffect, useState} from 'react'
 import axios from 'axios';
 import { getToken } from '../tokenService';
 import { Navigate } from 'react-router-dom';
+import { ApiDirectory } from '../apiDir';
+import '../styles/styles.css';
 
-const updateInputData = (token, inputData) => {
-    axios.post('http://127.0.0.1:8000/data/input/', 
+const updateInputData = (token, inputData, apiDir) => {
+    axios.post(`${apiDir}/data/input/`, 
         JSON.stringify(inputData), 
         {
             headers: {
@@ -22,6 +24,8 @@ const updateInputData = (token, inputData) => {
 
 
 const InputData = (props) => {
+    const api = new ApiDirectory()
+    const apiDir = api.getApiUrl()
     const token = getToken();
     const [cnt180, setCnt180] = useState(0);
     const [cnt168, setCnt168] = useState(0);
@@ -36,14 +40,16 @@ const InputData = (props) => {
     
 
     function getInputData(token) {
-        axios.get('http://127.0.0.1:8000/data/input/', 
+        axios.get(`${apiDir}/data/input/`, 
             {
                 headers: {
                 'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json',
+                'ngrok-skip-browser-warning': 'awd',
                 }
             })
             .then(response => {
-                console.log(response.data);
+                console.log(response);
                 var data = response.data;
                 setCnt180(data[0]['cnt_machines']);
                 setCnt168(data[1]['cnt_machines']);
@@ -86,7 +92,7 @@ const InputData = (props) => {
             }} />
             <input type="number" value={files180w} onChange={e => setFiles180w(parseInt(e.target.value))} />
             <input type="number" value={files180n} onChange={e => setFiles180n(parseInt(e.target.value))} />
-            <p>Кол-во новых пользователей</p>
+            <p className='aaa'>Кол-во новых пользователей</p>
             <input type="number" value={cntUZ} onChange={e => setCntUZ(parseInt(e.target.value))} />
             <button type='button' onClick={() => {
                 setIsCalculated(true);
@@ -104,7 +110,7 @@ const InputData = (props) => {
                         '180h_night': files180n,
                     },
                     'cnt_UZ': cntUZ
-                });
+                }, apiDir);
             }}>Рассчитать</button>
         </>
     )

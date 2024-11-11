@@ -2,10 +2,12 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { getToken } from '../tokenService';
 import { Link } from 'react-router-dom';
+import { ApiDirectory } from '../apiDir';
+import '../styles/styles.css';
 
 
-const createUser = (token, createUserInformatiom, getUsersFunction) => {
-    axios.post('http://127.0.0.1:8000/head/',
+const createUser = (token, createUserInformatiom, getUsersFunction, apiDir) => {
+    axios.post(`${apiDir}/head/`,
         JSON.stringify({
             "username": `${createUserInformatiom.username}`,
             "email": `${createUserInformatiom.email}`,
@@ -27,6 +29,8 @@ const createUser = (token, createUserInformatiom, getUsersFunction) => {
 
 
 export default function HeadPermissions() {
+    const api = new ApiDirectory()
+    const apiDir = api.getApiUrl()
     const token = getToken();
     const [users, setUsers] = useState();
     const [isLoading, setIsLoading] = useState(false);
@@ -38,9 +42,11 @@ export default function HeadPermissions() {
 
     const getUsers = () => {
         setIsLoading(true);
-        axios.get('http://127.0.0.1:8000/head/', {
+        axios.get(`${apiDir}/head/`, {
             headers: {
                 'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json',
+                'ngrok-skip-browser-warning': 'awd',
             }
         })
         .then(response => {
@@ -100,7 +106,8 @@ export default function HeadPermissions() {
                         "email": email,
                         "password": password,
                     }, 
-                getUsers);
+                    getUsers,
+                    apiDir);
                 }}>добавить</button>
             </div>
             { renderUsers() }

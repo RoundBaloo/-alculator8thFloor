@@ -2,20 +2,24 @@ import React, { useState } from 'react'
 import { Navigate } from 'react-router-dom';
 import axios from 'axios';
 import { saveToken } from '../tokenService';
+import { ApiDirectory } from '../apiDir';
+import '../styles/styles.css';
 
 
 const Login = () => {
+    const api = new ApiDirectory()
+    const apiDir = api.getApiUrl()
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [isAuthenticated, setIsAuthenticated] = useState(false);
 
-    const authenticate =() => {
+    const authenticate = () => {
         // const inputData = {
         //   "username": "a@a.com",
         //   "password": "12345",
         // };
     
-        axios.post('http://127.0.0.1:8000/api/token/', 
+        axios.post(`${apiDir}/api/token/`, 
             JSON.stringify({
                 "username": `${username}`,
                 "password": `${password}`,
@@ -40,22 +44,21 @@ const Login = () => {
     }
 
     return (
-    <>
-        <input 
-        placeholder='login' 
-        value={username}
-        onChange={(e) => setUsername(e.target.value)}
-        />
-        <input 
-        type='password' 
-        placeholder='password'
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-        />
-        {/* <Link to='/calculatorFactPlan'> */}
+        <>
+            <input 
+            className='aboba'
+            placeholder='login' 
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            />
+            <input 
+            type='password' 
+            placeholder='password'
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            />
             <button type='button' onClick={authenticate}>Войти в айти</button>
-        {/* </Link> */}
-    </>
+        </>
     )
 }
 
