@@ -8,19 +8,20 @@ import CalculatorFactPlanTable from './calculatorFactPlan/calculatorFactPlanTabl
 import HeadPermissions from './calculatorFactPlan/headPermissions';
 import reportWebVitals from './reportWebVitals';
 import { BrowserRouter as Router, Routes, Link, Route } from 'react-router-dom';
+import './styles/styles.css'
 
 
-function App () {
+function App() {
 
   return (
     <Router>
       <>
-        <Routes>
-          <Route exact path="/" element={<Login />} />
-          <Route exact path="/calculatorFactPlan" element={<CalculatorFactPlanTable />} />
-          <Route exact path="/inputForCalculatorFactPlan" element={<InputData />} />
-          <Route exact path="/handleUsersPermisions" element={<HeadPermissions />} />
-        </Routes>
+          <Routes>
+            <Route exact path="/" element={<Login />} />
+            <Route exact path="/calculatorFactPlan" element={<CalculatorFactPlanTable />} />
+            <Route exact path="/inputForCalculatorFactPlan" element={<InputData />} />
+            <Route exact path="/handleUsersPermisions" element={<HeadPermissions />} />
+          </Routes>
       </>
     </Router>
   );

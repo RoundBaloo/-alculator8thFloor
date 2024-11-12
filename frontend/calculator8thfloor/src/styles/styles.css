@@ -1,0 +1,78 @@
+body {
+    background-image: url('../img/Card.png');
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: cover;
+    background-position: center;
+    /* height: 100%; */
+}
+
+button {
+    all: unset;
+    cursor: pointer;
+}
+
+input {
+    outline: none;
+}
+
+.login-header {
+    padding-top: 30px;
+    padding-left: 60px;
+    margin-bottom: 190px;
+}
+
+.login-input {
+    width: 600px;
+    height: 15px;
+    padding: 17px 30px;
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+    border: solid white 2px;
+    border-bottom-width: 0;
+    color: white;
+    background-color: transparent;
+    font-size: 18px;
+}
+
+.password-input {
+    width: 600px;
+    height: 15px;
+    padding: 17px 30px;
+    border-bottom-left-radius: 15px;
+    border-bottom-right-radius: 15px;
+    border: solid white 2px;
+    color: white;
+
+    background-color: transparent;
+    font-size: 18px;
+}
+
+.password-input::placeholder,
+.login-input::placeholder {
+    font-size: 18px;
+    color: orange;
+}
+
+
+.input-form {
+    display: flex;
+    width: 662px;
+    margin: 0 auto;
+}
+
+.login-and-password {
+    display: flex;
+    flex-direction: column;
+    margin-right: 10px;
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+    font-size: 18px !important;
+    -webkit-text-fill-color: #ffffff;
+    transition: background-color 5000s ease-in-out 0s;
+    box-shadow: inset 0 0 20px 20px transparent;
+}

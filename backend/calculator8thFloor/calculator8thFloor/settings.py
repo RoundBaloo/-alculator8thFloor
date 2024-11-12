@@ -160,6 +160,6 @@ REST_FRAMEWORK = {
 
 # Указываем длительность сессии
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(hours=1),  # Устанавливаем срок действия токена
+    'ACCESS_TOKEN_LIFETIME': timedelta(hours=24),  # Устанавливаем срок действия токена
     'REFRESH_TOKEN_LIFETIME': timedelta(hours=3),   # Срок действия токена обновления
 }

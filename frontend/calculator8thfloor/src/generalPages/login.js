@@ -4,6 +4,8 @@ import axios from 'axios';
 import { saveToken } from '../tokenService';
 import { ApiDirectory } from '../apiDir';
 import '../styles/styles.css';
+import Logo from '../img/logo.svg';
+import SignIn from '../img/sign-in-icon.svg'
 
 
 const Login = () => {
@@ -45,19 +47,32 @@ const Login = () => {
 
     return (
         <>
-            <input 
-            className='aboba'
-            placeholder='login' 
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            />
-            <input 
-            type='password' 
-            placeholder='password'
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            />
-            <button type='button' onClick={authenticate}>Войти в айти</button>
+            <body>
+                <div className='login-page'>
+                    <div className='login-header'>
+                        <img src={Logo} width="50" height="50"></img>
+                    </div>
+
+                    <div className='input-form'>
+                        <div className='login-and-password'>
+                            <input 
+                            className='login-input'
+                            placeholder='Логин' 
+                            value={username}
+                            onChange={(e) => setUsername(e.target.value)}
+                            />
+                            <input
+                            className='password-input' 
+                            type='password' 
+                            placeholder='Пароль'
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            />
+                        </div>
+                        <button className='sign-in-button' type='button' onClick={authenticate}><img src={SignIn}></img></button>
+                    </div>
+                </div>
+            </body>
         </>
     )
 }
