@@ -81,7 +81,75 @@ class Calculator:
 
         return max_files_dict
 
-    def calculate_workloads(self, type, avg_day_files, avg_weekends_files, avg_night_files, new_users_number):  # type = plan or fact
+    def calc_new_users_files(self, new_users_number):
+        self.value_dict['new_users_files'] = dict()
+        new_users_files = self.value_dict['new_users_files']
+
+        new_users_files['night'] = round(new_users_number * 1.3 * 0.27)
+        new_users_files['weekend'] = round(new_users_number * 1.3 * 0.15)
+        new_users_files['day'] = round(new_users_number * 1.3) - new_users_files['night'] - new_users_files['weekend']
+
+    def get_new_users_files(self, new_users_number):
+        new_users_files_dict = dict()
+
+        if 'new_users_files' not in self.value_dict:
+            self.calc_new_users_files(new_users_number)
+
+        new_users_files = self.value_dict['new_users_files']
+
+        new_users_files_dict['180h_day'] = new_users_files['day']
+        new_users_files_dict['168h'] = new_users_files['day']
+        new_users_files_dict['79h'] = new_users_files['day']
+        new_users_files_dict['180h_night'] = new_users_files['night']
+        new_users_files_dict['180h_weekend'] = new_users_files['weekend']
+
+        return new_users_files_dict
+
+    def calc_new_avg_files(
+        self,
+        avg_day_files, avg_weekends_files, avg_night_files,
+        new_users_number
+    ):
+        self.value_dict['new_avg_files'] = dict()
+        new_avg_files = self.value_dict['new_avg_files']
+
+        if 'new_users_files' not in self.value_dict:
+            self.calc_new_users_files(new_users_number)
+
+        new_users_files = self.value_dict['new_users_files']
+
+        new_avg_files['day'] = avg_day_files + new_users_files['day']
+        new_avg_files['weekend'] = avg_weekends_files + new_users_files['weekend']
+        new_avg_files['night'] = avg_night_files + new_users_files['night']
+
+    def get_new_avg_files(
+        self,
+        avg_day_files, avg_weekends_files, avg_night_files,
+        new_users_number
+    ):
+        new_avg_files_dict = dict()
+
+        if 'new_avg_files' not in self.value_dict:
+            self.calc_new_avg_files(
+                avg_day_files, avg_weekends_files, avg_night_files,
+                new_users_number
+            )
+
+        new_avg_files = self.value_dict['new_avg_files']
+
+        new_avg_files_dict['180h_day'] = new_avg_files['day']
+        new_avg_files_dict['168h'] = new_avg_files['day']
+        new_avg_files_dict['79h'] = new_avg_files['day']
+        new_avg_files_dict['180h_night'] = new_avg_files['night']
+        new_avg_files_dict['180h_weekend'] = new_avg_files['weekend']
+
+        return new_avg_files_dict
+
+    def calculate_workloads(
+        self, type,
+        avg_day_files, avg_weekends_files, avg_night_files,
+        new_users_number
+    ):  # type = plan or fact
         self.value_dict[type] = dict()
         workload = self.value_dict[type]
 
@@ -89,14 +157,17 @@ class Calculator:
             self.calculate_machines_max_files()
 
         if type == 'plan':
-            new_night_files = round(new_users_number * 1.3 * 0.27)
-            avg_night_files += new_night_files
+            if 'new_avg_files' not in self.value_dict:
+                self.calc_new_avg_files(
+                    avg_day_files, avg_weekends_files, avg_night_files,
+                    new_users_number
+                )
 
-            new_weekends_files = round(new_users_number * 1.3 * 0.15)
-            avg_weekends_files += new_weekends_files
+            new_avg_files = self.value_dict['new_avg_files']
 
-            new_day_files = round(new_users_number * 1.3) - new_night_files - new_weekends_files
-            avg_day_files += new_day_files
+            avg_night_files = new_avg_files['night']
+            avg_weekends_files = new_avg_files['weekend']
+            avg_day_files = new_avg_files['day']
 
         key = 'max_files'
         day_files = self.value_dict['180h_day'][key] + self.value_dict['168h'][key] + self.value_dict['79h'][key]
@@ -105,11 +176,18 @@ class Calculator:
         workload['180h_night'] = avg_night_files / self.value_dict['180h_night'][key]
         workload['180h_weekend'] = avg_weekends_files / self.value_dict['180h_weekend'][key]
 
-
-    def get_workloads(self, type, avg_day_files, avg_weekends_files, avg_night_files, new_users_number):  # type = plan or fact
+    def get_workloads(
+        self, type,
+        avg_day_files, avg_weekends_files, avg_night_files,
+        new_users_number
+    ):  # type = plan or fact
         workloads_dict = dict()
         if type not in self.value_dict:
-            self.calculate_workloads(type, avg_day_files, avg_weekends_files, avg_night_files, new_users_number)
+            self.calculate_workloads(
+                type,
+                avg_day_files, avg_weekends_files, avg_night_files,
+                new_users_number
+            )
 
         workloads_dict['180h_day'] = self.value_dict[type]['day']
         workloads_dict['168h'] = self.value_dict[type]['day']
@@ -119,9 +197,17 @@ class Calculator:
 
         return workloads_dict
 
-    def calculate_machines_scarcity(self, type, avg_day_files, avg_weekends_files, avg_night_files, new_users_number):  # type = plan or fact
+    def calculate_machines_scarcity(
+        self, type,
+        avg_day_files, avg_weekends_files, avg_night_files,
+        new_users_number
+    ):  # type = plan or fact
         if type not in self.value_dict:
-            self.calculate_workloads(type, avg_day_files, avg_weekends_files, avg_night_files, new_users_number)
+            self.calculate_workloads(
+                type,
+                avg_day_files, avg_weekends_files, avg_night_files,
+                new_users_number
+            )
         workload = self.value_dict[type]
         scarcity_key = type + '_scarcity'
 
@@ -131,8 +217,12 @@ class Calculator:
         machine_168hour = self.value_dict['168h']
         machine_79hour = self.value_dict['79h']
 
-        night_scarcity = math.ceil(self.calc_scarcity('180h_night', workload['180h_night'], night_machine['max_files']))
-        weekends_scarcity = math.ceil(self.calc_scarcity('180h_weekend', workload['180h_weekend'], weekends_machine['max_files']))
+        night_scarcity = math.ceil(self.calc_scarcity(
+            '180h_night', workload['180h_night'], night_machine['max_files']
+        ))
+        weekends_scarcity = math.ceil(self.calc_scarcity(
+            '180h_weekend', workload['180h_weekend'], weekends_machine['max_files']
+        ))
         need_180hour_machines = max(night_scarcity, weekends_scarcity)
 
         weekends_machine[scarcity_key] = need_180hour_machines
@@ -144,7 +234,9 @@ class Calculator:
 
         new_add_files1 = machine_180hour[scarcity_key] * machine_180hour['month_files']
         new_day_workload1 = avg_day_files / (day_files + new_add_files1)
-        machine_168hour[scarcity_key] = round(self.calc_scarcity('168h', new_day_workload1, day_files))
+        machine_168hour[scarcity_key] = round(self.calc_scarcity(
+            '168h', new_day_workload1, day_files
+        ))
 
         new_add_files2 = machine_168hour[scarcity_key] * machine_168hour['month_files']
         new_day_workload2 = avg_day_files / (day_files + new_add_files1 + new_add_files2)
@@ -153,12 +245,20 @@ class Calculator:
         else:
             machine_79hour[scarcity_key] = 1
 
-    def get_machines_scarcity(self, type, avg_day_files, avg_weekends_files, avg_night_files, new_users_number):  # type = plan or fact.
+    def get_machines_scarcity(
+        self, type,
+        avg_day_files, avg_weekends_files, avg_night_files,
+        new_users_number
+    ):  # type = plan or fact.
         scarcities_dict = dict()
         scarcity_key = type + '_scarcity'
 
         if scarcity_key not in self.value_dict[Machine.names[1]]:
-            self.calculate_machines_scarcity(type, avg_day_files, avg_weekends_files, avg_night_files, new_users_number)
+            self.calculate_machines_scarcity(
+                type,
+                avg_day_files, avg_weekends_files, avg_night_files,
+                new_users_number
+            )
 
         for name in Machine.names:
             scarcities_dict[name] = self.value_dict[name][scarcity_key]
