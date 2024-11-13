@@ -4,6 +4,7 @@ import { getToken } from '../tokenService';
 import { Link } from 'react-router-dom';
 import { ApiDirectory } from '../apiDir';
 import '../styles/styles.css';
+import Logo from '../img/logo.svg'
 
 
 export default function CalculatorFactPlanTable(props) {
@@ -80,17 +81,19 @@ export default function CalculatorFactPlanTable(props) {
     return (
         <>
             <header>
-            <nav>
-                <ul>
-                <Link to='/calculatorFactPlan'><button type='button'>xxx</button>
-                </Link>
-                <Link to='/pupu1'>
-                </Link>
-                <Link to='/pupu2'>
-                </Link>
-                </ul>
-            </nav>
+                <nav className='inputData-navigation'>
+                    <img src={Logo} width="50" height="50" style={{marginRight: "78px"}}></img>
+                    <ul>
+                        <Link to='/calculatorFactPlan'><button className='calculator-type-button' type='button'>1 калькулятор</button>
+                        </Link>
+                        <Link to='/pupu1'><button className='calculator-type-button' type='button'>2 калькулятор</button>
+                        </Link>
+                        <Link to='/pupu2'><button className='calculator-type-button' type='button'>3 калькулятор</button>
+                        </Link>
+                    </ul>
+                </nav>
             </header>
+
             <body>
                 <table className="table table-bordered">
                     <thead className="thead-dark">

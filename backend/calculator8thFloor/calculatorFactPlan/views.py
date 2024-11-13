@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.contrib.auth.models import User
 from rest_framework import viewsets, status
 from rest_framework.response import Response
-from .serializers import FactDataSerializer, PlanDataSerializer, InputedFieldsDataSerializer, UserSerializer
+from .serializers import FactDataSerializer, PlanDataSerializer, InputedFieldsDataSerializer, UserSerializer, ChangePasswordSerializer
 from .models import Data
 from rest_framework.decorators import action
 from drf_yasg.utils import swagger_auto_schema
@@ -126,29 +126,17 @@ class HeadViewSet(viewsets.ModelViewSet):
         except Exception as e:
             return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
-    def update(self, request, *args, **kwargs):
-        if not request.user.is_superuser:
-            return Response({"error": "У вас нет прав на изменение пользователей"}, status=status.HTTP_403_FORBIDDEN)
-
+    def update(self, request, pk=None, partial=False):
         try:
-            partial = request.method == 'PATCH'
-            user = User.objects.get(username='123')
-            password = request.data.get('password')
+            user = self.queryset.get(id=pk)
+        except User.DoesNotExist:
+            return Response({"error": "Пользователь не найден"}, status=status.HTTP_404_NOT_FOUND)
 
-            print(password)
-            user.set_password(str(password))
-            user.save()
-
-            serializer = self.get_serializer(user, data=request.data, partial=partial)
-
-            if serializer.is_valid():
-                serializer.save()
-                return Response(serializer.data)
-            else:
-                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-        except Exception as e:
-            return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+        print(user.username)
+        serializer = ChangePasswordSerializer(data=request.data, context={'request': request})
+        serializer.is_valid(raise_exception=True)
+        serializer.save(user=user)
+        return Response({"detail": "Пароль успешно изменен."}, status=status.HTTP_200_OK)
 
 
 # def plan_export(request):
