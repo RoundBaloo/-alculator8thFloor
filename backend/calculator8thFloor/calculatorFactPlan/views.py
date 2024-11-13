@@ -151,14 +151,14 @@ class HeadViewSet(viewsets.ModelViewSet):
             return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
 
-def fact_export(request):
-    response = HttpResponse(content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
-    response['Content-Disposition'] = "attachment; filename=fact.xlsx"
+# def plan_export(request):
+#     response = HttpResponse(content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+#     response['Content-Disposition'] = "attachment; filename=fact.xlsx"
 
-    if request.GET:
-        col = 0
-        row = 0
-        workbook = xlsxwriter.Workbook('fact.xlsx')
-        worksheet = workbook.add_worksheet()
+#     if request.GET:
+#         col = 0
+#         row = 0
+#         workbook = xlsxwriter.Workbook('fact.xlsx')
+#         worksheet = workbook.add_worksheet()
 
-        worksheet.merge_range('A1:G1', 'ФАКТ')
+#         worksheet.merge_range('A1:G1', 'ФАКТ')
