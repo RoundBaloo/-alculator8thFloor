@@ -1,9 +1,17 @@
-import React, {useEffect, useState} from 'react'
+import React, { useEffect, useState } from 'react'
 import axios from 'axios';
 import { getToken } from '../tokenService';
 import { Navigate } from 'react-router-dom';
 import { ApiDirectory } from '../apiDir';
 import '../styles/styles.css';
+import { Link } from 'react-router-dom';
+import Logo from '../img/logo.svg';
+import icon180h from '../img/h180.svg';
+import icon160h from '../img/h160.svg';
+import icon79h from '../img/h79.svg';
+import day from '../img/day.svg';
+import night from '../img/night.svg';
+import weekend from '../img/weekend.svg';
 
 
 const InputData = (props) => {
@@ -21,15 +29,15 @@ const InputData = (props) => {
     const [cntUZ, setCntUZ] = useState(0);
     const [isCalculated, setIsCalculated] = useState(false);
     const [isError, setIsError] = useState(true);
-    
+
 
     function getInputData(token) {
-        axios.get(`${apiDir}/data/input/`, 
+        axios.get(`${apiDir}/data/input/`,
             {
                 headers: {
-                'Authorization': `Bearer ${token}`,
-                'Content-Type': 'application/json',
-                'ngrok-skip-browser-warning': 'awd',
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json',
+                    'ngrok-skip-browser-warning': 'awd',
                 }
             })
             .then(response => {
@@ -47,7 +55,7 @@ const InputData = (props) => {
             })
             .catch(error => {
                 if (error.response && (error.response.status === 401 || error.response.status === 403)) {
-                        window.location.href = '/';
+                    window.location.href = '/';
                 } else {
                     console.error('ABOBA ERROR', error);
                 }
@@ -80,12 +88,12 @@ const InputData = (props) => {
     }, []);
 
     const updateInputData = (token, inputData, apiDir, table) => {
-        axios.post(`${apiDir}/data/input/`, 
-            null, 
+        axios.post(`${apiDir}/data/input/`,
+            null,
             {
                 params: {
                     'data': JSON.stringify(inputData),
-                    'table': table, 
+                    'table': table,
                 },
                 headers: {
                     'Authorization': `Bearer ${token}`,
@@ -99,8 +107,8 @@ const InputData = (props) => {
             })
             .catch(error => {
                 if (error.response && (error.response.status === 401 || error.response.status === 403)) {
-                        setIsError(true);
-                        window.location.href = '/';
+                    setIsError(true);
+                    window.location.href = '/';
                 } else {
                     console.error('ABOBA ERROR', error);
                 }
@@ -115,32 +123,85 @@ const InputData = (props) => {
 
     return (
         <>
-            <p>Факт наличия машин для времени работы</p>
-            <input type="number" value={cnt180} onChange={e => setCnt180(parseInt(e.target.value))} />
-            <input type="number" value={cnt168} onChange={e => setCnt168(parseInt(e.target.value))} />
-            <input type="number" value={cnt79} onChange={e => setCnt79(parseInt(e.target.value))} />
-            <p>Среднее количество файлов на месяц для времени работы</p>
-            <input type="number" value={files180d} onChange={e => {
-                setFiles180d(parseInt(e.target.value));
-                setFiles168(parseInt(e.target.value));
-                setFiles79(parseInt(e.target.value));
-            }} />
-            <input type="number" value={files180w} onChange={e => setFiles180w(parseInt(e.target.value))} />
-            <input type="number" value={files180n} onChange={e => setFiles180n(parseInt(e.target.value))} />
-            <p className='aaa'>Кол-во новых пользователей</p>
-            <input type="number" value={cntUZ} onChange={e => setCntUZ(parseInt(e.target.value))} />
-            <button type='button' onClick={() => {
-                setIsCalculated(true);
-                callUpdateInputData('fact');
-            }}>Рассчитать факт</button>
-            {/* <button type='button' onClick={() => {
-                setIsCalculated(true);
-                callUpdateInputData('plan');
-            }}>Рассчитать план</button> */}
-            <button type='button' onClick={() => {
-                setIsCalculated(true);
-                callUpdateInputData('both');
-            }}>Рассчитать обе таблицы</button>
+            <header>
+                <nav className='inputData-navigation'>
+                    <img src={Logo} width="50" height="50" style={{marginRight: "78px"}}></img>
+                    <ul>
+                        <Link to='/calculatorFactPlan'><button className='calculator-type-button' type='button'>1 калькулятор</button>
+                        </Link>
+                        <Link to='/pupu1'><button className='calculator-type-button' type='button'>2 калькулятор</button>
+                        </Link>
+                        <Link to='/pupu2'><button className='calculator-type-button' type='button'>3 калькулятор</button>
+                        </Link>
+                    </ul>
+                </nav>
+            </header>
+
+            <div className='input-data-main-form'>
+                <h1>Факт и план</h1>
+
+                <div className='input-container'>
+                    <p>Факт наличия машин для времени работы</p>
+                    <div className='input-wrapper'>
+                        <input type="number" value={cnt180} onChange={e => setCnt180(parseInt(e.target.value))} />
+                        <img src={icon180h} className='input-icon'></img>
+                    </div>
+                    <div className='input-wrapper'>
+                        <input type="number" value={cnt168} onChange={e => setCnt168(parseInt(e.target.value))} />
+                        <img src={icon160h} className='input-icon'></img>
+                    </div>
+                    <div className='input-wrapper'>
+                        <input type="number" value={cnt79} onChange={e => setCnt79(parseInt(e.target.value))} />
+                        <img src={icon79h} className='input-icon min-fact'></img>
+                    </div>
+                </div>
+
+                <div className='input-container'>
+                    <p>Среднее количество файлов на месяц для времени работы</p>
+                    <div className='input-wrapper'>
+                        <input type="number" value={files180d} onChange={e => {
+                            setFiles180d(parseInt(e.target.value));
+                            setFiles168(parseInt(e.target.value));
+                            setFiles79(parseInt(e.target.value));
+                        }} />
+                        <img src={day} className='input-icon'></img>
+                    </div>
+                    <div className='input-wrapper'>
+                        <input type="number" value={files180w} onChange={e => setFiles180w(parseInt(e.target.value))} />
+                        <img src={night} className='input-icon night'></img>
+                    </div>
+                    <div className='input-wrapper'>
+                        <input type="number" value={files180n} onChange={e => setFiles180n(parseInt(e.target.value))} />
+                        <img src={weekend} className='input-icon'></img>
+                    </div>
+                </div>
+
+                <div className='input-container'>
+                    <p className='aaa'>Кол-во новых пользователей</p>
+                    <input type="number" value={cntUZ} onChange={e => setCntUZ(parseInt(e.target.value))} />
+                </div>
+
+                <div className='calculate-buttons'>
+                    <button type='button' 
+                    className='calculate-button'
+                    onClick={() => {
+                        setIsCalculated(true);
+                        callUpdateInputData('fact');
+                    }}>Рассчитать факт</button>
+                    {/* <button type='button'
+                    className='calculate-button' 
+                    onClick={() => {
+                        setIsCalculated(true);
+                        callUpdateInputData('plan');
+                    }}>Рассчитать план</button> */}
+                    <button type='button' 
+                    className='calculate-button'
+                    onClick={() => {
+                        setIsCalculated(true);
+                        callUpdateInputData('both');
+                    }}>Рассчитать факт и план</button>
+                </div>
+            </div>
         </>
     )
 }
