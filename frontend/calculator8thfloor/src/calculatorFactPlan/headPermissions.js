@@ -101,7 +101,8 @@ export default function HeadPermissions() {
     const submitChangePassword = () => {
         if (newPassword === confirmedNewPassword) {
             axios.patch(`${apiDir}/head/${userIdToChange}/`, {
-                password: newPassword
+                new_password: newPassword,
+                confirm_password: confirmedNewPassword,
             }, {
                 headers: {
                     'Authorization': `Bearer ${token}`,

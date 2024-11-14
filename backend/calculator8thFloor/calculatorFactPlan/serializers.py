@@ -4,6 +4,7 @@ from drf_yasg import openapi
 from drf_yasg.views import get_schema_view
 from drf_yasg.utils import swagger_auto_schema
 from .models import Data
+from rest_framework.exceptions import ValidationError
         
 
 class FactDataSerializer(serializers.HyperlinkedModelSerializer):
@@ -55,3 +56,19 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = '__all__'
+        
+        
+class ChangePasswordSerializer(serializers.Serializer):
+    new_password = serializers.CharField(required=True)
+    confirm_password = serializers.CharField(required=True)
+
+    def validate(self, attrs):
+        # Проверка совпадения нового пароля
+        if attrs['new_password'] != attrs['confirm_password']:
+            raise ValidationError({"confirm_password": "Пароли не совпадают."})
+
+        return attrs
+
+    def save(self, user):
+        user.set_password(self.validated_data['new_password'])
+        user.save()
