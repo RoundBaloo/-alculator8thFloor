@@ -1,4 +1,3 @@
-from django.shortcuts import render
 from django.contrib.auth.models import User
 from rest_framework import viewsets, status
 from rest_framework.response import Response
@@ -9,7 +8,7 @@ from drf_yasg.utils import swagger_auto_schema
 from .components.data_updater import DataUpdater
 from rest_framework.permissions import IsAuthenticated
 import json
-from django.http import HttpResponse
+from django.http import FileResponse
 import xlsxwriter
 from .components import export_functions
 # Create your views here.
@@ -141,14 +140,33 @@ class HeadViewSet(viewsets.ModelViewSet):
 
 
 def export_fact_excel(request):
-    response = HttpResponse(content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
-    response['Content-Disposition'] = "attachment; filename=fact.xlsx"
-
     workbook = xlsxwriter.Workbook('fact.xlsx')
     worksheet = workbook.add_worksheet()
     export_functions.create_fact_excel_table(worksheet)
     worksheet.title = 'Fact Table'
 
-    workbook.save(response)
+    workbook.close()
 
-    return response
+    return FileResponse(open('fact.xlsx', 'rb'))
+
+
+def export_plan_excel(request):
+    workbook = xlsxwriter.Workbook('plan.xlsx')
+    worksheet = workbook.add_worksheet()
+    export_functions.create_plan_excel_table(worksheet)
+    worksheet.title = 'Plan Table'
+
+    workbook.close()
+
+    return FileResponse(open('plan.xlsx', 'rb'))
+
+
+def export_fact_plan_excel(request):
+    workbook = xlsxwriter.Workbook('fact_plan.xlsx')
+    worksheet = workbook.add_worksheet()
+    export_functions.create_fact_plan_excel_table(worksheet)
+    worksheet.title = 'Fact Plan Table'
+
+    workbook.close()
+
+    return FileResponse(open('fact_plan.xlsx', 'rb'))

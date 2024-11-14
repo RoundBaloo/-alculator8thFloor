@@ -1,2 +1,6 @@
 backend/venv/
 **/__pycache__/
+backend\calculator8thFloor\calculatorFactPlan\__pycache__
+backend\calculator8thFloor\calculatorFactPlan\components\__pycache__
+backend\calculator8thFloor\calculatorFactPlan\migrations\__pycache__
+backend\calculator8thFloor\db.sqlite3
