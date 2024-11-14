@@ -11,6 +11,7 @@ from rest_framework.permissions import IsAuthenticated
 import json
 from django.http import HttpResponse
 import xlsxwriter
+from .components import export_functions
 # Create your views here.
 
 
@@ -151,14 +152,15 @@ class HeadViewSet(viewsets.ModelViewSet):
             return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
 
-# def plan_export(request):
-#     response = HttpResponse(content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
-#     response['Content-Disposition'] = "attachment; filename=fact.xlsx"
+def export_fact_excel(request):
+    response = HttpResponse(content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+    response['Content-Disposition'] = "attachment; filename=fact.xlsx"
 
-#     if request.GET:
-#         col = 0
-#         row = 0
-#         workbook = xlsxwriter.Workbook('fact.xlsx')
-#         worksheet = workbook.add_worksheet()
+    workbook = xlsxwriter.Workbook('fact.xlsx')
+    worksheet = workbook.add_worksheet()
+    export_functions.create_fact_excel_table(worksheet)
+    worksheet.title = 'Fact Table'
 
-#         worksheet.merge_range('A1:G1', 'ФАКТ')
+    workbook.save(response)
+
+    return response

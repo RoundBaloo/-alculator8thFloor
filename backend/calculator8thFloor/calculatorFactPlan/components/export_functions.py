@@ -1,7 +1,7 @@
 from ..models import Data
 
 
-def fact_excel_export(worksheet):
+def create_fact_excel_table(worksheet):
     worksheet.merge_range('A1:G1', 'ФАКТ')
     column_names = ['Машина', 'Максимальное кол-во файлов в месяц',
                     'Факт среднее кол-во файлов в месяц', 'Факт кол-во машин',
@@ -42,10 +42,8 @@ def fact_excel_export(worksheet):
 
         row += 1
 
-    return worksheet
 
-
-def plan_excel_export(worksheet):
+def create_plan_excel_table(worksheet):
     worksheet.merge_range('A1:I1', 'ПЛАН')
 
     column_names = ['Машина', 'Максимальное кол-во файлов в месяц',
@@ -93,13 +91,11 @@ def plan_excel_export(worksheet):
 
         row += 1
 
-    return worksheet
 
+def create_fact_plan_excel_table(worksheet):
+    create_fact_excel_table(worksheet)
 
-def fact_plan_excel_export(worksheet):
-    new_worksheet = fact_excel_export(worksheet)
-
-    new_worksheet.merge_range('H1:M1', 'ПЛАН')
+    worksheet.merge_range('H1:M1', 'ПЛАН')
 
     column_names = ['Кол-во новых УЗ',
                     'Среднее кол-во файлов с учетом новых УЗ в месяц',
@@ -133,5 +129,3 @@ def fact_plan_excel_export(worksheet):
         worksheet.write(row, 12, machine.scarcity_plan)
 
         row += 1
-
-    return worksheet

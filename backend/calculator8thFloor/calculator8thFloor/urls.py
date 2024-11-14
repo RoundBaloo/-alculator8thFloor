@@ -33,6 +33,7 @@ routerHead.register(r'', views.HeadViewSet, basename='head-funcs')
 
 urlpatterns = [
     path('head/', include(routerHead.urls)),
+    path('export/fact/excel', views.export_fact_excel),
     path('data/', include(routerData.urls)),
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     path('admin/', admin.site.urls),
@@ -40,5 +41,4 @@ urlpatterns = [
     path('redoc/', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
-] 
-
+]
