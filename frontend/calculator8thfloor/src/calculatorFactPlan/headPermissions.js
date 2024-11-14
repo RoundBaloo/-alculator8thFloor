@@ -141,13 +141,13 @@ export default function HeadPermissions() {
                                 <strong>Username:</strong> {user.username} <br />
                                 <strong>Email:</strong> {user.email} <br />
                                 <strong>Role:</strong> {user.is_superuser ? 'Руководитель' : 'Работник'}
-                                <button type='button' onClick={() => {
+                                <button className='delete-button' type='button' onClick={() => {
                                     const confirmation = window.confirm('Вы уверены, что хотите удалить этого пользователя?');
                                     if (confirmation) {
                                         deleteThisUser(user.id)
                                     }
                                 }}>удалить</button>
-                                <button type='button' onClick={() => handleChangePassword(user.id)}>изменить пароль</button>
+                                <button className='change-button' type='button' onClick={() => handleChangePassword(user.id)}>изменить пароль</button>
                                 {isChangingPassword && user.id === userIdToChange && (
                                     <div>
                                         <input type='password' placeholder='новый пароль' value={newPassword} onChange={e => setNewPassword(e.target.value)} />

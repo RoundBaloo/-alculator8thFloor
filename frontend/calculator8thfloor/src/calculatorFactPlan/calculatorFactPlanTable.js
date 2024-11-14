@@ -62,7 +62,7 @@ export default function CalculatorFactPlanTable(props) {
         }
 
         return (
-            <tbody>
+            <tbody className='MIDDLE-STYLE'>
                 {data.map((row, index) => (
                     <tr key={index}>
                         <td>{row.machine_type}</td>
