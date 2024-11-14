@@ -1,24 +1,28 @@
-import React from 'react';
+import React, { useState } from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
-import App1 from './App';
 import Login from './generalPages/login'
 import InputData from './calculatorFactPlan/inputData';
 import CalculatorFactPlanTable from './calculatorFactPlan/calculatorFactPlanTable';
 import HeadPermissions from './calculatorFactPlan/headPermissions';
 import reportWebVitals from './reportWebVitals';
-import { BrowserRouter as Router, Routes, Link, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import './styles/styles.css'
 
 
 function App() {
+  const [isAdmin, setIsAdmin] = useState(false);
+
+  const updateIsAdmin = (admin) => {
+    setIsAdmin(admin);
+  }
 
   return (
     <Router>
       <>
           <Routes>
-            <Route exact path="/" element={<Login />} />
-            <Route exact path="/calculatorFactPlan" element={<CalculatorFactPlanTable />} />
+            <Route exact path="/" element={<Login updateIsAdmin={updateIsAdmin} />} />
+            <Route exact path="/calculatorFactPlan" element={<CalculatorFactPlanTable isAdmin={isAdmin} />} />
             <Route exact path="/inputForCalculatorFactPlan" element={<InputData />} />
             <Route exact path="/handleUsersPermisions" element={<HeadPermissions />} />
           </Routes>

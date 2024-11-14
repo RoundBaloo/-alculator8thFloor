@@ -8,7 +8,7 @@ import Logo from '../img/logo.svg';
 import SignIn from '../img/sign-in-icon.svg'
 
 
-const Login = () => {
+const Login = (props) => {
     const api = new ApiDirectory()
     const apiDir = api.getApiUrl()
     const [username, setUsername] = useState('');
@@ -35,6 +35,7 @@ const Login = () => {
                 console.log(response.data.access)
                 saveToken(response.data.access)
                 setIsAuthenticated(true)
+                props.updateIsAdmin(response.data.role == 'admin' ? true : false)
             })
             .catch(error => {
                 console.error('ABOBA ERROR')

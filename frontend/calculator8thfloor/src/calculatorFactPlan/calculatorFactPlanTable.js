@@ -112,9 +112,11 @@ export default function CalculatorFactPlanTable(props) {
                 <Link to='/inputForCalculatorFactPlan'>
                 <button type='button'>Ввести новые данные</button>
                 </Link> 
-                <Link to='/handleUsersPermisions'>
-                <button type='button'>доступ пользователей</button>
-                </Link> 
+                {props.isAdmin && (
+                    <Link to='/handleUsersPermisions'>
+                        <button type='button'>доступ пользователей</button>
+                    </Link>
+                )}
             </body>
         </>
     );
