@@ -14,6 +14,25 @@ export default function CalculatorFactPlanTable(props) {
     const [data, setData] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
 
+
+    const handleDownloadFactExcel = () => {
+        axios.get(`${apiDir}/export/fact/excel`, { responseType: 'blob' })
+          .then(response => {
+            console.log(response.data)
+            const url = window.URL.createObjectURL(new Blob([response.data]));
+            const link = document.createElement('a');
+            link.href = url;
+            link.setAttribute('download', 'fact.xlsx'); // имя файла для скачивания
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
+          })
+          .catch(error => {
+            console.error('Ошибка при загрузке файла:', error);
+          });
+      };
+
+
     useEffect(() => {
         const getCalculatedData = () => {
             setIsLoading(true);
@@ -90,6 +109,10 @@ export default function CalculatorFactPlanTable(props) {
                         </Link>
                         <Link to='/pupu2'><button className='calculator-type-button' type='button'>3 калькулятор</button>
                         </Link>
+                        <button className='calculator-type-button' type='button' onClick={() => {
+                            handleDownloadFactExcel();
+                            console.log('нажал');
+                        }}>экспорт факта</button>
                     </ul>
                 </nav>
             </header>
