@@ -102,7 +102,7 @@ class Calculator:
         new_users_files_dict['79h'] = new_users_files['day']
         new_users_files_dict['180h_night'] = new_users_files['night']
         new_users_files_dict['180h_weekend'] = new_users_files['weekend']
-
+        print(new_users_files_dict)
         return new_users_files_dict
 
     def calc_new_avg_files(
@@ -274,13 +274,14 @@ machines_numbers_dict1 = {
 }
 
 calc = Calculator(machines_numbers_dict1)
-print(calc.get_machines_scarcity('fact', 6539, 1143, 833, 600))
+# print(calc.get_machines_scarcity('fact', 6539, 1143, 833, 600))
 machines_numbers_dict2 = {
     '180h': 2,
     '168h': 4,
     '79h': 4
 }
 calc.set_new_machines_numbers(machines_numbers_dict2)
-print(calc.get_machines_scarcity('fact', 6539, 1143, 833, 600))
-print(calc.get_workloads('fact', 6539, 1143, 833, 600))
+# print(calc.get_machines_scarcity('fact', 6539, 1143, 833, 600))
+# print(calc.get_workloads('fact', 6539, 1143, 833, 600))
+print(calc.get_new_avg_files(6539, 833, 1143, 600))
 print('a')

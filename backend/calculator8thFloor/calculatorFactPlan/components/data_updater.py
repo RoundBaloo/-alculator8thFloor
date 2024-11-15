@@ -57,7 +57,12 @@ class DataUpdater:
                 avg_fact_files_per_month[3], 
                 avg_fact_files_per_month[4], 
                 self.input_data['cnt_UZ'])
-        
+        avg_fact_files_with_new = self.calculator.get_new_avg_files(
+            avg_fact_files_per_month[0], 
+            avg_fact_files_per_month[3], 
+            avg_fact_files_per_month[4], 
+            self.input_data['cnt_UZ'])
+            
         for obj in Data.objects.all():
             obj.month_files = month_files[f'{obj.machine_type}']
             obj.max_files = max_files[f'{obj.machine_type}']
@@ -65,7 +70,7 @@ class DataUpdater:
                 obj.load_fact = load_fact[f'{obj.machine_type}']
                 obj.scarcity_fact = scarcity_fact[f'{obj.machine_type}']
             if (table == 'plan' or table == 'both'):
-                # obj.avg_fact_files_with_new = ...
+                obj.avg_fact_files_with_new = avg_fact_files_with_new[f'{obj.machine_type}']
                 obj.load_plan = load_plan[f'{obj.machine_type}']
                 obj.scarcity_plan = scarcity_plan[f'{obj.machine_type}']
             obj.save()

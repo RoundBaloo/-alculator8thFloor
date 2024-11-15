@@ -191,7 +191,7 @@ export default function HeadPermissions() {
             </div>
             { renderUsers() }
             <Link to='/calculatorFactPlan'>
-                <button type='button'>назад</button>
+                <button className='calculator-type-button' type='button'>назад</button>
             </Link>
         </>
     )

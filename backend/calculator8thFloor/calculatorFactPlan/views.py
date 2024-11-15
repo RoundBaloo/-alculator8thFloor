@@ -146,7 +146,10 @@ def export_fact_excel(request):
     worksheet.title = 'Fact Table'
 
     workbook.close()
-
+    
+    response = FileResponse(open('fact.xlsx', 'rb'))
+    response['ngrok-skip-browser-warning'] = 'skip-browser-warning'
+    
     return FileResponse(open('fact.xlsx', 'rb'))
 
 

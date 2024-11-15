@@ -11,57 +11,139 @@ export default function CalculatorFactPlanTable(props) {
     const api = new ApiDirectory()
     const apiDir = api.getApiUrl()
     const token = getToken();
-    const [data, setData] = useState([]);
+    const [factData, setFactData] = useState([]);
+    const [planData, setPlanData] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
 
 
     const handleDownloadFactExcel = () => {
-        axios.get(`${apiDir}/export/fact/excel`, { responseType: 'blob' })
-          .then(response => {
-            console.log(response.data)
+        axios.get(`${apiDir}/export/fact/excel`, {
+            headers: {
+                'ngrok-skip-browser-warning': 'skip-browser-warning',
+            },
+            responseType: 'blob'
+        })
+        .then(response => {
+            console.log(response)
             const url = window.URL.createObjectURL(new Blob([response.data]));
             const link = document.createElement('a');
             link.href = url;
-            link.setAttribute('download', 'fact.xlsx'); // имя файла для скачивания
+            link.setAttribute('download', 'fact.xlsx');
             document.body.appendChild(link);
             link.click();
             link.remove();
-          })
-          .catch(error => {
+            window.URL.revokeObjectURL(url);
+        })
+        .catch(error => {
             console.error('Ошибка при загрузке файла:', error);
-          });
-      };
+        });
+    };
+
+
+    const handleDownloadPlanExcel = () => {
+        axios.get(`${apiDir}/export/plan/excel`, {
+            headers: {
+                'ngrok-skip-browser-warning': 'skip-browser-warning',
+            },
+            responseType: 'blob'
+        })
+        .then(response => {
+            console.log(response)
+            const url = window.URL.createObjectURL(new Blob([response.data]));
+            const link = document.createElement('a');
+            link.href = url;
+            link.setAttribute('download', 'fact.xlsx');
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
+            window.URL.revokeObjectURL(url);
+        })
+        .catch(error => {
+            console.error('Ошибка при загрузке файла:', error);
+        });
+    };
+
+
+    const handleDownloadFactPlanExcel = () => {
+        axios.get(`${apiDir}/export/fact_plan/excel`, {
+            headers: {
+                'ngrok-skip-browser-warning': 'skip-browser-warning',
+            },
+            responseType: 'blob'
+        })
+        .then(response => {
+            console.log(response)
+            const url = window.URL.createObjectURL(new Blob([response.data]));
+            const link = document.createElement('a');
+            link.href = url;
+            link.setAttribute('download', 'fact.xlsx');
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
+            window.URL.revokeObjectURL(url);
+        })
+        .catch(error => {
+            console.error('Ошибка при загрузке файла:', error);
+        });
+    };
+    
+
+    const getFactCalculatedData = () => {
+        setIsLoading(true);
+        axios.get(`${apiDir}/data/fact/`, {
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json',
+                'ngrok-skip-browser-warning': 'awd',
+            }
+        })
+        .then(response => {
+            console.log(response)
+            setFactData(response.data);
+            setIsLoading(false);
+        })
+        .catch(error => {
+            if (error.response && (error.response.status === 401 || error.response.status === 403)) {
+                    setIsLoading(false);
+                    window.location.href = '/';
+            } else {
+                console.error('ABOBA ERROR', error);
+            }
+        })
+    };
+
+
+    const getPlanCalculatedData = () => {
+        setIsLoading(true);
+        axios.get(`${apiDir}/data/plan/`, {
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json',
+                'ngrok-skip-browser-warning': 'awd',
+            }
+        })
+        .then(response => {
+            console.log(response)
+            setPlanData(response.data);
+            setIsLoading(false);
+        })
+        .catch(error => {
+            if (error.response && (error.response.status === 401 || error.response.status === 403)) {
+                    setIsLoading(false);
+                    window.location.href = '/';
+            } else {
+                console.error('ABOBA ERROR', error);
+            }
+        })
+    };
 
 
     useEffect(() => {
-        const getCalculatedData = () => {
-            setIsLoading(true);
-            axios.get(`${apiDir}/data/fact/`, {
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                    'Content-Type': 'application/json',
-                    'ngrok-skip-browser-warning': 'awd',
-                }
-            })
-            .then(response => {
-                console.log(response)
-                setData(response.data);
-                setIsLoading(false);
-            })
-            .catch(error => {
-                if (error.response && (error.response.status === 401 || error.response.status === 403)) {
-                        setIsLoading(false);
-                        window.location.href = '/';
-                } else {
-                    console.error('ABOBA ERROR', error);
-                }
-            })
-        };
-
-        getCalculatedData();
+        getFactCalculatedData();
+        getPlanCalculatedData();
     }, []);
 
-    const renderTable = () => {
+    const renderFactTable = () => {
         if (isLoading) {
             return (
                 <div className="text-center">
@@ -72,7 +154,7 @@ export default function CalculatorFactPlanTable(props) {
             );
         }
 
-        if (data.length === 0) {
+        if (factData.length === 0) {
             return (
                 <tr>
                     <td colSpan="7" className="text-center">Что-то пошло не так, перезагрузите страницу</td>
@@ -82,7 +164,7 @@ export default function CalculatorFactPlanTable(props) {
 
         return (
             <tbody className='MIDDLE-STYLE'>
-                {data.map((row, index) => (
+                {factData.map((row, index) => (
                     <tr key={index}>
                         <td>{row.machine_type}</td>
                         <td>{row.month_files}</td>
@@ -96,6 +178,46 @@ export default function CalculatorFactPlanTable(props) {
             </tbody>
         );
     };
+
+
+    const renderPlanTable = () => {
+        if (isLoading) {
+            return (
+                <div className="text-center">
+                    <div className="spinner-border" role="status">
+                        <span className="sr-only">Loading...</span>
+                    </div>
+                </div>
+            );
+        }
+
+        if (factData.length === 0) {
+            return (
+                <tr>
+                    <td colSpan="7" className="text-center">Что-то пошло не так, перезагрузите страницу</td>
+                </tr>
+            );
+        }
+
+        return (
+            <tbody className='MIDDLE-STYLE'>
+                {planData.map((row, index) => (
+                    <tr key={index}>
+                        <td>{row.machine_type}</td>
+                        <td>{row.cnt_UZ}</td>
+                        <td>{row.month_files}</td>
+                        <td>{row.avg_fact_files_per_month}</td>
+                        <td>{row.avg_fact_files_with_new}</td>
+                        <td>{row.cnt_machines}</td>
+                        <td>{row.max_files}</td>
+                        <td>{parseInt(row.load_plan * 100)}%</td>
+                        <td>{row.scarcity_plan}</td>
+                    </tr>
+                ))}
+            </tbody>
+        );
+    };
+
 
     return (
         <>
@@ -113,11 +235,20 @@ export default function CalculatorFactPlanTable(props) {
                             handleDownloadFactExcel();
                             console.log('нажал');
                         }}>экспорт факта</button>
+                        <button className='calculator-type-button' type='button' onClick={() => {
+                            handleDownloadPlanExcel();
+                            console.log('нажал');
+                        }}>экспорт плана</button>
+                        <button className='calculator-type-button' type='button' onClick={() => {
+                            handleDownloadFactPlanExcel();
+                            console.log('нажал');
+                        }}>экспорт факта и плана</button>
                     </ul>
                 </nav>
             </header>
 
             <body>
+                <p style={{color: 'whitesmoke'}}>Fact</p>
                 <table className="table table-bordered">
                     <thead className="thead-dark">
                         <tr>
@@ -130,14 +261,31 @@ export default function CalculatorFactPlanTable(props) {
                             <th>Факт нехватки машин</th>
                         </tr>
                     </thead>
-                    {renderTable()}
+                    {renderFactTable()}
+                </table>
+                <p style={{color: 'white'}}>Plan</p>
+                <table className="table table-bordered">
+                    <thead className="thead-dark">
+                        <tr>
+                            <th>тип машины</th>
+                            <th>Кол-во новых UZ</th>
+                            <th>Максимальное <br /> кол-во файлов в месяц</th>
+                            <th>Факт среднего <br /> кол-ва файлов в месяц</th>
+                            <th>С учетом новых UZ</th>
+                            <th>Факт</th>
+                            <th>Факт максимального <br /> кол-ва файлов</th>
+                            <th>Планируемая нагрузка в %</th>
+                            <th>Планируемая нехватки машин</th>
+                        </tr>
+                    </thead>
+                    {renderPlanTable()}
                 </table>
                 <Link to='/inputForCalculatorFactPlan'>
-                <button type='button'>Ввести новые данные</button>
+                <button className='calculator-type-button' type='button'>Ввести новые данные</button>
                 </Link> 
                 {props.isAdmin && (
                     <Link to='/handleUsersPermisions'>
-                        <button type='button'>доступ пользователей</button>
+                        <button className='calculator-type-button' type='button'>доступ пользователей</button>
                     </Link>
                 )}
             </body>
