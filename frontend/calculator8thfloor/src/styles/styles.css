@@ -209,32 +209,100 @@ input[type="number"]::-webkit-inner-spin-button {
     -webkit-appearance: none;
     margin: 0;
 }
+/*-------inputData-end----------*/
 
 /*fast*/
-.table-bordered {
+/* .table-bordered {
     color: white;
     border: solid 1px white;
     border-radius: 10px;
     margin-left: 15px;
     gap: 10px;
 }
+} */
+/*fast*/
 
-.users {
+/*---------superuser-panel------------*/
+.table-wrapper {
+    width: 990px;
+    margin: 0 auto;
     color: white;
+    border: solid 1px white;
+    margin-bottom: 50px;
+    border-collapse: separate;
+    border-radius: 20px;
+    padding: 10px 50px 30px 50px;
+    font-size: 16px;
+    background-color: rgba(24, 24, 24, 0.85);
 }
 
-.delete-button {
-    color: red;
-    margin-left: 15px;
-    border: solid 1px white;
-    border-radius: 10px;
-    padding: 4px;
+.users {
+    margin-bottom: 50px;
+    width: 990px;
+
+}
+
+.users th {
+    padding: 10px;
+    text-align: left;
+}
+
+.users tr {
+    border-bottom: 1px solid transparent; 
+    position: relative; 
+}
+
+.users tr:hover {
+    cursor: pointer;
+}
+
+.users tr::after {
+    content: '';  
+    position: absolute; 
+    left: 0; 
+    bottom: 0; 
+    width: 100%; 
+    height: 1px;
+    background-color: #4a4a4a; 
+}
+
+.users td {
+    padding: 10px;
+    text-align: left;
+}
+
+.edit-buttons {
+    display: flex;
+    justify-content: flex-end;
 }
 
 .change-button {
-    color: orange;
-    margin-left: 15px;
+    margin-right: 20px;
+    visibility: hidden;
+    pointer-events: auto;
+}
+
+.delete-button {
+    visibility: hidden;
+    pointer-events: auto;
+    padding-right: 10px;
+}
+
+.add-user {
+    padding: 10px;
     border: solid 1px white;
     border-radius: 10px;
-    padding: 4px;
+    font-size: 22px;
+    line-height: 22px;  /* Устанавливаем высоту строки равной высоте кнопки */
+    text-align: center;
 }
+
+/*
+.
+.
+. еще будет
+.
+.
+*/
+
+/*---------superuser-panel-end------------*/
