@@ -7,8 +7,10 @@ import '../styles/styles.css';
 import Logo from '../img/logo.svg';
 import DeleteMember from '../img/delete_member_icon.svg';
 import ChangeMember from '../img/change_member_icon.svg';
-import { switchButtons } from './stepaScripts/switchButtons'
+import { switchButtons } from './stepaScripts/switchButtons';
+import { showAddUserForm } from './stepaScripts/showAddUserForm';
 import WhitePlusIcon from '../img/white_plus_icon.svg';
+import OrangePlusIcon from '../img/orange-plus-icon.svg';
 
 
 
@@ -222,7 +224,38 @@ export default function HeadPermissions() {
                                 ))}
                             </tbody>
                         </table>
-                        <button className='add-user'><img src={WhitePlusIcon} style={{marginRight: "20px"}}></img>Добавить пользователя</button>
+                        <button className='add-user' onClick={showAddUserForm}><img src={WhitePlusIcon} style={{ marginRight: "20px" }}></img>Добавить пользователя</button>
+
+                        <div className="register">
+                            <div className='input-inner'>
+                                <input type='text' onChange={e => (setUsername(e.target.value))} />
+                                <small>Логин</small>
+                            </div>
+                            <div className='password-container'>
+                                <div className='input-inner'>
+                                    <input type='password' onChange={e => (setPassword(e.target.value))} />
+                                    <small>Пароль</small>
+                                </div>
+                                <div className='input-inner'>
+                                    <input type='password' onChange={e => (setConfirmedPassword(e.target.value))} />
+                                    <small>Подтвердите пароль</small>
+                                </div>
+                            </div>
+                            <div className='input-inner'>
+                                <input type='email' onChange={e => (setEmail(e.target.value))} />
+                                <small>Почта</small>
+                            </div>
+                            <button type='button' className='confirm-add-user' onClick={() => {
+                                createUser(token, {
+                                    "username": username,
+                                    "email": email,
+                                    "password": password,
+                                },
+                                    getUsers,
+                                    apiDir);
+                            }}><img src={OrangePlusIcon} style={{ marginRight: "15px", paddingTop: "3px" }}></img> Добавить</button>
+                        </div>
+                        
                     </div>
                 </>
             );

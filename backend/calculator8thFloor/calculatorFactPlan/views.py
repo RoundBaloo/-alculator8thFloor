@@ -15,6 +15,7 @@ from .components import export_functions
 # Create your views here.
 
 
+# таблица факта
 class FactDataViewSet(viewsets.ModelViewSet):
     queryset = Data.objects.all()
     serializer_class = FactDataSerializer
