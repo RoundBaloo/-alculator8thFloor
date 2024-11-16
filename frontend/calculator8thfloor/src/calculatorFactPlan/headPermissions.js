@@ -11,6 +11,9 @@ import { switchButtons } from './stepaScripts/switchButtons';
 import { showAddUserForm } from './stepaScripts/showAddUserForm';
 import WhitePlusIcon from '../img/white_plus_icon.svg';
 import OrangePlusIcon from '../img/orange-plus-icon.svg';
+import { hideAddUserButton } from './stepaScripts/hideAddUserButton';
+import { showAddUserButton } from './stepaScripts/showAddUserButton';
+import { hideRegisterForm } from './stepaScripts/hideRegisterForm';
 
 
 
@@ -53,6 +56,7 @@ export default function HeadPermissions() {
     const [userIdToChange, setUserIdToChange] = useState(null);
     const [newPassword, setNewPassword] = useState('');
     const [confirmedNewPassword, setConfirmedNewPassword] = useState('');
+    const [currentUser, setCurrentUser] = useState();
 
     const getUsers = () => {
         setIsLoading(true);
@@ -120,6 +124,7 @@ export default function HeadPermissions() {
                 .then(response => {
                     console.log('Пароль изменен');
                     setIsChangingPassword(false);
+                    showAddUserButton();
                     setNewPassword('');
                     setConfirmedNewPassword('');
                     getUsers(); // Обновляем список пользователей
@@ -178,6 +183,9 @@ export default function HeadPermissions() {
                                 </Link>
                                 <Link to='/pupu2'><button className='calculator-type-button' type='button'>3 калькулятор</button>
                                 </Link>
+                                <Link to='/calculatorFactPlan'>
+                                    <button className='calculator-type-button return-back' type='button'>назад</button>
+                                </Link>
                             </ul>
                         </nav>
                     </header>
@@ -201,14 +209,18 @@ export default function HeadPermissions() {
                                             <button
                                                 className='change-button'
                                                 type='button'
-                                                onClick={() => handleChangePassword(user.id)}><img src={ChangeMember}></img></button>
-                                            {isChangingPassword && user.id === userIdToChange && (
+                                                onClick={() => {
+                                                    handleChangePassword(user.id);
+                                                    setCurrentUser(user);
+                                                    hideAddUserButton();
+                                                }}><img src={ChangeMember}></img></button>
+                                            {/* {isChangingPassword && user.id === userIdToChange && (
                                                 <div>
                                                     <input type='password' placeholder='новый пароль' value={newPassword} onChange={e => setNewPassword(e.target.value)} />
                                                     <input type='password' placeholder='подтвердите пароль' value={confirmedNewPassword} onChange={e => setConfirmedNewPassword(e.target.value)} />
                                                     <button type='button' onClick={submitChangePassword}>Отправить</button>
                                                 </div>
-                                            )}
+                                            )} */}
                                             <button
                                                 className='delete-button'
                                                 type='button'
@@ -220,7 +232,6 @@ export default function HeadPermissions() {
                                                 }}><img src={DeleteMember}></img></button>
                                         </td>
                                     </tr>
-
                                 ))}
                             </tbody>
                         </table>
@@ -253,9 +264,34 @@ export default function HeadPermissions() {
                                 },
                                     getUsers,
                                     apiDir);
+                                hideRegisterForm();
+                                showAddUserButton();
                             }}><img src={OrangePlusIcon} style={{ marginRight: "15px", paddingTop: "3px" }}></img> Добавить</button>
                         </div>
-                        
+
+                        {isChangingPassword && currentUser.id === userIdToChange && (
+                            <div className='change-password-container'>
+                                <div className='input-inner'>
+                                    <input type='text' onChange={e => (setUsername(e.target.value))} />
+                                    <small>Логин</small>
+                                </div>
+
+                                <div className='password-container'>
+                                    <input type='password' placeholder='новый пароль' value={newPassword} onChange={e => setNewPassword(e.target.value)} />
+                                    <input type='password' placeholder='подтвердите пароль' value={confirmedNewPassword} onChange={e => setConfirmedNewPassword(e.target.value)} />
+                                </div>
+
+                                <div className='input-inner'>
+                                    <input type='email' onChange={e => (setEmail(e.target.value))} />
+                                    <small>Почта</small>
+                                </div>
+                                <button className='send-changed-password' type='button' onClick={() => {
+                                    submitChangePassword();
+                                }}>Отправить</button>
+                            </div>
+                        )}
+
+
                     </div>
                 </>
             );
@@ -289,9 +325,9 @@ export default function HeadPermissions() {
                 }}>добавить</button>
             </div> */}
             {renderUsers()}
-            <Link to='/calculatorFactPlan'>
-                <button className='calculator-type-button' type='button'>назад</button>
-            </Link>
+            {/* <Link to='/calculatorFactPlan'>
+                <button className='calculator-type-button return-back' type='button'>назад</button>
+            </Link> */}
         </>
     )
 }

@@ -252,6 +252,10 @@ input[type="number"]::-webkit-inner-spin-button {
     position: relative; 
 }
 
+.users thead tr:hover {
+    cursor: default;
+}
+
 .users tr:hover {
     cursor: pointer;
 }
@@ -299,12 +303,12 @@ input[type="number"]::-webkit-inner-spin-button {
 }
 
 .register {
-    display: none; /*!!!!!!!!!!!!!!!flex*/
+    display: none;
     justify-content: space-between;
     gap: 10px;
 }
 
-.register input {
+.register input, .change-password-container input {
     display: inline-block;
 
     background-color: transparent;
@@ -334,7 +338,7 @@ input[type="number"]::-webkit-inner-spin-button {
     height: 40px;
 }
 
-.confirm-add-user {
+.confirm-add-user, .send-changed-password{
     height: 40px;
     border: solid 1px orange;
     border-radius: 10px;
@@ -346,12 +350,14 @@ input[type="number"]::-webkit-inner-spin-button {
     margin: auto 0;
 }
 
-/*
-.
-.
-. еще будет
-.
-.
-*/
+.change-password-container {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.return-back {
+    margin-left: 300px;
+}
 
 /*---------superuser-panel-end------------*/
