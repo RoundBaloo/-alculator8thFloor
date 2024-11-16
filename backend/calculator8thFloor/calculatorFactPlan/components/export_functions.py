@@ -154,3 +154,38 @@ def create_fact_plan_excel_table(worksheet):
         worksheet.write(row, 13, machine.scarcity_plan)
 
         row += 1
+
+
+def get_context_dictionary():
+    machine_180h_day = Data.objects.get(machine_type='180h_day')
+    machine_168h = Data.objects.get(machine_type='168h')
+    machine_79h = Data.objects.get(machine_type='79h')
+    machine_180h_night = Data.objects.get(machine_type='180h_night')
+    machine_180h_weekend = Data.objects.get(machine_type='180h_weekend')
+
+    sum_max_files = sum(x.max_files for x in Data.objects.all())
+    context = {
+        'sum_max_files': sum_max_files,
+        'avg_day_files': machine_180h_day.avg_fact_files_per_month,
+        'avg_night_weekend_files': machine_180h_night.avg_fact_files_per_month + machine_180h_weekend.avg_fact_files_per_month,
+        'machines_180h': machine_180h_day.cnt_machines,
+        'machines_168h': machine_168h.cnt_machines,
+        'machines_79h': machine_79h.cnt_machines,
+        'fact_day_workload': machine_180h_day.load_fact,
+        'fact_night_workload': machine_180h_night.load_fact,
+        'fact_scarcity_180h': machine_180h_day.scarcity_fact,
+        'fact_scarcity_168h': machine_168h.scarcity_fact,
+        'fact_scarcity_79h': machine_79h.scarcity_fact,
+        'new_users': machine_180h_day.cnt_UZ,
+        'new_day_files': machine_180h_day.new_users_files,
+        'new_night_weekend_files': machine_180h_night.new_users_files + machine_180h_weekend.new_users_files,
+        'new_day_avg_files': machine_180h_day.avg_fact_files_with_new,
+        'new_night_weekend_avg_files': machine_180h_night.avg_fact_files_with_new + machine_180h_weekend.avg_fact_files_with_new,
+        'plan_day_workload': machine_180h_day.load_plan,
+        'plan_night_workload': machine_180h_night.load_plan,
+        'plan_scarcity_180h': machine_180h_day.scarcity_plan,
+        'plan_scarcity_168h': machine_168h.scarcity_plan,
+        'plan_scarcity_79h': machine_79h.scarcity_plan
+    }
+
+    return context

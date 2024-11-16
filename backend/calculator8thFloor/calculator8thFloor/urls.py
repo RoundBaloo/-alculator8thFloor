@@ -37,6 +37,7 @@ urlpatterns = [
     path('export/fact/excel', views.export_fact_excel),
     path('export/plan/excel', views.export_plan_excel),
     path('export/fact_plan/excel', views.export_fact_plan_excel),
+    path('export/report', views.export_report),
     path('data/', include(routerData.urls)),
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     path('admin/', admin.site.urls),

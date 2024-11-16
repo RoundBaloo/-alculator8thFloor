@@ -10,6 +10,7 @@ from rest_framework.permissions import IsAuthenticated
 import json
 from django.http import FileResponse
 import xlsxwriter
+from docxtpl import DocxTemplate
 from .components import export_functions
 # Create your views here.
 
@@ -173,3 +174,13 @@ def export_fact_plan_excel(request):
     workbook.close()
 
     return FileResponse(open('fact_plan.xlsx', 'rb'))
+
+
+def export_report(request):
+    doc = DocxTemplate('шаблон.docx')
+    context = export_functions.get_context_dictionary()
+    print(context)
+    doc.render(context)
+    doc.save('Report.docx')
+
+    return FileResponse(open('Report.docx', 'rb'))
