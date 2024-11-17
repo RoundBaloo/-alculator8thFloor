@@ -209,18 +209,10 @@ input[type="number"]::-webkit-inner-spin-button {
     -webkit-appearance: none;
     margin: 0;
 }
+
 /*-------inputData-end----------*/
 
-/*fast*/
-/* .table-bordered {
-    color: white;
-    border: solid 1px white;
-    border-radius: 10px;
-    margin-left: 15px;
-    gap: 10px;
-}
-} */
-/*fast*/
+
 
 /*---------superuser-panel------------*/
 .table-wrapper {
@@ -248,8 +240,8 @@ input[type="number"]::-webkit-inner-spin-button {
 }
 
 .users tr {
-    border-bottom: 1px solid transparent; 
-    position: relative; 
+    border-bottom: 1px solid transparent;
+    position: relative;
 }
 
 .users thead tr:hover {
@@ -261,13 +253,13 @@ input[type="number"]::-webkit-inner-spin-button {
 }
 
 .users tr::after {
-    content: '';  
-    position: absolute; 
-    left: 0; 
-    bottom: 0; 
-    width: 100%; 
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
     height: 1px;
-    background-color: #4a4a4a; 
+    background-color: #4a4a4a;
 }
 
 .users td {
@@ -308,7 +300,8 @@ input[type="number"]::-webkit-inner-spin-button {
     gap: 10px;
 }
 
-.register input, .change-password-container input {
+.register input,
+.change-password-container input {
     display: inline-block;
 
     background-color: transparent;
@@ -338,7 +331,8 @@ input[type="number"]::-webkit-inner-spin-button {
     height: 40px;
 }
 
-.confirm-add-user, .send-changed-password{
+.confirm-add-user,
+.send-changed-password {
     height: 40px;
     border: solid 1px orange;
     border-radius: 10px;
@@ -361,3 +355,67 @@ input[type="number"]::-webkit-inner-spin-button {
 }
 
 /*---------superuser-panel-end------------*/
+
+
+
+/*----------TABLES--------------*/
+.body-container {
+    width: 1450px;
+    display: flex;
+    flex-direction: column;
+}
+
+.table {
+    color: white;
+    border: solid 1px white;
+    border-radius: 10px;
+    overflow: hidden;
+    border-collapse: separate;
+    border-spacing: 0;
+    font-size: 14px;
+    font-weight: 200;
+}
+
+.table th {
+    text-align: left;
+    padding: 8px;
+
+    font-weight: 500;
+}
+
+.table th,
+.table td {
+    border: 0.1px solid white;
+    text-align: left;
+    padding: 8px;
+}
+
+
+.table-container {
+    display: flex;
+    margin: 0 auto 40px auto;
+}
+
+.vertical-text {
+    color: white;
+    display: flex;
+    flex-direction: column;  
+    justify-content: center; 
+    align-items: center; 
+    margin-right: 20px;
+    font-size: 24px;
+    font-weight: 200;
+}
+
+.vertical-text p {
+    display: block;
+    margin-bottom: 3px;
+}
+
+.fact-table {
+    width: 1080px;
+}
+
+.plan-table {
+    width: 1200px;
+}

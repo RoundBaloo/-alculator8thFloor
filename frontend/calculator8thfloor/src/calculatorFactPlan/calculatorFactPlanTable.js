@@ -23,20 +23,20 @@ export default function CalculatorFactPlanTable(props) {
             },
             responseType: 'blob'
         })
-        .then(response => {
-            console.log(response)
-            const url = window.URL.createObjectURL(new Blob([response.data]));
-            const link = document.createElement('a');
-            link.href = url;
-            link.setAttribute('download', 'fact.xlsx');
-            document.body.appendChild(link);
-            link.click();
-            link.remove();
-            window.URL.revokeObjectURL(url);
-        })
-        .catch(error => {
-            console.error('Ошибка при загрузке файла:', error);
-        });
+            .then(response => {
+                console.log(response)
+                const url = window.URL.createObjectURL(new Blob([response.data]));
+                const link = document.createElement('a');
+                link.href = url;
+                link.setAttribute('download', 'fact.xlsx');
+                document.body.appendChild(link);
+                link.click();
+                link.remove();
+                window.URL.revokeObjectURL(url);
+            })
+            .catch(error => {
+                console.error('Ошибка при загрузке файла:', error);
+            });
     };
 
 
@@ -47,20 +47,20 @@ export default function CalculatorFactPlanTable(props) {
             },
             responseType: 'blob'
         })
-        .then(response => {
-            console.log(response)
-            const url = window.URL.createObjectURL(new Blob([response.data]));
-            const link = document.createElement('a');
-            link.href = url;
-            link.setAttribute('download', 'fact.xlsx');
-            document.body.appendChild(link);
-            link.click();
-            link.remove();
-            window.URL.revokeObjectURL(url);
-        })
-        .catch(error => {
-            console.error('Ошибка при загрузке файла:', error);
-        });
+            .then(response => {
+                console.log(response)
+                const url = window.URL.createObjectURL(new Blob([response.data]));
+                const link = document.createElement('a');
+                link.href = url;
+                link.setAttribute('download', 'fact.xlsx');
+                document.body.appendChild(link);
+                link.click();
+                link.remove();
+                window.URL.revokeObjectURL(url);
+            })
+            .catch(error => {
+                console.error('Ошибка при загрузке файла:', error);
+            });
     };
 
 
@@ -71,22 +71,22 @@ export default function CalculatorFactPlanTable(props) {
             },
             responseType: 'blob'
         })
-        .then(response => {
-            console.log(response)
-            const url = window.URL.createObjectURL(new Blob([response.data]));
-            const link = document.createElement('a');
-            link.href = url;
-            link.setAttribute('download', 'fact.xlsx');
-            document.body.appendChild(link);
-            link.click();
-            link.remove();
-            window.URL.revokeObjectURL(url);
-        })
-        .catch(error => {
-            console.error('Ошибка при загрузке файла:', error);
-        });
+            .then(response => {
+                console.log(response)
+                const url = window.URL.createObjectURL(new Blob([response.data]));
+                const link = document.createElement('a');
+                link.href = url;
+                link.setAttribute('download', 'fact.xlsx');
+                document.body.appendChild(link);
+                link.click();
+                link.remove();
+                window.URL.revokeObjectURL(url);
+            })
+            .catch(error => {
+                console.error('Ошибка при загрузке файла:', error);
+            });
     };
-    
+
 
     const getFactCalculatedData = () => {
         setIsLoading(true);
@@ -97,19 +97,19 @@ export default function CalculatorFactPlanTable(props) {
                 'ngrok-skip-browser-warning': 'awd',
             }
         })
-        .then(response => {
-            console.log(response)
-            setFactData(response.data);
-            setIsLoading(false);
-        })
-        .catch(error => {
-            if (error.response && (error.response.status === 401 || error.response.status === 403)) {
+            .then(response => {
+                console.log(response)
+                setFactData(response.data);
+                setIsLoading(false);
+            })
+            .catch(error => {
+                if (error.response && (error.response.status === 401 || error.response.status === 403)) {
                     setIsLoading(false);
                     window.location.href = '/';
-            } else {
-                console.error('ABOBA ERROR', error);
-            }
-        })
+                } else {
+                    console.error('ABOBA ERROR', error);
+                }
+            })
     };
 
 
@@ -122,19 +122,19 @@ export default function CalculatorFactPlanTable(props) {
                 'ngrok-skip-browser-warning': 'awd',
             }
         })
-        .then(response => {
-            console.log(response)
-            setPlanData(response.data);
-            setIsLoading(false);
-        })
-        .catch(error => {
-            if (error.response && (error.response.status === 401 || error.response.status === 403)) {
+            .then(response => {
+                console.log(response)
+                setPlanData(response.data);
+                setIsLoading(false);
+            })
+            .catch(error => {
+                if (error.response && (error.response.status === 401 || error.response.status === 403)) {
                     setIsLoading(false);
                     window.location.href = '/';
-            } else {
-                console.error('ABOBA ERROR', error);
-            }
-        })
+                } else {
+                    console.error('ABOBA ERROR', error);
+                }
+            })
     };
 
 
@@ -163,7 +163,7 @@ export default function CalculatorFactPlanTable(props) {
         }
 
         return (
-            <tbody className='MIDDLE-STYLE'>
+            <tbody className='fact-table-body'>
                 {factData.map((row, index) => (
                     <tr key={index}>
                         <td>{row.machine_type}</td>
@@ -200,7 +200,7 @@ export default function CalculatorFactPlanTable(props) {
         }
 
         return (
-            <tbody className='MIDDLE-STYLE'>
+            <tbody className='plan-table-body'>
                 {planData.map((row, index) => (
                     <tr key={index}>
                         <td>{row.machine_type}</td>
@@ -215,7 +215,7 @@ export default function CalculatorFactPlanTable(props) {
                     </tr>
                 ))}
             </tbody>
-        );
+        );       
     };
 
 
@@ -223,7 +223,7 @@ export default function CalculatorFactPlanTable(props) {
         <>
             <header>
                 <nav className='inputData-navigation'>
-                    <img src={Logo} width="50" height="50" style={{marginRight: "78px"}}></img>
+                    <img src={Logo} width="50" height="50" style={{ marginRight: "78px" }}></img>
                     <ul>
                         <Link to='/calculatorFactPlan'><button className='calculator-type-button' type='button'>1 калькулятор</button>
                         </Link>
@@ -248,46 +248,67 @@ export default function CalculatorFactPlanTable(props) {
             </header>
 
             <body>
-                <p style={{color: 'whitesmoke'}}>Fact</p>
-                <table className="table table-bordered">
-                    <thead className="thead-dark">
-                        <tr>
-                            <th>тип машины</th>
-                            <th>Максимальное кол-во файлов в месяц</th>
-                            <th>Факт среднего кол-ва файлов в месяц</th>
-                            <th>Факт</th>
-                            <th>Факт максимального кол-ва файлов</th>
-                            <th>Факт нагрузки в %</th>
-                            <th>Факт нехватки машин</th>
-                        </tr>
-                    </thead>
-                    {renderFactTable()}
-                </table>
-                <p style={{color: 'white'}}>Plan</p>
-                <table className="table table-bordered">
-                    <thead className="thead-dark">
-                        <tr>
-                            <th>тип машины</th>
-                            <th>Кол-во новых UZ</th>
-                            <th>Максимальное <br /> кол-во файлов в месяц</th>
-                            <th>Факт среднего <br /> кол-ва файлов в месяц</th>
-                            <th>С учетом новых UZ</th>
-                            <th>Факт</th>
-                            <th>Факт максимального <br /> кол-ва файлов</th>
-                            <th>Планируемая нагрузка в %</th>
-                            <th>Планируемая нехватки машин</th>
-                        </tr>
-                    </thead>
-                    {renderPlanTable()}
-                </table>
-                <Link to='/inputForCalculatorFactPlan'>
-                <button className='calculator-type-button' type='button'>Ввести новые данные</button>
-                </Link> 
-                {props.isAdmin && (
-                    <Link to='/handleUsersPermisions'>
-                        <button className='calculator-type-button' type='button'>доступ пользователей</button>
-                    </Link>
-                )}
+                <div className='body-container'>
+
+                    <div className='table-container'>
+                        <div className='vertical-text'>
+                            <p>Ф</p>
+                            <p>А</p>
+                            <p>К</p>
+                            <p>Т</p>
+                        </div>
+                        <table className="table fact-table">
+                            <thead className="thead-dark">
+                                <tr>
+                                    <th></th>
+                                    <th>Максимальное количество <br />файлов в месяц</th>
+                                    <th>Факт среднего кол-ва <br />файлов в месяц</th>
+                                    <th>Факт количества <br />машин</th>
+                                    <th>Факт максимального <br />количества файлов</th>
+                                    <th>Факт нагрузки в %</th>
+                                    <th>Факт нехватки машин</th>
+                                </tr>
+                            </thead>
+                            {renderFactTable()}
+                        </table>
+                    </div>
+
+                    <div className='table-container'>
+                        <div className='vertical-text'>
+                            <p>П</p>
+                            <p>Л</p>
+                            <p>А</p>
+                            <p>Н</p>
+                        </div>
+                        <table className="table plan-table">
+                            <thead className="thead-dark">
+                                <tr>
+                                    <th></th>
+                                    <th>Кол-во новых UZ</th>
+                                    <th>Мах кол-во <br />файлов в месяц</th>
+                                    <th>Факт среднего <br /> кол-ва файлов в месяц</th>
+                                    <th>С учетом новых UZ</th>
+                                    <th>Факт количества машин</th>
+                                    <th>Факт максимального <br /> кол-ва файлов</th>
+                                    <th>Планируемая нагрузка в %</th>
+                                    <th>Планируемая нехватки машин</th>
+                                </tr>
+                            </thead>
+                            {renderPlanTable()}
+                        </table>
+                    </div>
+                    
+                    <div style={{marginLeft: "140px"}}>
+                        <Link to='/inputForCalculatorFactPlan'>
+                            <button className='calculator-type-button' type='button' style = {{borderColor: "orange"}}>Ввести новые данные</button>
+                        </Link>
+                        {props.isAdmin && (
+                            <Link to='/handleUsersPermisions'>
+                                <button className='calculator-type-button' type='button' style = {{borderColor: "orange"}}>доступ пользователей</button>
+                            </Link>
+                        )}
+                    </div>
+                </div>
             </body>
         </>
     );
