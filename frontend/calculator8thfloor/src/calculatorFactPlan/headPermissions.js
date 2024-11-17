@@ -239,21 +239,21 @@ export default function HeadPermissions() {
 
                         <div className="register">
                             <div className='input-inner'>
-                                <input type='text' onChange={e => (setUsername(e.target.value))} />
+                                <input type='text' value={username} onChange={e => (setUsername(e.target.value))} />
                                 <small>Логин</small>
                             </div>
                             <div className='password-container'>
                                 <div className='input-inner'>
-                                    <input type='password' onChange={e => (setPassword(e.target.value))} />
+                                    <input type='password' value={password} onChange={e => (setPassword(e.target.value))} />
                                     <small>Пароль</small>
                                 </div>
                                 <div className='input-inner'>
-                                    <input type='password' onChange={e => (setConfirmedPassword(e.target.value))} />
+                                    <input type='password' value={confirmedPassword} onChange={e => (setConfirmedPassword(e.target.value))} />
                                     <small>Подтвердите пароль</small>
                                 </div>
                             </div>
                             <div className='input-inner'>
-                                <input type='email' onChange={e => (setEmail(e.target.value))} />
+                                <input type='email' value={email} onChange={e => (setEmail(e.target.value))} />
                                 <small>Почта</small>
                             </div>
                             <button type='button' className='confirm-add-user' onClick={() => {
@@ -266,6 +266,10 @@ export default function HeadPermissions() {
                                     apiDir);
                                 hideRegisterForm();
                                 showAddUserButton();
+                                setUsername('');
+                                setPassword('');
+                                setConfirmedPassword('');
+                                setEmail('');
                             }}><img src={OrangePlusIcon} style={{ marginRight: "15px", paddingTop: "3px" }}></img> Добавить</button>
                         </div>
 

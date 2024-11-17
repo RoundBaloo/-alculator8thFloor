@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Фактические данные</title>
+</head>
+<body>
+    <h1>Фактические данные</h1>
+    
+    {% if fact_data %}
+        <table border="1">
+            <tr>
+                <th>Машина</th>
+                <th>Среднее количество файлов в месяц</th>
+                <th>Фактическое количество файлов</th>
+                <th>Количество машин</th>
+                <th>Максимальное количество файлов</th>
+                <th>Нагрузка (%)</th>
+                <th>Нехватка машин</th>
+            </tr>
+            
+            {% for item in fact_data %}
+                <tr>
+                    <td>{{ item.machine_type }}</td>
+                    {% if item.machine_type == '180h_day' %}
+                    <td rowspan="3">{{ item.avg_fact_files_per_month }}</td>
+                    {% elif item.machine_type == '168h' or item.machine_type == '79h' %}
+                    {% elif item.machine_type == '180h_weekend' or item.machine_type == '180h_night' %}
+                    <td>{{ item.avg_fact_files_per_month }}</td>
+                    {% endif %}
+                    <td>{{ item.month_files }}</td>
+                    <td>{{ item.cnt_machines }}</td>
+                    <td>{{ item.max_files }}</td>
+                    <td>{{ item.load_fact|floatformat:"2" }}%</td>
+                    <td>{{ item.scarcity_fact }}</td>
+                </tr>
+                {% endfor %}
+        </table>
+    {% else %}
+        <p>Данные не доступны.</p>
+    {% endif %}
+</body>
+</html>

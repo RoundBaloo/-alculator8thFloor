@@ -88,6 +88,30 @@ export default function CalculatorFactPlanTable(props) {
     };
 
 
+    const handleDownloadFactPlanWord = () => {
+        axios.get(`${apiDir}/export/report`, {
+            headers: {
+                'ngrok-skip-browser-warning': 'skip-browser-warning',
+            },
+            responseType: 'blob'
+        })
+            .then(response => {
+                console.log(response)
+                const url = window.URL.createObjectURL(new Blob([response.data]));
+                const link = document.createElement('a');
+                link.href = url;
+                link.setAttribute('download', 'report.docx');
+                document.body.appendChild(link);
+                link.click();
+                link.remove();
+                window.URL.revokeObjectURL(url);
+            })
+            .catch(error => {
+                console.error('Ошибка при загрузке файла:', error);
+            });
+    };
+
+
     const getFactCalculatedData = () => {
         setIsLoading(true);
         axios.get(`${apiDir}/data/fact/`, {
@@ -164,17 +188,68 @@ export default function CalculatorFactPlanTable(props) {
 
         return (
             <tbody className='fact-table-body'>
-                {factData.map((row, index) => (
-                    <tr key={index}>
-                        <td>{row.machine_type}</td>
-                        <td>{row.month_files}</td>
-                        <td>{row.avg_fact_files_per_month}</td>
-                        <td>{row.cnt_machines}</td>
-                        <td>{row.max_files}</td>
-                        <td>{parseInt(row.load_fact * 100)}%</td>
-                        <td>{row.scarcity_fact}</td>
-                    </tr>
-                ))}
+                {factData.map((row, index) => {
+                    const is180hDay = row.machine_type.startsWith('180h_day');
+                    const is168h = row.machine_type === '168h';
+                    const is79h = row.machine_type === '79h';
+                    const is180hWeekendOrNight = row.machine_type === '180h_weekend' || row.machine_type === '180h_night';
+                    const is180hWeekend = row.machine_type === '180h_weekend';
+                    const is180hNight = row.machine_type === '180h_night';
+                
+                    return (
+                        <tr key={index}>
+                            <td>{row.machine_type}</td>
+                            {is180hNight ? (
+                                null
+                            ) : is180hWeekend ? (
+                                <td rowSpan={2}>{row.month_files}</td>
+                            ) : (
+                                <td>{row.month_files}</td>
+                            )}
+                            {is180hDay ? (
+                                <td rowSpan={3}>{row.avg_fact_files_per_month}</td>
+                            ) : (is168h || is79h) ? (
+                                // Для 168h и 79h ничего не выводим
+                                null
+                            ) : is180hWeekendOrNight ? (
+                                <td>{row.avg_fact_files_per_month}</td>
+                            ) : (
+                                <td>&nbsp;</td>
+                            )}
+                            {is180hNight ? (
+                                null
+                            ) : is180hWeekend ? (
+                                <td rowSpan={2}>{row.cnt_machines}</td>
+                            ) : (
+                                <td>{row.cnt_machines}</td>
+                            )}
+                            {is180hNight ? (
+                                null
+                            ) : is180hWeekend ? (
+                                <td rowSpan={2}>{row.max_files}</td>
+                            ) : (
+                                <td>{row.max_files}</td>
+                            )}
+                            {is180hDay ? (
+                                <td rowSpan={3}>{parseInt(row.load_fact * 100)}%</td>
+                            ) : (is168h || is79h) ? (
+                                // Для 168h и 79h ничего не выводим
+                                null
+                            ) : is180hWeekendOrNight ? (
+                                <td>{parseInt(row.load_fact * 100)}%</td>
+                            ) : (
+                                <td>&nbsp;</td>
+                            )}  
+                            {is180hNight ? (
+                                null
+                            ) : is180hWeekend ? (
+                                <td rowSpan={2}>{row.scarcity_fact}</td>
+                            ) : (
+                                <td>{row.scarcity_fact}</td>
+                            )}
+                        </tr>
+                    )
+                })}
             </tbody>
         );
     };
@@ -201,19 +276,94 @@ export default function CalculatorFactPlanTable(props) {
 
         return (
             <tbody className='plan-table-body'>
-                {planData.map((row, index) => (
-                    <tr key={index}>
-                        <td>{row.machine_type}</td>
-                        <td>{row.cnt_UZ}</td>
-                        <td>{row.month_files}</td>
-                        <td>{row.avg_fact_files_per_month}</td>
-                        <td>{row.avg_fact_files_with_new}</td>
-                        <td>{row.cnt_machines}</td>
-                        <td>{row.max_files}</td>
-                        <td>{parseInt(row.load_plan * 100)}%</td>
-                        <td>{row.scarcity_plan}</td>
-                    </tr>
-                ))}
+                {planData.map((row, index) => {
+                    const is180hDay = row.machine_type.startsWith('180h_day');
+                    const is168h = row.machine_type === '168h';
+                    const is79h = row.machine_type === '79h';
+                    const is180hWeekendOrNight = row.machine_type === '180h_weekend' || row.machine_type === '180h_night';
+                    const is180hWeekend = row.machine_type === '180h_weekend';
+                    const is180hNight = row.machine_type === '180h_night';
+
+                    return (
+                        <tr key={index}>
+                            <td>{row.machine_type}</td>
+                            
+                            {is180hNight ? (
+                                null
+                            ) : is180hWeekend ? (
+                                <td rowSpan={2}>{row.month_files}</td>
+                            ) : (
+                                <td>{row.month_files}</td>
+                            )}
+
+                            {is180hDay ? (
+                                <td rowSpan={5}>{row.cnt_UZ}</td>
+                            ) : (is168h || is79h || is180hWeekendOrNight) ? (
+                                null
+                            ) : (
+                                <td>&nbsp;</td>
+                            )}
+
+                            {is180hDay ? (
+                                <td rowSpan={3}>{row.avg_fact_files_per_month}</td>
+                            ) : (is168h || is79h) ? (
+                                // Для 168h и 79h ничего не выводим
+                                null
+                            ) : is180hWeekendOrNight ? (
+                                <td>{row.avg_fact_files_per_month}</td>
+                            ) : (
+                                <td>&nbsp;</td>
+                            )}
+
+                            {is180hDay ? (
+                                <td rowSpan={3}>{row.avg_fact_files_with_new}</td>
+                            ) : (is168h || is79h) ? (
+                                // Для 168h и 79h ничего не выводим
+                                null
+                            ) : is180hWeekendOrNight ? (
+                                <td>{row.avg_fact_files_per_month}</td>
+                            ) : (
+                                <td>&nbsp;</td>
+                            )}
+
+                            {is180hNight ? (
+                                null
+                            ) : is180hWeekend ? (
+                                <td rowSpan={2}>{row.cnt_machines}</td>
+                            ) : (
+                                <td>{row.cnt_machines}</td>
+                            )}
+
+                            {is180hNight ? (
+                                null
+                            ) : is180hWeekend ? (
+                                <td rowSpan={2}>{row.max_files}</td>
+                            ) : (
+                                <td>{row.max_files}</td>
+                            )}
+
+                            {is180hDay ? (
+                                <td rowSpan={3}>{parseInt(row.load_plan * 100)}%</td>
+                            ) : (is168h || is79h) ? (
+                                // Для 168h и 79h ничего не выводим
+                                null
+                            ) : is180hWeekendOrNight ? (
+                                <td>{parseInt(row.load_plan * 100)}%</td>
+                            ) : (
+                                <td>&nbsp;</td>
+                            )}      
+
+                            {is180hNight ? (
+                                null
+                            ) : is180hWeekend ? (
+                                <td rowSpan={2}>{row.scarcity_plan}</td>
+                            ) : (
+                                <td>{row.scarcity_plan}</td>
+                            )}
+
+                        </tr>
+                    );
+                })}
             </tbody>
         );       
     };
@@ -243,6 +393,10 @@ export default function CalculatorFactPlanTable(props) {
                             handleDownloadFactPlanExcel();
                             console.log('нажал');
                         }}>экспорт факта и плана</button>
+                        <button className='calculator-type-button' type='button' onClick={() => {
+                            handleDownloadFactPlanWord();
+                            console.log('нажал');
+                        }}>экспорт в ворд</button>
                     </ul>
                 </nav>
             </header>
@@ -284,8 +438,8 @@ export default function CalculatorFactPlanTable(props) {
                             <thead className="thead-dark">
                                 <tr>
                                     <th></th>
-                                    <th>Кол-во новых UZ</th>
                                     <th>Мах кол-во <br />файлов в месяц</th>
+                                    <th>Кол-во новых UZ</th>
                                     <th>Факт среднего <br /> кол-ва файлов в месяц</th>
                                     <th>С учетом новых UZ</th>
                                     <th>Факт количества машин</th>

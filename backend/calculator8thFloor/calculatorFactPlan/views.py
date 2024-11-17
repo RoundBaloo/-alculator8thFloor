@@ -20,7 +20,7 @@ class FactDataViewSet(viewsets.ModelViewSet):
     queryset = Data.objects.all()
     serializer_class = FactDataSerializer
 
-    permission_classes = [IsAuthenticated]
+    # permission_classes = [IsAuthenticated]
 
     @swagger_auto_schema(operation_summary="Get all calculated data",
                          operation_description="Returns a list of all calculated data entries")
@@ -185,3 +185,21 @@ def export_report(request):
     doc.save('Report.docx')
 
     return FileResponse(open('Report.docx', 'rb'))
+
+
+from django.shortcuts import render
+import requests
+
+def fact_data_view(request):
+    # URL вашего API
+    api_url = 'http://localhost:8000/data/fact/'
+    
+    # Отправляем GET-запрос к API
+    response = requests.get(api_url)
+    print(response.status_code)
+    
+    if response.status_code == 200:
+        fact_data = response.json()
+        return render(request, 'calculatorFactPlan/fact_data.html', {'fact_data': fact_data})
+    else:
+        return render(request, 'calculatorFactPlan/error.html', {'error': 'Ошибка при получении данных'})
