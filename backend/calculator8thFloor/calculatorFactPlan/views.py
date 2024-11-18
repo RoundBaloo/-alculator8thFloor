@@ -12,6 +12,8 @@ from django.http import FileResponse
 import xlsxwriter
 from docxtpl import DocxTemplate
 from .components import export_functions
+from spire.doc import *
+from spire.doc.common import *
 # Create your views here.
 
 
@@ -177,7 +179,7 @@ def export_fact_plan_excel(request):
     return FileResponse(open('fact_plan.xlsx', 'rb'))
 
 
-def export_report(request):
+def export_report_docx(request):
     doc = DocxTemplate('шаблон.docx')
     context = export_functions.get_context_dictionary()
     print(context)
@@ -187,17 +189,45 @@ def export_report(request):
     return FileResponse(open('Report.docx', 'rb'))
 
 
+def export_report_pdf(request):
+    doc = DocxTemplate('шаблон.docx')
+    context = export_functions.get_context_dictionary()
+    print(context)
+    doc.render(context)
+    doc.save('Report.docx')
+
+    document = Document()
+    # Load a Doc or Docx file
+    document.LoadFromFile('Report.docx')
+
+    # Create a ToPdfParameterList object
+    parameter = ToPdfParameterList()
+
+    # Disable hyperlinks in generated document
+    parameter.DisableLink = True
+
+    # Embed fonts in generated document
+    parameter.IsEmbeddedAllFonts = True
+
+    # Save the Word document to PDF
+    document.SaveToFile("Report.pdf", parameter)
+    document.Close()
+
+    return FileResponse(open('Report.pdf', 'rb'))
+
+
 from django.shortcuts import render
 import requests
+
 
 def fact_data_view(request):
     # URL вашего API
     api_url = 'http://localhost:8000/data/fact/'
-    
+
     # Отправляем GET-запрос к API
     response = requests.get(api_url)
     print(response.status_code)
-    
+
     if response.status_code == 200:
         fact_data = response.json()
         return render(request, 'calculatorFactPlan/fact_data.html', {'fact_data': fact_data})

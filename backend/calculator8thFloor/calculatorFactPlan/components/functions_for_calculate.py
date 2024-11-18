@@ -189,11 +189,11 @@ class Calculator:
                 new_users_number
             )
 
-        workloads_dict['180h_day'] = self.value_dict[type]['day']
-        workloads_dict['168h'] = self.value_dict[type]['day']
-        workloads_dict['79h'] = self.value_dict[type]['day']
-        workloads_dict['180h_night'] = self.value_dict[type]['180h_night']
-        workloads_dict['180h_weekend'] = self.value_dict[type]['180h_weekend']
+        workloads_dict['180h_day'] = self.value_dict[type]['day'] * 100
+        workloads_dict['168h'] = self.value_dict[type]['day'] * 100
+        workloads_dict['79h'] = self.value_dict[type]['day'] * 100
+        workloads_dict['180h_night'] = self.value_dict[type]['180h_night'] * 100
+        workloads_dict['180h_weekend'] = self.value_dict[type]['180h_weekend'] * 100
 
         return workloads_dict
 

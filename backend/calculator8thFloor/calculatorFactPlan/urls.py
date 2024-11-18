@@ -26,7 +26,8 @@ urlpatterns = [
     path('export/fact/excel', views.export_fact_excel),
     path('export/plan/excel', views.export_plan_excel),
     path('export/fact_plan/excel', views.export_fact_plan_excel),
-    path('export/report', views.export_report),
+    path('export/report/docx', views.export_report_docx),
+    path('export/report/pdf', views.export_report_pdf),
     path('data/', include(routerData.urls)),
     path('fact-data/', views.fact_data_view, name='fact_data'),
 ]
