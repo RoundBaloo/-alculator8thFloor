@@ -32,7 +32,7 @@ const InputData = (props) => {
 
 
     function getInputData(token) {
-        axios.get(`${apiDir}/data/input/`,
+        axios.get(`${apiDir}/calculatorFactPlan/data/input/`,
             {
                 headers: {
                     'Authorization': `Bearer ${token}`,
@@ -88,7 +88,7 @@ const InputData = (props) => {
     }, []);
 
     const updateInputData = (token, inputData, apiDir, table) => {
-        axios.post(`${apiDir}/data/input/`,
+        axios.post(`${apiDir}/calculatorFactPlan/data/input/`,
             null,
             {
                 params: {

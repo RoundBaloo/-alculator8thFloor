@@ -17,7 +17,7 @@ export default function CalculatorFactPlanTable(props) {
 
 
     const handleDownloadFactExcel = () => {
-        axios.get(`${apiDir}/export/fact/excel`, {
+        axios.get(`${apiDir}/calculatorFactPlan/export/fact/excel`, {
             headers: {
                 'ngrok-skip-browser-warning': 'skip-browser-warning',
             },
@@ -41,7 +41,7 @@ export default function CalculatorFactPlanTable(props) {
 
 
     const handleDownloadPlanExcel = () => {
-        axios.get(`${apiDir}/export/plan/excel`, {
+        axios.get(`${apiDir}/calculatorFactPlan/export/plan/excel`, {
             headers: {
                 'ngrok-skip-browser-warning': 'skip-browser-warning',
             },
@@ -65,7 +65,7 @@ export default function CalculatorFactPlanTable(props) {
 
 
     const handleDownloadFactPlanExcel = () => {
-        axios.get(`${apiDir}/export/fact_plan/excel`, {
+        axios.get(`${apiDir}/calculatorFactPlan/export/fact_plan/excel`, {
             headers: {
                 'ngrok-skip-browser-warning': 'skip-browser-warning',
             },
@@ -89,7 +89,7 @@ export default function CalculatorFactPlanTable(props) {
 
 
     const handleDownloadFactPlanWord = () => {
-        axios.get(`${apiDir}/export/report`, {
+        axios.get(`${apiDir}/calculatorFactPlan/export/report`, {
             headers: {
                 'ngrok-skip-browser-warning': 'skip-browser-warning',
             },
@@ -114,7 +114,7 @@ export default function CalculatorFactPlanTable(props) {
 
     const getFactCalculatedData = () => {
         setIsLoading(true);
-        axios.get(`${apiDir}/data/fact/`, {
+        axios.get(`${apiDir}/calculatorFactPlan/data/fact/`, {
             headers: {
                 'Authorization': `Bearer ${token}`,
                 'Content-Type': 'application/json',
@@ -139,7 +139,7 @@ export default function CalculatorFactPlanTable(props) {
 
     const getPlanCalculatedData = () => {
         setIsLoading(true);
-        axios.get(`${apiDir}/data/plan/`, {
+        axios.get(`${apiDir}/calculatorFactPlan/data/plan/`, {
             headers: {
                 'Authorization': `Bearer ${token}`,
                 'Content-Type': 'application/json',
@@ -189,6 +189,7 @@ export default function CalculatorFactPlanTable(props) {
         return (
             <tbody className='fact-table-body'>
                 {factData.map((row, index) => {
+                    console.log(row.machine_name)
                     const is180hDay = row.machine_type.startsWith('180h_day');
                     const is168h = row.machine_type === '168h';
                     const is79h = row.machine_type === '79h';
@@ -198,7 +199,7 @@ export default function CalculatorFactPlanTable(props) {
                 
                     return (
                         <tr key={index}>
-                            <td>{row.machine_type}</td>
+                            <td>{row.machine_name}</td>
                             {is180hNight ? (
                                 null
                             ) : is180hWeekend ? (
@@ -286,7 +287,7 @@ export default function CalculatorFactPlanTable(props) {
 
                     return (
                         <tr key={index}>
-                            <td>{row.machine_type}</td>
+                            <td>{row.machine_name}</td>
                             
                             {is180hNight ? (
                                 null

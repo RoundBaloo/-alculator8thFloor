@@ -12,6 +12,7 @@ class FactDataSerializer(serializers.HyperlinkedModelSerializer):
         model = Data
         fields = [
             'machine_type',
+            'machine_name',
             'month_files',
             'avg_fact_files_per_month',
             'cnt_machines',
@@ -29,6 +30,7 @@ class PlanDataSerializer(serializers.HyperlinkedModelSerializer):
         model = Data
         fields = [
             'machine_type',
+            'machine_name',
             'month_files',
             'avg_fact_files_per_month',
             'avg_fact_files_with_new',

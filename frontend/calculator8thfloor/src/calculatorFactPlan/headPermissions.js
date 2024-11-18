@@ -18,7 +18,7 @@ import { hideRegisterForm } from './stepaScripts/hideRegisterForm';
 
 
 const createUser = (token, createUserInformatiom, getUsersFunction, apiDir) => {
-    axios.post(`${apiDir}/head/`,
+    axios.post(`${apiDir}/calculatorFactPlan/head/`,
         JSON.stringify({
             "username": `${createUserInformatiom.username}`,
             "email": `${createUserInformatiom.email}`,
@@ -60,7 +60,7 @@ export default function HeadPermissions() {
 
     const getUsers = () => {
         setIsLoading(true);
-        axios.get(`${apiDir}/head/`, {
+        axios.get(`${apiDir}/calculatorFactPlan/head/`, {
             headers: {
                 'Authorization': `Bearer ${token}`,
                 'Content-Type': 'application/json',
@@ -85,7 +85,7 @@ export default function HeadPermissions() {
 
 
     const deleteThisUser = (id) => {
-        axios.delete(`${apiDir}/head/${id}/`,
+        axios.delete(`${apiDir}/calculatorFactPlan/head/${id}/`,
             {
                 headers: {
                     'Authorization': `Bearer ${token}`,
@@ -225,9 +225,13 @@ export default function HeadPermissions() {
                                                 className='delete-button'
                                                 type='button'
                                                 onClick={() => {
-                                                    const confirmation = window.confirm('Вы уверены, что хотите удалить этого пользователя?');
-                                                    if (confirmation) {
-                                                        deleteThisUser(user.id)
+                                                    if (!user.is_superuser){
+                                                        const confirmation = window.confirm('Вы уверены, что хотите удалить этого пользователя?');
+                                                        if (confirmation) {
+                                                            deleteThisUser(user.id)
+                                                        }
+                                                    } else {
+                                                        alert('Невозможно удалить руководителя')
                                                     }
                                                 }}><img src={DeleteMember}></img></button>
                                         </td>
