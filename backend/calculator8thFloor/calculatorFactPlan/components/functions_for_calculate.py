@@ -37,13 +37,13 @@ class Calculator:
         self.value_dict['180h_night'][key] = kwargs['180h']
         self.value_dict['180h_weekend'][key] = kwargs['180h']
 
-    def calc_scarcity(self, machine_name, workload, files_number):
+    def calc_scarcity(self, machine_name, workload, files_number, need_workload):
         machine = self.value_dict[machine_name]
 
-        if workload <= 0.86:
+        if workload <= need_workload:
             return 0
         else:
-            need_add_files = files_number * (workload - 0.86) / 0.86
+            need_add_files = files_number * (workload - need_workload) / need_workload
             scarcity = need_add_files / machine['month_files']
             return scarcity
 
@@ -102,7 +102,7 @@ class Calculator:
         new_users_files_dict['79h'] = new_users_files['day']
         new_users_files_dict['180h_night'] = new_users_files['night']
         new_users_files_dict['180h_weekend'] = new_users_files['weekend']
-        print(new_users_files_dict)
+
         return new_users_files_dict
 
     def calc_new_avg_files(
@@ -200,7 +200,7 @@ class Calculator:
     def calculate_machines_scarcity(
         self, type,
         avg_day_files, avg_weekends_files, avg_night_files,
-        new_users_number
+        new_users_number, need_workload
     ):  # type = plan or fact
         if type not in self.value_dict:
             self.calculate_workloads(
@@ -218,10 +218,12 @@ class Calculator:
         machine_79hour = self.value_dict['79h']
 
         night_scarcity = math.ceil(self.calc_scarcity(
-            '180h_night', workload['180h_night'], night_machine['max_files']
+            '180h_night', workload['180h_night'],
+            night_machine['max_files'], need_workload
         ))
         weekends_scarcity = math.ceil(self.calc_scarcity(
-            '180h_weekend', workload['180h_weekend'], weekends_machine['max_files']
+            '180h_weekend', workload['180h_weekend'],
+            weekends_machine['max_files'], need_workload
         ))
         need_180hour_machines = max(night_scarcity, weekends_scarcity)
 
@@ -235,12 +237,12 @@ class Calculator:
         new_add_files1 = machine_180hour[scarcity_key] * machine_180hour['month_files']
         new_day_workload1 = avg_day_files / (day_files + new_add_files1)
         machine_168hour[scarcity_key] = round(self.calc_scarcity(
-            '168h', new_day_workload1, day_files
+            '168h', new_day_workload1, day_files, need_workload
         ))
 
         new_add_files2 = machine_168hour[scarcity_key] * machine_168hour['month_files']
         new_day_workload2 = avg_day_files / (day_files + new_add_files1 + new_add_files2)
-        if new_day_workload2 <= 0.86:
+        if new_day_workload2 <= need_workload:
             machine_79hour[scarcity_key] = 0
         else:
             machine_79hour[scarcity_key] = 1
@@ -248,7 +250,7 @@ class Calculator:
     def get_machines_scarcity(
         self, type,
         avg_day_files, avg_weekends_files, avg_night_files,
-        new_users_number
+        new_users_number, need_workload=0.86
     ):  # type = plan or fact.
         scarcities_dict = dict()
         scarcity_key = type + '_scarcity'
@@ -257,7 +259,7 @@ class Calculator:
             self.calculate_machines_scarcity(
                 type,
                 avg_day_files, avg_weekends_files, avg_night_files,
-                new_users_number
+                new_users_number, need_workload
             )
 
         for name in Machine.names:
@@ -274,14 +276,13 @@ machines_numbers_dict1 = {
 }
 
 calc = Calculator(machines_numbers_dict1)
-# print(calc.get_machines_scarcity('fact', 6539, 1143, 833, 600))
+print(calc.get_machines_scarcity('fact', 6539, 1143, 833, 600))
 machines_numbers_dict2 = {
     '180h': 2,
     '168h': 4,
     '79h': 4
 }
 calc.set_new_machines_numbers(machines_numbers_dict2)
-# print(calc.get_machines_scarcity('fact', 6539, 1143, 833, 600))
-# print(calc.get_workloads('fact', 6539, 1143, 833, 600))
-print(calc.get_new_avg_files(6539, 833, 1143, 600))
+print(calc.get_machines_scarcity('fact', 6539, 1143, 833, 600, 0.5))
+print(calc.get_workloads('fact', 6539, 1143, 833, 600))
 print('a')
