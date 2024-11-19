@@ -42,7 +42,7 @@ const createUser = (token, createUserInformatiom, getUsersFunction, apiDir) => {
 }
 
 
-export default function HeadPermissions() {
+export default function HeadPermissions(props) {
     const api = new ApiDirectory()
     const apiDir = api.getApiUrl()
     const token = getToken();
@@ -177,14 +177,20 @@ export default function HeadPermissions() {
                         <nav className='inputData-navigation'>
                             <img src={Logo} width="50" height="50" style={{ marginRight: "78px" }}></img>
                             <ul>
-                                <Link to='/calculatorFactPlan'><button className='calculator-type-button' type='button'>1 калькулятор</button>
+                                <Link to='/calculatorFactPlan'>
+                                    <button className={`calculator-type-button ${props.currentCalculator !== 'calculatorFactPlan' ? 'nav-calculator-type-button' : ''}`} 
+                                    type='button'>1 калькулятор</button>
                                 </Link>
-                                <Link to='/pupu1'><button className='calculator-type-button' type='button'>2 калькулятор</button>
+                                <Link to='/pupu1'>
+                                    <button className={`calculator-type-button ${props.currentCalculator !== 'calculator1' ? 'nav-calculator-type-button' : ''}`}
+                                    type='button'>2 калькулятор</button>
                                 </Link>
-                                <Link to='/pupu2'><button className='calculator-type-button' type='button'>3 калькулятор</button>
+                                <Link to='/pupu2'>
+                                    <button className={`calculator-type-button ${props.currentCalculator !== 'calculator2' ? 'nav-calculator-type-button' : ''}`}
+                                    type='button'>3 калькулятор</button>
                                 </Link>
                                 <Link to='/calculatorFactPlan'>
-                                    <button className='calculator-type-button return-back' type='button'>назад</button>
+                                    <button className='calculator-type-button return-back' type='button'>Назад</button>
                                 </Link>
                             </ul>
                         </nav>

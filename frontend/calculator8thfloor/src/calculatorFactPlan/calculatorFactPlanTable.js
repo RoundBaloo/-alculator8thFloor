@@ -89,7 +89,7 @@ export default function CalculatorFactPlanTable(props) {
 
 
     const handleDownloadFactPlanWord = () => {
-        axios.get(`${apiDir}/calculatorFactPlan/export/report`, {
+        axios.get(`${apiDir}/calculatorFactPlan/export/report/docx`, {
             headers: {
                 'ngrok-skip-browser-warning': 'skip-browser-warning',
             },
@@ -101,6 +101,30 @@ export default function CalculatorFactPlanTable(props) {
                 const link = document.createElement('a');
                 link.href = url;
                 link.setAttribute('download', 'report.docx');
+                document.body.appendChild(link);
+                link.click();
+                link.remove();
+                window.URL.revokeObjectURL(url);
+            })
+            .catch(error => {
+                console.error('Ошибка при загрузке файла:', error);
+            });
+    };
+
+
+    const handleDownloadFactPlanPDF = () => {
+        axios.get(`${apiDir}/calculatorFactPlan/export/report/pdf`, {
+            headers: {
+                'ngrok-skip-browser-warning': 'skip-browser-warning',
+            },
+            responseType: 'blob'
+        })
+            .then(response => {
+                console.log(response)
+                const url = window.URL.createObjectURL(new Blob([response.data]));
+                const link = document.createElement('a');
+                link.href = url;
+                link.setAttribute('download', 'report.pdf');
                 document.body.appendChild(link);
                 link.click();
                 link.remove();
@@ -232,12 +256,12 @@ export default function CalculatorFactPlanTable(props) {
                                 <td>{row.max_files}</td>
                             )}
                             {is180hDay ? (
-                                <td rowSpan={3}>{parseInt(row.load_fact * 100)}%</td>
+                                <td rowSpan={3}>{row.load_fact}%</td>
                             ) : (is168h || is79h) ? (
                                 // Для 168h и 79h ничего не выводим
                                 null
                             ) : is180hWeekendOrNight ? (
-                                <td>{parseInt(row.load_fact * 100)}%</td>
+                                <td>{row.load_fact}%</td>
                             ) : (
                                 <td>&nbsp;</td>
                             )}  
@@ -344,12 +368,12 @@ export default function CalculatorFactPlanTable(props) {
                             )}
 
                             {is180hDay ? (
-                                <td rowSpan={3}>{parseInt(row.load_plan * 100)}%</td>
+                                <td rowSpan={3}>{row.load_plan}%</td>
                             ) : (is168h || is79h) ? (
                                 // Для 168h и 79h ничего не выводим
                                 null
                             ) : is180hWeekendOrNight ? (
-                                <td>{parseInt(row.load_plan * 100)}%</td>
+                                <td>{row.load_plan}%</td>
                             ) : (
                                 <td>&nbsp;</td>
                             )}      
@@ -376,11 +400,17 @@ export default function CalculatorFactPlanTable(props) {
                 <nav className='inputData-navigation'>
                     <img src={Logo} width="50" height="50" style={{ marginRight: "78px" }}></img>
                     <ul>
-                        <Link to='/calculatorFactPlan'><button className='calculator-type-button' type='button'>1 калькулятор</button>
+                        <Link to='/calculatorFactPlan'>
+                            <button className={`calculator-type-button ${props.currentCalculator !== 'calculatorFactPlan' ? 'nav-calculator-type-button' : ''}`} 
+                            type='button'>1 калькулятор</button>
                         </Link>
-                        <Link to='/pupu1'><button className='calculator-type-button' type='button'>2 калькулятор</button>
+                        <Link to='/pupu1'>
+                            <button className={`calculator-type-button ${props.currentCalculator !== 'calculator1' ? 'nav-calculator-type-button' : ''}`}
+                            type='button'>2 калькулятор</button>
                         </Link>
-                        <Link to='/pupu2'><button className='calculator-type-button' type='button'>3 калькулятор</button>
+                        <Link to='/pupu2'>
+                            <button className={`calculator-type-button ${props.currentCalculator !== 'calculator2' ? 'nav-calculator-type-button' : ''}`}
+                            type='button'>3 калькулятор</button>
                         </Link>
                         <button className='calculator-type-button' type='button' onClick={() => {
                             handleDownloadFactExcel();
@@ -398,6 +428,10 @@ export default function CalculatorFactPlanTable(props) {
                             handleDownloadFactPlanWord();
                             console.log('нажал');
                         }}>экспорт в ворд</button>
+                        <button className='calculator-type-button' type='button' onClick={() => {
+                            handleDownloadFactPlanPDF();
+                            console.log('нажал');
+                        }}>экспорт в пдф</button>
                     </ul>
                 </nav>
             </header>
@@ -455,11 +489,11 @@ export default function CalculatorFactPlanTable(props) {
                     
                     <div style={{marginLeft: "140px"}}>
                         <Link to='/inputForCalculatorFactPlan'>
-                            <button className='calculator-type-button' type='button' style = {{borderColor: "orange"}}>Ввести новые данные</button>
+                            <button className='calculator-type-button' type='button'>Ввести новые данные</button>
                         </Link>
                         {props.isAdmin && (
                             <Link to='/handleUsersPermisions'>
-                                <button className='calculator-type-button' type='button' style = {{borderColor: "orange"}}>доступ пользователей</button>
+                                <button className='calculator-type-button' type='button'>Управление доступом</button>
                             </Link>
                         )}
                     </div>

@@ -102,12 +102,21 @@ input:-webkit-autofill:active {
 .calculator-type-button {
     width: 180px;
     height: 40px;
-    border: 1px solid white;
     border-radius: 10px;
     background-color: rgba(24, 24, 24, 0.7);
     color: white;
     margin-right: 20px;
     text-align: center;
+    border: 2px solid white;
+    transition: border-color 0.2s ease;
+}
+
+.nav-calculator-type-button {
+    border: 0px solid white;
+}
+
+.calculator-type-button:hover {
+    border-color: orange;
 }
 
 .input-data-main-form {
@@ -199,9 +208,14 @@ input:-webkit-autofill:active {
 .calculate-button {
     width: 300px;
     height: 50px;
-    border: 1px solid orange;
+    border: 2px solid white;
     border-radius: 10px;
     text-align: center;
+    transition: border-color 0.2s ease;
+}
+
+.calculate-button:hover {
+    border-color: orange;
 }
 
 input[type="number"]::-webkit-outer-spin-button,
@@ -286,12 +300,17 @@ input[type="number"]::-webkit-inner-spin-button {
 
 .add-user {
     padding: 10px;
-    border: solid 1px white;
+    border: solid 2px white;
     border-radius: 10px;
     font-size: 18px;
     line-height: 22px;
     display: flex;
     align-items: center;
+    transition: border-color 0.2s ease;
+}
+
+.add-user:hover {
+    border-color: orange;
 }
 
 .register {
@@ -334,7 +353,7 @@ input[type="number"]::-webkit-inner-spin-button {
 .confirm-add-user,
 .send-changed-password {
     height: 40px;
-    border: solid 1px orange;
+    border: solid 2px white;
     border-radius: 10px;
     padding: 0 10px;
     display: flex;
@@ -342,6 +361,12 @@ input[type="number"]::-webkit-inner-spin-button {
     font-size: 22px;
     line-height: 20px;
     margin: auto 0;
+    transition: border-color 0.2s ease;
+}
+
+.confirm-add-user:hover,
+.send-changed-password:hover {
+    border-color: orange;
 }
 
 .change-password-container {

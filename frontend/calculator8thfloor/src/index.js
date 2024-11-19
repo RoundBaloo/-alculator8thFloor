@@ -12,6 +12,7 @@ import './styles/styles.css'
 
 function App() {
   const [isAdmin, setIsAdmin] = useState(false);
+  const [currentCalculator, setCurrentCalculator] = useState('calculatorFactPlan')
 
   const updateIsAdmin = (admin) => {
     setIsAdmin(admin);
@@ -22,9 +23,13 @@ function App() {
       <>
           <Routes>
             <Route exact path="/" element={<Login updateIsAdmin={updateIsAdmin} />} />
-            <Route exact path="/calculatorFactPlan" element={<CalculatorFactPlanTable isAdmin={isAdmin} />} />
-            <Route exact path="/inputForCalculatorFactPlan" element={<InputData />} />
-            <Route exact path="/handleUsersPermisions" element={<HeadPermissions />} />
+            <Route exact path="/calculatorFactPlan" element={<CalculatorFactPlanTable isAdmin={isAdmin}
+                                                                                      currentCalculator={currentCalculator}
+                                                                                      setCurrentCalculator={setCurrentCalculator} />} />
+            <Route exact path="/inputForCalculatorFactPlan" element={<InputData currentCalculator={currentCalculator}
+                                                                                setCurrentCalculator={setCurrentCalculator} />} />
+            <Route exact path="/handleUsersPermisions" element={<HeadPermissions currentCalculator={currentCalculator}
+                                                                                  setCurrentCalculator={setCurrentCalculator}/>} />
           </Routes>
       </>
     </Router>
