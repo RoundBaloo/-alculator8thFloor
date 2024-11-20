@@ -3,12 +3,28 @@
     margin: 0;
 }
 
+@font-face {
+    font-family: 'Aeonik Pro';
+    src: url('../font/AeonikPro-Light.otf') format('opentype');
+    font-weight: normal;
+}
+
+@font-face {
+    font-family: 'Aeonik Pro';
+    src: url('../font/AeonikPro-Regular.otf') format('opentype');
+    font-weight: bold;
+}
+
+
 body {
     background-image: url('../img/Card.png');
     background-repeat: no-repeat;
     background-attachment: fixed;
     background-size: cover;
     background-position: center;
+    font-family: 'Aeonik Pro', sans-serif;
+    font-weight: bold;
+    letter-spacing: 1px;
 }
 
 button {
@@ -62,7 +78,7 @@ a:hover {
 .password-input::placeholder,
 .login-input::placeholder {
     font-size: 18px;
-    color: orange;
+    color: #F59D0E;
 }
 
 
@@ -99,32 +115,86 @@ input:-webkit-autofill:active {
     margin-bottom: 40px;
 }
 
+.headerButtons{
+    display: flex;
+    width: 1250px;
+}
+
 .calculator-type-button {
-    width: 180px;
+    width: 160px;
     height: 40px;
+    font-size: 16px;
+    line-height: 18px;
     border-radius: 10px;
     background-color: rgba(24, 24, 24, 0.7);
     color: white;
     margin-right: 20px;
-    text-align: center;
+    padding-left: 20px;
     border: 2px solid white;
     transition: border-color 0.2s ease;
 }
+
+
 
 .nav-calculator-type-button {
     border: 0px solid white;
 }
 
 .calculator-type-button:hover {
-    border-color: orange;
+    border-color: #F59D0E;
+}
+
+.calculator-type-button-export {
+    width: 180px;
+    height: 40px;
+    font-size: 16px;
+    line-height: 18px;
+    border-radius: 10px;
+    background-color: rgba(24, 24, 24, 0.7);
+    color: #F59D0E;
+    padding-left: 20px;
+
+    transition: border-color 0.2s ease;
+    white-space: nowrap;
+}
+
+.calculator-type-button-export.active {
+    border-bottom-right-radius: 0;
+    border-top-right-radius: 0;
+    border: 2px solid #F59D0E;
+}
+
+.calculator-type-button-export.type {
+    border: 2px solid #F59D0E;
+    border-radius: 0;
+    border-left: 0;
+    padding-left: 15px;
+    padding-right: 10px;
+    color: white;
+}
+
+.calculator-type-button-export.type.last {
+    border-radius: 0 10px 10px 0;
+    border-left: 0;
+}
+
+
+.calculator-type-button-export:hover {
+    border: 2px solid #F59D0E;
+}
+
+.calculator-type-button-export.type:hover {
+    border: 2px solid #F59D0E;
+    border-left: 0;
+    color: #F59D0E;
 }
 
 .input-data-main-form {
-    width: 940px;
-    height: 470px;
+    width: 1010px;
+    height: 510px;
     padding: 30px 90px 30px 60px;
     margin: 0 auto;
-    border: 1px solid white;
+    border: 2px solid white;
     border-radius: 30px;
     color: white;
     font-weight: 300;
@@ -133,35 +203,37 @@ input:-webkit-autofill:active {
 }
 
 .input-data-main-form h1 {
-    font-weight: 500;
-    margin-bottom: 30px;
+    margin-bottom: 40px;
+    font-size: 40px;
 }
 
 /*вводы*/
 
 .input-container {
     display: flex;
-    margin-bottom: 30px;
+    margin-bottom: 40px;
+
 }
 
 .input-container p {
     display: block;
-    width: 500px;
-    margin-right: 149px;
-    padding-top: 10.75px;
-    padding-bottom: 10.75px;
+    width: 600px;
+    font-size: 24px;
+    align-self: center;
+    margin-right: 40px;
 }
 
 .input-container input {
-    width: 67px;
-    height: 30px;
-    padding: 4px;
-    text-align: center;
+    width: 90px;
+    height: 48px;
+    padding-left: 10px;
     background-color: transparent;
     color: white;
-    border: 1px solid white;
+    border: 2px solid white;
     border-radius: 10px;
-    font-size: 14px;
+    font-size: 20px;
+    font-weight: normal;
+    letter-spacing: 3px;
     margin-right: 20px;
     align-self: center;
 }
@@ -169,6 +241,7 @@ input:-webkit-autofill:active {
 .input-wrapper {
     position: relative;
     display: inline-flex;
+
 }
 
 .input-icon {
@@ -176,8 +249,8 @@ input:-webkit-autofill:active {
     top: 5%;
     left: 10px;
     transform: translateY(-50%);
-    width: 27px;
-    height: 14px;
+    width: 32px;
+    height: 19px;
     padding-left: 3px;
     padding-right: 3px;
     background-color: #1b1b1b;
@@ -195,27 +268,28 @@ input:-webkit-autofill:active {
     padding-right: 2px;
 }
 
-.input-data-main-form> :nth-last-child(2) {
-    margin-bottom: 68px;
-}
-
 .calculate-buttons {
     display: flex;
-    width: 650px;
-    justify-content: space-between;
 }
 
 .calculate-button {
-    width: 300px;
-    height: 50px;
+    width: 260px;
+    height: 55px;
     border: 2px solid white;
     border-radius: 10px;
-    text-align: center;
+    padding-left: 20px;
     transition: border-color 0.2s ease;
+    font-size: 24px;
 }
 
+.calculate-button.second {
+    width: 320px;
+    margin-left: 60px;
+}
+
+
 .calculate-button:hover {
-    border-color: orange;
+    border-color: #F59D0E;
 }
 
 input[type="number"]::-webkit-outer-spin-button,
@@ -310,7 +384,7 @@ input[type="number"]::-webkit-inner-spin-button {
 }
 
 .add-user:hover {
-    border-color: orange;
+    border-color: #F59D0E;
 }
 
 .register {
@@ -366,7 +440,7 @@ input[type="number"]::-webkit-inner-spin-button {
 
 .confirm-add-user:hover,
 .send-changed-password:hover {
-    border-color: orange;
+    border-color: #F59D0E;
 }
 
 .change-password-container {

@@ -149,15 +149,15 @@ const InputData = (props) => {
                 <div className='input-container'>
                     <p>Факт наличия машин для времени работы</p>
                     <div className='input-wrapper'>
-                        <input type="number" value={cnt180} onChange={e => setCnt180(parseInt(e.target.value))} />
+                        <input type="number" value={cnt180} onChange={e => setCnt180(parseInt(e.target.value))}/>
                         <img src={icon180h} className='input-icon'></img>
                     </div>
                     <div className='input-wrapper'>
-                        <input type="number" value={cnt168} onChange={e => setCnt168(parseInt(e.target.value))} />
+                        <input type="number" value={cnt168} onChange={e => setCnt168(parseInt(e.target.value))}/>
                         <img src={icon160h} className='input-icon'></img>
                     </div>
                     <div className='input-wrapper'>
-                        <input type="number" value={cnt79} onChange={e => setCnt79(parseInt(e.target.value))} />
+                        <input type="number" value={cnt79} onChange={e => setCnt79(parseInt(e.target.value))}/>
                         <img src={icon79h} className='input-icon min-fact'></img>
                     </div>
                 </div>
@@ -169,43 +169,50 @@ const InputData = (props) => {
                             setFiles180d(parseInt(e.target.value));
                             setFiles168(parseInt(e.target.value));
                             setFiles79(parseInt(e.target.value));
-                        }} />
+                        }}/>
                         <img src={day} className='input-icon'></img>
                     </div>
                     <div className='input-wrapper'>
-                        <input type="number" value={files180w} onChange={e => setFiles180w(parseInt(e.target.value))} />
+                        <input type="number" value={files180w} onChange={e => setFiles180w(parseInt(e.target.value))}/>
                         <img src={night} className='input-icon night'></img>
                     </div>
                     <div className='input-wrapper'>
-                        <input type="number" value={files180n} onChange={e => setFiles180n(parseInt(e.target.value))} />
+                        <input type="number" value={files180n} onChange={e => setFiles180n(parseInt(e.target.value))}/>
                         <img src={weekend} className='input-icon'></img>
                     </div>
                 </div>
 
                 <div className='input-container'>
-                    <p className='aaa'>Кол-во новых пользователей</p>
-                    <input type="number" value={cntUZ} onChange={e => setCntUZ(parseInt(e.target.value))} />
+                    <p>Кол-во новых пользователей</p>
+                    <input type="number" value={cntUZ} onChange={e => setCntUZ(parseInt(e.target.value))}/>
+                </div>
+
+                <div className='input-container'>
+                    <p>Разрешенная нагрузка</p>
+                    <input type="number"/>
                 </div>
 
                 <div className='calculate-buttons'>
-                    <button type='button' 
-                    className='calculate-button'
-                    onClick={() => {
-                        setIsCalculated(true);
-                        callUpdateInputData('fact');
-                    }}>Рассчитать факт</button>
+                    <button type='button'
+                            className='calculate-button'
+                            onClick={() => {
+                                setIsCalculated(true);
+                                callUpdateInputData('fact');
+                            }}>Рассчитать факт
+                    </button>
                     {/* <button type='button'
                     className='calculate-button' 
                     onClick={() => {
                         setIsCalculated(true);
                         callUpdateInputData('plan');
                     }}>Рассчитать план</button> */}
-                    <button type='button' 
-                    className='calculate-button'
-                    onClick={() => {
-                        setIsCalculated(true);
-                        callUpdateInputData('both');
-                    }}>Рассчитать факт и план</button>
+                    <button type='button'
+                            className='calculate-button second'
+                            onClick={() => {
+                                setIsCalculated(true);
+                                callUpdateInputData('both');
+                            }}>Рассчитать факт и план
+                    </button>
                 </div>
             </div>
         </>

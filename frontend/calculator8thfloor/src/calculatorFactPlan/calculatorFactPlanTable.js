@@ -393,59 +393,85 @@ export default function CalculatorFactPlanTable(props) {
         );       
     };
 
+    const [showAllButtons, setShowAllButtons] = useState(false);
+
+    const handleFirstButtonClick = () => {
+        console.log('нажал');
+        setShowAllButtons(prevState => !prevState);
+    };
+
+
 
     return (
         <>
             <header>
                 <nav className='inputData-navigation'>
                     <img src={Logo} width="50" height="50" style={{ marginRight: "78px" }}></img>
-                    <ul>
+                    <ul className={'headerButtons'}>
                         <Link to='/calculatorFactPlan'>
-                            <button className={`calculator-type-button ${props.currentCalculator !== 'calculatorFactPlan' ? 'nav-calculator-type-button' : ''}`} 
-                            type='button'>1 калькулятор</button>
+                            <button
+                                className={`calculator-type-button ${props.currentCalculator !== 'calculatorFactPlan' ? 'nav-calculator-type-button' : ''}`}
+                                type='button'>1 калькулятор
+                            </button>
                         </Link>
                         <Link to='/pupu1'>
-                            <button className={`calculator-type-button ${props.currentCalculator !== 'calculator1' ? 'nav-calculator-type-button' : ''}`}
-                            type='button'>2 калькулятор</button>
+                            <button
+                                className={`calculator-type-button ${props.currentCalculator !== 'calculator1' ? 'nav-calculator-type-button' : ''}`}
+                                type='button'>2 калькулятор
+                            </button>
                         </Link>
                         <Link to='/pupu2'>
-                            <button className={`calculator-type-button ${props.currentCalculator !== 'calculator2' ? 'nav-calculator-type-button' : ''}`}
-                            type='button'>3 калькулятор</button>
+                            <button
+                                className={`calculator-type-button ${props.currentCalculator !== 'calculator2' ? 'nav-calculator-type-button' : ''}`}
+                                type='button'>3 калькулятор
+                            </button>
                         </Link>
-                        <button className='calculator-type-button' type='button' onClick={() => {
-                            handleDownloadFactExcel();
-                            console.log('нажал');
-                        }}>экспорт факта</button>
-                        <button className='calculator-type-button' type='button' onClick={() => {
-                            handleDownloadPlanExcel();
-                            console.log('нажал');
-                        }}>экспорт плана</button>
-                        <button className='calculator-type-button' type='button' onClick={() => {
-                            handleDownloadFactPlanExcel();
-                            console.log('нажал');
-                        }}>экспорт факта и плана</button>
-                        <button className='calculator-type-button' type='button' onClick={() => {
-                            handleDownloadFactPlanWord();
-                            console.log('нажал');
-                        }}>экспорт в ворд</button>
-                        <button className='calculator-type-button' type='button' onClick={() => {
-                            handleDownloadFactPlanPDF();
-                            console.log('нажал');
-                        }}>экспорт в пдф</button>
+
+
+                        <button className={`calculator-type-button-export ${showAllButtons ? 'active' : ''}`}
+                                type='button' onClick={handleFirstButtonClick}>Экспорт
+                        </button>
+                        {showAllButtons && (
+                            <>
+                                <button className={`calculator-type-button-export type ${showAllButtons ? 'show' : ''}`} type='button' onClick={handleDownloadFactExcel}>
+                                    Факт
+                                </button>
+                                <button className={`calculator-type-button-export type ${showAllButtons ? 'show' : ''}`} type='button' onClick={() => {
+                                    handleDownloadPlanExcel();
+                                    console.log('нажал');
+                                }}>План
+                                </button>
+                                <button className={`calculator-type-button-export type ${showAllButtons ? 'show' : ''}`} type='button' onClick={() => {
+                                    handleDownloadFactPlanExcel();
+                                    console.log('нажал');
+                                }}>Факт и план
+                                </button>
+                                <button className={`calculator-type-button-export type ${showAllButtons ? 'show' : ''}`} type='button' onClick={() => {
+                                    handleDownloadFactPlanWord();
+                                    console.log('нажал');
+                                }}>Word
+                                </button>
+                                <button className={`calculator-type-button-export type last ${showAllButtons ? 'show' : ''}`} type='button' onClick={() => {
+                                    handleDownloadFactPlanPDF();
+                                    console.log('нажал');
+                                }}>Pdf
+                                </button>
+                            </>
+                        )}
                     </ul>
                 </nav>
             </header>
 
             <body>
-                <div className='body-container'>
+            <div className='body-container'>
 
-                    <div className='table-container'>
-                        <div className='vertical-text'>
-                            <p>Ф</p>
-                            <p>А</p>
-                            <p>К</p>
-                            <p>Т</p>
-                        </div>
+                <div className='table-container'>
+                    <div className='vertical-text'>
+                        <p>Ф</p>
+                        <p>А</p>
+                        <p>К</p>
+                        <p>Т</p>
+                    </div>
                         <table className="table fact-table">
                             <thead className="thead-dark">
                                 <tr>
