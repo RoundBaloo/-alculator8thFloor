@@ -18,3 +18,5 @@ class Data(models.Model):
     cnt_UZ = models.IntegerField()
     load_plan = models.CharField(max_length=10)
     scarcity_plan = models.IntegerField()
+    permitted_load = models.IntegerField()
+ 

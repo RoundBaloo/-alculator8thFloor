@@ -19,6 +19,7 @@ class DataUpdater:
             obj.avg_fact_files_per_month = self.input_data['avg_fact_files_per_month'][f'{obj.machine_type}']
             if (table == 'plan' or table == 'both'):
                 obj.cnt_UZ = self.input_data['cnt_UZ']
+                obj.permitted_load = self.input_data['permitted_load']
             obj.save()
         self.update_calculated_fact_data(table)
     
@@ -44,7 +45,8 @@ class DataUpdater:
                 avg_fact_files_per_month[0], 
                 avg_fact_files_per_month[3], 
                 avg_fact_files_per_month[4], 
-                self.input_data['cnt_UZ'])
+                self.input_data['cnt_UZ'],
+                self.input_data['permitted_load'] / 100)
         load_plan = self.calculator.get_workloads(
                 'plan', 
                 avg_fact_files_per_month[0], 
@@ -56,7 +58,8 @@ class DataUpdater:
                 avg_fact_files_per_month[0], 
                 avg_fact_files_per_month[3], 
                 avg_fact_files_per_month[4], 
-                self.input_data['cnt_UZ'])
+                self.input_data['cnt_UZ'],
+                self.input_data['permitted_load'] / 100)
         avg_fact_files_with_new = self.calculator.get_new_avg_files(
             avg_fact_files_per_month[0], 
             avg_fact_files_per_month[3], 

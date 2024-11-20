@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import axios from 'axios';
 import { getToken } from '../tokenService';
-import { Navigate } from 'react-router-dom';
+import { Navigate, useSearchParams } from 'react-router-dom';
 import { ApiDirectory } from '../apiDir';
 import '../styles/styles.css';
 import { Link } from 'react-router-dom';
@@ -27,6 +27,7 @@ const InputData = (props) => {
     const [files180w, setFiles180w] = useState(0);
     const [files180n, setFiles180n] = useState(0);
     const [cntUZ, setCntUZ] = useState(0);
+    const [permittedLoad, setPermittedLoad] = useState();
     const [isCalculated, setIsCalculated] = useState(false);
     const [isError, setIsError] = useState(true);
 
@@ -52,6 +53,7 @@ const InputData = (props) => {
                 setFiles180w(data[3]['avg_fact_files_per_month']);
                 setFiles180n(data[4]['avg_fact_files_per_month']);
                 setCntUZ(data[0]['cnt_UZ']);
+                setPermittedLoad(data[0]['permitted_load']);
             })
             .catch(error => {
                 if (error.response && (error.response.status === 401 || error.response.status === 403)) {
@@ -77,7 +79,8 @@ const InputData = (props) => {
                 '180h_weekend': files180w,
                 '180h_night': files180n,
             },
-            'cnt_UZ': cntUZ
+            'cnt_UZ': cntUZ,
+            'permitted_load': permittedLoad,
         }, apiDir, table);
     }
 
@@ -189,7 +192,7 @@ const InputData = (props) => {
 
                 <div className='input-container'>
                     <p>Разрешенная нагрузка</p>
-                    <input type="number"/>
+                    <input type="number" value={permittedLoad} onChange={e => setPermittedLoad(parseInt(e.target.value))}/>
                 </div>
 
                 <div className='calculate-buttons'>
