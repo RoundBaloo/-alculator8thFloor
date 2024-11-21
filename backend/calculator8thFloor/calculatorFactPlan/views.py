@@ -147,7 +147,7 @@ class HeadViewSet(viewsets.ModelViewSet):
 def export_fact_excel(request):
     workbook = xlsxwriter.Workbook('fact.xlsx')
     worksheet = workbook.add_worksheet()
-    export_functions.create_fact_excel_table(worksheet)
+    export_functions.create_fact_excel_table(workbook, worksheet)
     worksheet.title = 'Fact Table'
 
     workbook.close()
@@ -161,7 +161,7 @@ def export_fact_excel(request):
 def export_plan_excel(request):
     workbook = xlsxwriter.Workbook('plan.xlsx')
     worksheet = workbook.add_worksheet()
-    export_functions.create_plan_excel_table(worksheet)
+    export_functions.create_plan_excel_table(workbook, worksheet)
     worksheet.title = 'Plan Table'
 
     workbook.close()
@@ -172,7 +172,7 @@ def export_plan_excel(request):
 def export_fact_plan_excel(request):
     workbook = xlsxwriter.Workbook('fact_plan.xlsx')
     worksheet = workbook.add_worksheet()
-    export_functions.create_fact_plan_excel_table(worksheet)
+    export_functions.create_fact_plan_excel_table(workbook, worksheet)
     worksheet.title = 'Fact Plan Table'
 
     workbook.close()

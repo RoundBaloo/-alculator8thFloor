@@ -1,8 +1,25 @@
 from ..models import Data
 
 
-def create_fact_excel_table(worksheet):
-    worksheet.merge_range('B1:G1', 'ФАКТ')
+class typography():
+    title_format = {'text_wrap': True, 'align': 'center', 'fg_color': 'yellow',
+                    'font_size': 14, 'bold': True, 'border': 5}
+    column_title_format = {'text_wrap': True, 'align': 'center', 'border': 5,
+                           'bg_color': 'yellow', 'bold': True}
+    cell_format = {'align': 'center'}
+
+
+def create_fact_excel_table(workbook, worksheet):
+    # установление ширины столбцов
+    worksheet.set_column('A:A', 23)
+    worksheet.set_column('B:G', 14)
+
+    # Подготовка стилей ячеек
+    title_format = workbook.add_format(typography.title_format)
+    column_name_format = workbook.add_format(typography.column_title_format)
+    cell_format = workbook.add_format(typography.cell_format)
+
+    worksheet.merge_range('B1:G1', 'ФАКТ', title_format)
     column_names = ['Машина', 'Максимальное кол-во файлов в месяц',
                     'Факт среднее кол-во файлов в месяц', 'Факт кол-во машин',
                     'Факт максимальное кол-во файлов', 'Факт нагрузка в %',
@@ -12,7 +29,7 @@ def create_fact_excel_table(worksheet):
 
     col = 0
     for column_name in column_names:
-        worksheet.write(1, col, column_name)
+        worksheet.write(1, col, column_name, column_name_format)
         col += 1
 
     row = 2
@@ -33,18 +50,27 @@ def create_fact_excel_table(worksheet):
     row = 2
     # заполнение таблицы значениями
     for machine in Data.objects.all():
-        worksheet.write(row, 1, machine.month_files)
-        worksheet.write(row, 2, machine.avg_fact_files_per_month)
-        worksheet.write(row, 3, machine.cnt_machines)
-        worksheet.write(row, 4, machine.max_files)
-        worksheet.write(row, 5, machine.load_fact)
-        worksheet.write(row, 6, machine.scarcity_fact)
+        worksheet.write(row, 1, machine.month_files, cell_format)
+        worksheet.write(row, 2, machine.avg_fact_files_per_month, cell_format)
+        worksheet.write(row, 3, machine.cnt_machines, cell_format)
+        worksheet.write(row, 4, machine.max_files, cell_format)
+        worksheet.write(row, 5, machine.load_fact, cell_format)
+        worksheet.write(row, 6, machine.scarcity_fact, cell_format)
 
         row += 1
 
 
-def create_plan_excel_table(worksheet):
-    worksheet.merge_range('B1:I1', 'ПЛАН')
+def create_plan_excel_table(workbook, worksheet):
+    # установление ширины столбцов
+    worksheet.set_column('A:A', 23)
+    worksheet.set_column('B:J', 14)
+
+    # Подготовка стилей ячеек
+    title_format = workbook.add_format(typography.title_format)
+    column_name_format = workbook.add_format(typography.column_title_format)
+    cell_format = workbook.add_format(typography.cell_format)
+
+    worksheet.merge_range('B1:I1', 'ПЛАН', title_format)
 
     column_names = ['Машина', 'Максимальное кол-во файлов в месяц',
                     'Факт среднее кол-во файлов в месяц', 'Кол-во новых УЗ',
@@ -54,7 +80,7 @@ def create_plan_excel_table(worksheet):
                     'Планируемая нагрузка в %', 'Планируемая нехватка машин']
     col = 0
     for column_name in column_names:
-        worksheet.write(1, col, column_name)
+        worksheet.write(1, col, column_name, column_name_format)
         col += 1
 
     row_names = ['180 часов', '168 часов', '79 часов',
@@ -82,23 +108,32 @@ def create_plan_excel_table(worksheet):
     row = 2
     # заполнение таблицы значениями
     for machine in Data.objects.all():
-        worksheet.write(row, 1, machine.month_files)
-        worksheet.write(row, 2, machine.avg_fact_files_per_month)
-        worksheet.write(row, 3, machine.cnt_UZ)
-        worksheet.write(row, 4, machine.new_users_files)
-        worksheet.write(row, 5, machine.avg_fact_files_with_new)
-        worksheet.write(row, 6, machine.cnt_machines)
-        worksheet.write(row, 7, machine.max_files)
-        worksheet.write(row, 8, machine.load_plan)
-        worksheet.write(row, 9, machine.scarcity_plan)
+        worksheet.write(row, 1, machine.month_files, cell_format)
+        worksheet.write(row, 2, machine.avg_fact_files_per_month, cell_format)
+        worksheet.write(row, 3, machine.cnt_UZ, cell_format)
+        worksheet.write(row, 4, machine.new_users_files, cell_format)
+        worksheet.write(row, 5, machine.avg_fact_files_with_new, cell_format)
+        worksheet.write(row, 6, machine.cnt_machines, cell_format)
+        worksheet.write(row, 7, machine.max_files, cell_format)
+        worksheet.write(row, 8, machine.load_plan, cell_format)
+        worksheet.write(row, 9, machine.scarcity_plan, cell_format)
 
         row += 1
 
 
-def create_fact_plan_excel_table(worksheet):
-    worksheet.merge_range('B1:E1', 'Общие Данные')
-    worksheet.merge_range('F1:G1', 'ФАКТ')
-    worksheet.merge_range('H1:L1', 'ПЛАН')
+def create_fact_plan_excel_table(workbook, worksheet):
+    # установление ширины столбцов
+    worksheet.set_column('A:A', 23)
+    worksheet.set_column('B:N', 14)
+
+    # Подготовка стилей ячеек
+    title_format = workbook.add_format(typography.title_format)
+    column_name_format = workbook.add_format(typography.column_title_format)
+    cell_format = workbook.add_format(typography.cell_format)
+
+    worksheet.merge_range('B1:E1', 'Общие Данные', title_format)
+    worksheet.merge_range('F1:G1', 'ФАКТ', title_format)
+    worksheet.merge_range('H1:L1', 'ПЛАН', title_format)
 
     column_names = ['Машина', 'Максимальное кол-во файлов в месяц',
                     'Факт среднее кол-во файлов в месяц', 'Факт кол-во машин',
@@ -109,7 +144,7 @@ def create_fact_plan_excel_table(worksheet):
                     'Планируемая нагрузка в %', 'Планируемая нехватка машин']
     col = 0
     for column_name in column_names:
-        worksheet.write(1, col, column_name)
+        worksheet.write(1, col, column_name, column_name_format)
         col += 1
 
     row_names = ['180 часов', '168 часов', '79 часов',
@@ -139,19 +174,17 @@ def create_fact_plan_excel_table(worksheet):
     row = 2
     # заполнение таблицы значениями
     for machine in Data.objects.all():
-        worksheet.write(row, 1, machine.month_files)
-        worksheet.write(row, 2, machine.avg_fact_files_per_month)
-        worksheet.write(row, 3, machine.cnt_machines)
-        worksheet.write(row, 4, machine.max_files)
-        worksheet.write(row, 5, machine.load_fact)
-        worksheet.write(row, 6, machine.scarcity_fact)
-        worksheet.write(row, 7, machine.cnt_UZ)
-        worksheet.write(row, 8, machine.new_users_files)
-        worksheet.write(row, 9, machine.avg_fact_files_with_new)
-        worksheet.write(row, 10, machine.cnt_machines)
-        worksheet.write(row, 11, machine.max_files)
-        worksheet.write(row, 12, machine.load_plan)
-        worksheet.write(row, 13, machine.scarcity_plan)
+        worksheet.write(row, 1, machine.month_files, cell_format)
+        worksheet.write(row, 2, machine.avg_fact_files_per_month, cell_format)
+        worksheet.write(row, 3, machine.cnt_machines, cell_format)
+        worksheet.write(row, 4, machine.max_files, cell_format)
+        worksheet.write(row, 5, machine.load_fact, cell_format)
+        worksheet.write(row, 6, machine.scarcity_fact, cell_format)
+        worksheet.write(row, 7, machine.cnt_UZ, cell_format)
+        worksheet.write(row, 8, machine.new_users_files, cell_format)
+        worksheet.write(row, 9, machine.avg_fact_files_with_new, cell_format)
+        worksheet.write(row, 10, machine.load_plan, cell_format)
+        worksheet.write(row, 11, machine.scarcity_plan, cell_format)
 
         row += 1
 
