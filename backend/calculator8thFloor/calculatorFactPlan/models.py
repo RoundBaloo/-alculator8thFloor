@@ -19,4 +19,3 @@ class Data(models.Model):
     load_plan = models.CharField(max_length=10)
     scarcity_plan = models.IntegerField()
     permitted_load = models.IntegerField()
- 

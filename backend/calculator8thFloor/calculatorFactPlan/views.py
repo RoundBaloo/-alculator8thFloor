@@ -3,7 +3,6 @@ from rest_framework import viewsets, status
 from rest_framework.response import Response
 from .serializers import FactDataSerializer, PlanDataSerializer, InputedFieldsDataSerializer, UserSerializer, ChangePasswordSerializer
 from .models import Data
-from rest_framework.decorators import action
 from drf_yasg.utils import swagger_auto_schema
 from .components.data_updater import DataUpdater
 from rest_framework.permissions import IsAuthenticated
@@ -14,6 +13,8 @@ from docxtpl import DocxTemplate
 from .components import export_functions
 from spire.doc import *
 from spire.doc.common import *
+from django.shortcuts import render
+import requests
 # Create your views here.
 
 
@@ -150,10 +151,10 @@ def export_fact_excel(request):
     worksheet.title = 'Fact Table'
 
     workbook.close()
-    
+
     response = FileResponse(open('fact.xlsx', 'rb'))
     response['ngrok-skip-browser-warning'] = 'skip-browser-warning'
-    
+
     return FileResponse(open('fact.xlsx', 'rb'))
 
 
@@ -214,10 +215,6 @@ def export_report_pdf(request):
     document.Close()
 
     return FileResponse(open('Report.pdf', 'rb'))
-
-
-from django.shortcuts import render
-import requests
 
 
 def fact_data_view(request):

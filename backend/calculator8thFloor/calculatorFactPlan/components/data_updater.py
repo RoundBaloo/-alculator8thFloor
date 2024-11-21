@@ -1,6 +1,7 @@
 from ..models import Data
 from .functions_for_calculate import Calculator
 
+
 class DataUpdater:
     def __init__(self, input_data):
         self.input_data = input_data
@@ -11,8 +12,7 @@ class DataUpdater:
             '79h': input_data['cnt_machines']['79h'],
         })
         self.files = list(Data.objects.values_list('avg_fact_files_per_month', flat=True))
-    
-    
+
     def update_inputed_data(self, table):
         for obj in Data.objects.all():
             obj.cnt_machines = self.input_data['cnt_machines'][f'{obj.machine_type}'.split('_')[0]]
@@ -22,8 +22,7 @@ class DataUpdater:
                 obj.permitted_load = self.input_data['permitted_load']
             obj.save()
         self.update_calculated_fact_data(table)
-    
-        
+
     def update_calculated_fact_data(self, table):
         cnt_machines = Data.objects.values_list('cnt_machines', flat=True)
         self.calculator.set_new_machines_numbers({
@@ -65,7 +64,7 @@ class DataUpdater:
             avg_fact_files_per_month[3], 
             avg_fact_files_per_month[4], 
             self.input_data['cnt_UZ'])
-            
+
         for obj in Data.objects.all():
             obj.month_files = month_files[f'{obj.machine_type}']
             obj.max_files = max_files[f'{obj.machine_type}']
@@ -77,5 +76,3 @@ class DataUpdater:
                 obj.load_plan = load_plan[f'{obj.machine_type}']
                 obj.scarcity_plan = scarcity_plan[f'{obj.machine_type}']
             obj.save()
-            
-            

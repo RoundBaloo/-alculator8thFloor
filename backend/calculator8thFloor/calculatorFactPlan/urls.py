@@ -1,15 +1,6 @@
 from django.urls import include, path
-from django.contrib import admin
-from drf_yasg.views import get_schema_view
-from drf_yasg import openapi
 from rest_framework import routers
-from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from calculatorFactPlan import views
-from general_components.customTokenObtainPairView import CustomTokenObtainPairView
-
-from django.conf import settings
-from django.conf.urls.static import static
-
 
 
 router = routers.DefaultRouter()

@@ -87,7 +87,8 @@ class Calculator:
 
         new_users_files['night'] = round(new_users_number * 1.3 * 0.27)
         new_users_files['weekend'] = round(new_users_number * 1.3 * 0.15)
-        new_users_files['day'] = round(new_users_number * 1.3) - new_users_files['night'] - new_users_files['weekend']
+        all_files = round(new_users_number * 1.3)
+        new_users_files['day'] = all_files - new_users_files['night'] - new_users_files['weekend']
 
     def get_new_users_files(self, new_users_number):
         new_users_files_dict = dict()
@@ -267,23 +268,3 @@ class Calculator:
             scarcities_dict[name] = self.value_dict[name][scarcity_key]
 
         return scarcities_dict
-
-
-# check
-machines_numbers_dict1 = {
-    '180h': 1,
-    '168h': 4,
-    '79h': 4
-}
-
-calc = Calculator(machines_numbers_dict1)
-print(calc.get_machines_scarcity('fact', 6539, 1143, 833, 600))
-machines_numbers_dict2 = {
-    '180h': 2,
-    '168h': 4,
-    '79h': 4
-}
-calc.set_new_machines_numbers(machines_numbers_dict2)
-print(calc.get_machines_scarcity('fact', 6539, 1143, 833, 600, 0.5))
-print(calc.get_workloads('fact', 6539, 1143, 833, 600))
-print('a')
