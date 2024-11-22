@@ -2,11 +2,13 @@ from ..models import Data
 
 
 class typography():
-    title_format = {'text_wrap': True, 'align': 'center', 'fg_color': 'yellow',
+    title_format = {'text_wrap': True, 'align': 'center', 'bg_color': 'F59D0E',
                     'font_size': 14, 'bold': True, 'border': 5}
     column_title_format = {'text_wrap': True, 'align': 'center', 'border': 5,
-                           'bg_color': 'yellow', 'bold': True}
+                           'bg_color': 'F59D0E', 'bold': True}
     cell_format = {'align': 'center'}
+    red_format = {'bg_color': 'FF9999', 'font_color': 'red', 'border': 5}
+    green_format = {'bg_color': '99FFCC', 'font_color': '00CC00', 'border': 5}
 
 
 def create_fact_excel_table(workbook, worksheet):
@@ -18,6 +20,8 @@ def create_fact_excel_table(workbook, worksheet):
     title_format = workbook.add_format(typography.title_format)
     column_name_format = workbook.add_format(typography.column_title_format)
     cell_format = workbook.add_format(typography.cell_format)
+    red_format = workbook.add_format(typography.red_format)
+    green_format = workbook.add_format(typography.green_format)
 
     worksheet.merge_range('B1:G1', 'ФАКТ', title_format)
     column_names = ['Машина', 'Максимальное кол-во файлов в месяц',
@@ -48,16 +52,33 @@ def create_fact_excel_table(workbook, worksheet):
     worksheet.merge_range('G6:G7', 0)
 
     row = 2
-    # заполнение таблицы значениями
+    # Заполнение таблицы значениями
     for machine in Data.objects.all():
         worksheet.write(row, 1, machine.month_files, cell_format)
         worksheet.write(row, 2, machine.avg_fact_files_per_month, cell_format)
         worksheet.write(row, 3, machine.cnt_machines, cell_format)
         worksheet.write(row, 4, machine.max_files, cell_format)
-        worksheet.write(row, 5, machine.load_fact, cell_format)
+        worksheet.write(row, 5, int(machine.load_fact), cell_format)
         worksheet.write(row, 6, machine.scarcity_fact, cell_format)
 
         row += 1
+
+    # Раскрашивание ячеек нагрузки и нехватки в красный и зеленый
+    red_load_condition = {'type': 'cell', 'criteria': '>',
+                          'value': 86, 'format': red_format}
+    worksheet.conditional_format('F3:F7', red_load_condition)
+
+    green_load_condition = {'type': 'cell', 'criteria': '<=',
+                            'value': 86, 'format': green_format}
+    worksheet.conditional_format('F3:F7', green_load_condition)
+
+    red_scarcity_condition = {'type': 'cell', 'criteria': '>',
+                              'value': 0, 'format': red_format}
+    worksheet.conditional_format('G3:G7', red_scarcity_condition)
+
+    green_scarcity_condition = {'type': 'cell', 'criteria': '==',
+                                'value': 0, 'format': green_format}
+    worksheet.conditional_format('G3:G7', green_scarcity_condition)
 
 
 def create_plan_excel_table(workbook, worksheet):
@@ -69,8 +90,10 @@ def create_plan_excel_table(workbook, worksheet):
     title_format = workbook.add_format(typography.title_format)
     column_name_format = workbook.add_format(typography.column_title_format)
     cell_format = workbook.add_format(typography.cell_format)
+    red_format = workbook.add_format(typography.red_format)
+    green_format = workbook.add_format(typography.green_format)
 
-    worksheet.merge_range('B1:I1', 'ПЛАН', title_format)
+    worksheet.merge_range('B1:J1', 'ПЛАН', title_format)
 
     column_names = ['Машина', 'Максимальное кол-во файлов в месяц',
                     'Факт среднее кол-во файлов в месяц', 'Кол-во новых УЗ',
@@ -120,6 +143,23 @@ def create_plan_excel_table(workbook, worksheet):
 
         row += 1
 
+    # Раскрашивание ячеек нагрузки и нехватки в красный и зеленый
+    red_load_condition = {'type': 'cell', 'criteria': '>',
+                          'value': 86, 'format': red_format}
+    worksheet.conditional_format('I3:I7', red_load_condition)
+
+    green_load_condition = {'type': 'cell', 'criteria': '<=',
+                            'value': 86, 'format': green_format}
+    worksheet.conditional_format('I3:I7', green_load_condition)
+
+    red_scarcity_condition = {'type': 'cell', 'criteria': '>',
+                              'value': 0, 'format': red_format}
+    worksheet.conditional_format('J3:J7', red_scarcity_condition)
+
+    green_scarcity_condition = {'type': 'cell', 'criteria': '==',
+                                'value': 0, 'format': green_format}
+    worksheet.conditional_format('J3:J7', green_scarcity_condition)
+
 
 def create_fact_plan_excel_table(workbook, worksheet):
     # установление ширины столбцов
@@ -130,6 +170,8 @@ def create_fact_plan_excel_table(workbook, worksheet):
     title_format = workbook.add_format(typography.title_format)
     column_name_format = workbook.add_format(typography.column_title_format)
     cell_format = workbook.add_format(typography.cell_format)
+    red_format = workbook.add_format(typography.red_format)
+    green_format = workbook.add_format(typography.green_format)
 
     worksheet.merge_range('B1:E1', 'Общие Данные', title_format)
     worksheet.merge_range('F1:G1', 'ФАКТ', title_format)
@@ -187,6 +229,32 @@ def create_fact_plan_excel_table(workbook, worksheet):
         worksheet.write(row, 11, machine.scarcity_plan, cell_format)
 
         row += 1
+
+    # Раскрашивание ячеек нагрузки и нехватки факта в красный и зеленый
+    red_load_condition = {'type': 'cell', 'criteria': '>',
+                          'value': 86, 'format': red_format}
+    worksheet.conditional_format('F3:F7', red_load_condition)
+
+    green_load_condition = {'type': 'cell', 'criteria': '<=',
+                            'value': 86, 'format': green_format}
+    worksheet.conditional_format('F3:F7', green_load_condition)
+
+    red_scarcity_condition = {'type': 'cell', 'criteria': '>',
+                              'value': 0, 'format': red_format}
+    worksheet.conditional_format('G3:G7', red_scarcity_condition)
+
+    green_scarcity_condition = {'type': 'cell', 'criteria': '==',
+                                'value': 0, 'format': green_format}
+    worksheet.conditional_format('G3:G7', green_scarcity_condition)
+
+    # Раскрашивание ячеек нагрузки и нехватки плана в красный и зеленый
+    worksheet.conditional_format('K3:K7', red_load_condition)
+
+    worksheet.conditional_format('K3:K7', green_load_condition)
+
+    worksheet.conditional_format('L3:L7', red_scarcity_condition)
+
+    worksheet.conditional_format('L3:L7', green_scarcity_condition)
 
 
 def get_context_dictionary():
