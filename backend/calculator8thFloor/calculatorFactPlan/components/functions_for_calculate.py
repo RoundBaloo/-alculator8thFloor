@@ -1,9 +1,10 @@
 import math
 
 
-class Machine:
+class Machines_info:
     """
-    Класс, который содержит имена машин и количество файлов, которые каждая машина может обработать за месяц.
+    Класс, который содержит имена машин и количество файлов, которые
+    каждая машина может обработать за месяц.
     """
     # Список имен машин
     names: list = []
@@ -12,10 +13,10 @@ class Machine:
     # Константа для преобразования часов в минуты
     minutes_in_hour = 50
 
-    def __init__(self, name, hours_in_day, days_in_month, productivity):
+    def add_machine_info(self, name, hours_in_day, days_in_month, productivity):
         """
-        Инициализирует новую машину, добавляя ее имя в names, рассчитывая и
-        добавляя количество файлов за месяц в files_in_a_month
+        Добавляет имя машины в names и рассчитывает и добавляет
+        количество файлов за месяц в files_in_a_month
 
         Args:
             name (str): имя машины
@@ -23,10 +24,10 @@ class Machine:
             days_in_month (int): дни работы в месяц
             productivity (int): время, необходимое для создания одного файла
         """
-        Machine.names.append(name)
-        minutes_in_day = hours_in_day * Machine.minutes_in_hour
+        Machines_info.names.append(name)
+        minutes_in_day = hours_in_day * Machines_info.minutes_in_hour
         files_in_a_day = round(minutes_in_day / productivity * 0.85)
-        Machine.files_in_a_month[name] = days_in_month * files_in_a_day
+        Machines_info.files_in_a_month[name] = days_in_month * files_in_a_day
 
 
 class Calculator:
@@ -34,11 +35,7 @@ class Calculator:
     Класс, который выполняет все расчеты, связанные с машинами.
     """
     # Инициализируем машины с их параметрами
-    day_machine_180hour = Machine('180h_day', 11, 15, 8)
-    day_machine_168hour = Machine('168h', 8, 20, 8)
-    day_machine_79hour = Machine('79h', 4, 20, 8)
-    weekends_machine = Machine('180h_weekend', 11, 15, 6)
-    night_machine = Machine('180h_night', 11, 15, 6)
+    machines_info = Machines_info()
 
     def __init__(self, kwargs):
         """
@@ -47,6 +44,12 @@ class Calculator:
         Args:
             kwargs (dict): словарь, где ключи - имена машин, а значения - количества машин
         """
+        Calculator.machines_info.add_machine_info('180h_day', 11, 15, 8)
+        Calculator.machines_info.add_machine_info('168h', 8, 20, 8)
+        Calculator.machines_info.add_machine_info('79h', 4, 20, 8)
+        Calculator.machines_info.add_machine_info('180h_weekend', 11, 15, 6)
+        Calculator.machines_info.add_machine_info('180h_night', 11, 15, 6)
+
         # Словарь, в котором хранится информация о машинах и их файлах в месяц
         self.value_dict = dict()
         self.set_new_machines_numbers(kwargs)  # Устанавливаем количество машин
@@ -73,13 +76,14 @@ class Calculator:
 
     def calculate_machines_month_files(self):
         """
-        Заполняет value_dict количеством файлов, которые каждая машина обрабатывает за месяц.
+        Заполняет value_dict количеством файлов, которые
+        каждая машина обрабатывает за месяц.
         """
         key = 'month_files'
-        for name in Machine.names:
+        for name in Machines_info.names:
             # Инициализируем пустой словарь для каждой машины
             self.value_dict[name] = dict()
-            self.value_dict[name][key] = Machine.files_in_a_month[name]
+            self.value_dict[name][key] = Machines_info.files_in_a_month[name]
 
     def get_machines_month_files(self):
         """
@@ -91,7 +95,7 @@ class Calculator:
         month_files_dict = dict()
         key = 'month_files'
 
-        for name in Machine.names:
+        for name in Machines_info.names:
             month_files_dict[name] = self.value_dict[name][key]
 
         return month_files_dict
@@ -103,7 +107,7 @@ class Calculator:
         """
         key = 'max_files'
 
-        for name in Machine.names:
+        for name in Machines_info.names:
             machine = self.value_dict[name]
             machine[key] = machine['month_files'] * machine['number']
 
@@ -119,10 +123,10 @@ class Calculator:
         key = 'max_files'
 
         # Проверяем, нужно ли произвести расчет max_files
-        if key not in self.value_dict[Machine.names[0]]:
+        if key not in self.value_dict[Machines_info.names[0]]:
             self.calculate_machines_max_files()
 
-        for name in Machine.names:
+        for name in Machines_info.names:
             max_files_dict[name] = self.value_dict[name][key]
 
         return max_files_dict
@@ -220,7 +224,10 @@ class Calculator:
 
         # Проверяем, нужно ли произвести расчет new_avg_files
         if 'new_avg_files' not in self.value_dict:
-            self.calc_new_avg_files(avg_day_files, avg_weekends_files, avg_night_files, new_users_number)
+            self.calc_new_avg_files(
+                avg_day_files, avg_weekends_files,
+                avg_night_files, new_users_number
+                )
 
         new_avg_files = self.value_dict['new_avg_files']
 
@@ -250,7 +257,7 @@ class Calculator:
         workload = self.value_dict[type]
 
         # Проверяем, нужно ли произвести расчет max_files
-        if 'max_files' not in self.value_dict[Machine.names[0]]:
+        if 'max_files' not in self.value_dict[Machines_info.names[0]]:
             self.calculate_machines_max_files()
 
         if type == 'plan':
@@ -435,13 +442,13 @@ class Calculator:
         scarcity_key = type + '_scarcity'
 
         # Проверяем, нужно ли произвести расчет нехватки
-        if scarcity_key not in self.value_dict[Machine.names[1]]:
+        if scarcity_key not in self.value_dict[Machines_info.names[1]]:
             self.calculate_machines_scarcity(
                 type, avg_day_files, avg_weekends_files, avg_night_files,
                 new_users_number, need_workload
             )
 
-        for name in Machine.names:
+        for name in Machines_info.names:
             scarcities_dict[name] = self.value_dict[name][scarcity_key]
 
         return scarcities_dict
