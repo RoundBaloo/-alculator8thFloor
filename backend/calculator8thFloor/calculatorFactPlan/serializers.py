@@ -1,6 +1,6 @@
-from django.contrib.auth.models import Group, User
+from django.contrib.auth.models import User
 from rest_framework import serializers
-from .models import Data
+from .models import Data, TableColumnName
 from rest_framework.exceptions import ValidationError
 
 
@@ -71,3 +71,9 @@ class ChangePasswordSerializer(serializers.Serializer):
     def save(self, user):
         user.set_password(self.validated_data['new_password'])
         user.save()
+        
+
+class GetTableColumnNamesSerializer(serializers.Serializer):
+    class Meta:
+        model = TableColumnName
+        fields = '__all__'

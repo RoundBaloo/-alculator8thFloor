@@ -48,15 +48,19 @@ export default function HeadPermissions(props) {
     const token = getToken();
     const [users, setUsers] = useState();
     const [isLoading, setIsLoading] = useState(false);
-    const [username, setUsername] = useState();
-    const [email, setEmail] = useState();
-    const [password, setPassword] = useState();
-    const [confirmedPassword, setConfirmedPassword] = useState();
+    const [username, setUsername] = useState('');
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [confirmedPassword, setConfirmedPassword] = useState('');
     const [isChangingPassword, setIsChangingPassword] = useState(false);
     const [userIdToChange, setUserIdToChange] = useState(null);
     const [newPassword, setNewPassword] = useState('');
     const [confirmedNewPassword, setConfirmedNewPassword] = useState('');
     const [currentUser, setCurrentUser] = useState();
+    const [isUsernameFilled, setIsUsernameFilled] = useState(true);
+    const [isPasswordFilled, setIsPasswordFilled] = useState(true);
+    const [isConfirmedPasswordFilled, setIsConfirmedPasswordFilled] = useState(true);
+    const [isEmailFilled, setIsEmailFilled] = useState(true);
 
     const getUsers = () => {
         setIsLoading(true);
@@ -249,38 +253,71 @@ export default function HeadPermissions(props) {
 
                         <div className="register">
                             <div className='input-inner'>
-                                <input type='text' value={username} onChange={e => (setUsername(e.target.value))} />
+                                <input type='text' value={username} onChange={e => (setUsername(e.target.value))} style={{
+                                    borderColor: !isUsernameFilled && 'red',
+                                }} />
                                 <small>Логин</small>
                             </div>
                             <div className='password-container'>
                                 <div className='input-inner'>
-                                    <input type='password' value={password} onChange={e => (setPassword(e.target.value))} />
+                                    <input type='password' value={password} onChange={e => (setPassword(e.target.value))} style={{
+                                    borderColor: !isPasswordFilled && 'red',
+                                }} />
                                     <small>Пароль</small>
                                 </div>
                                 <div className='input-inner'>
-                                    <input type='password' value={confirmedPassword} onChange={e => (setConfirmedPassword(e.target.value))} />
+                                    <input type='password' value={confirmedPassword} onChange={e => (setConfirmedPassword(e.target.value))} style={{
+                                    borderColor: !isConfirmedPasswordFilled && 'red',
+                                }} />
                                     <small>Подтвердите пароль</small>
                                 </div>
                             </div>
                             <div className='input-inner'>
-                                <input type='email' value={email} onChange={e => (setEmail(e.target.value))} />
+                                <input type='email' value={email} onChange={e => (setEmail(e.target.value))} style={{
+                                    borderColor: !isEmailFilled && 'red',
+                                }} />
                                 <small>Почта</small>
                             </div>
                             <button type='button' className='confirm-add-user' onClick={() => {
-                                createUser(token, {
-                                    "username": username,
-                                    "email": email,
-                                    "password": password,
-                                },
-                                    getUsers,
-                                    apiDir);
+                                if (username.length === 0) {
+                                    setIsUsernameFilled(false);
+                                } else if (password.length === 0) {
+                                    setIsUsernameFilled(true);
+                                    setIsPasswordFilled(false);
+                                } else if (confirmedPassword.length === 0) {
+                                    setIsPasswordFilled(true);
+                                    setIsConfirmedPasswordFilled(false);
+                                } else if (email.length === 0) {
+                                    setIsConfirmedPasswordFilled(true);
+                                    setIsEmailFilled(false);
+                                } else {
+                                    setIsUsernameFilled(true);
+                                    setIsPasswordFilled(true);
+                                    setIsConfirmedPasswordFilled(true);
+                                    setIsEmailFilled(true);
+                                    createUser(token, {
+                                        "username": username,
+                                        "email": email,
+                                        "password": password,
+                                    },
+                                        getUsers,
+                                        apiDir);
+                                    hideRegisterForm();
+                                    showAddUserButton();
+                                    setUsername('');
+                                    setPassword('');
+                                    setConfirmedPassword('');
+                                    setEmail('');
+                                }
+                            }}>
+                                <img src={OrangePlusIcon} style={{ marginRight: "15px", paddingTop: "3px" }} /> Добавить
+                            </button>
+                            <button type='button' className='confirm-add-user' onClick={() => {
                                 hideRegisterForm();
                                 showAddUserButton();
-                                setUsername('');
-                                setPassword('');
-                                setConfirmedPassword('');
-                                setEmail('');
-                            }}><img src={OrangePlusIcon} style={{ marginRight: "15px", paddingTop: "3px" }}></img> Добавить</button>
+                            }}>
+                                Отменить
+                            </button>
                         </div>
 
                         {isChangingPassword && currentUser.id === userIdToChange && (
@@ -302,6 +339,12 @@ export default function HeadPermissions(props) {
                                 <button className='send-changed-password' type='button' onClick={() => {
                                     submitChangePassword();
                                 }}>Отправить</button>
+                                <button type='button' className='confirm-add-user' onClick={() => {
+                                    setIsChangingPassword(false);
+                                    showAddUserButton();
+                                }}>
+                                    Отменить
+                                </button>
                             </div>
                         )}
 

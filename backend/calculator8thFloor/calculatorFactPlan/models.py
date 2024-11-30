@@ -19,3 +19,16 @@ class Data(models.Model):
     load_plan = models.CharField(max_length=10)
     scarcity_plan = models.IntegerField()
     permitted_load = models.IntegerField()
+    
+class TableColumnName(models.Model):
+    month_files = models.CharField(max_length=40)
+    avg_fact_files_per_month = models.CharField(max_length=40)
+    avg_fact_files_with_new = models.CharField(max_length=40)
+    new_users_files = models.CharField(max_length=40)
+    cnt_machines = models.CharField(max_length=40)
+    max_files = models.CharField(max_length=40)
+    load_fact = models.CharField(max_length=40)
+    scarcity_fact = models.CharField(max_length=40)
+    cnt_UZ = models.CharField(max_length=40)
+    load_plan = models.CharField(max_length=40)
+    scarcity_plan = models.CharField(max_length=40)

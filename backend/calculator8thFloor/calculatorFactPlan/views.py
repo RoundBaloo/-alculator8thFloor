@@ -1,8 +1,8 @@
 from django.contrib.auth.models import User
 from rest_framework import viewsets, status
 from rest_framework.response import Response
-from .serializers import FactDataSerializer, PlanDataSerializer, InputedFieldsDataSerializer, UserSerializer, ChangePasswordSerializer
-from .models import Data
+from .serializers import FactDataSerializer, PlanDataSerializer, InputedFieldsDataSerializer, UserSerializer, ChangePasswordSerializer, GetTableColumnNamesSerializer
+from .models import Data, TableColumnName
 from drf_yasg.utils import swagger_auto_schema
 from .components.data_updater import DataUpdater
 from rest_framework.permissions import IsAuthenticated
@@ -10,7 +10,7 @@ import json
 from django.http import FileResponse
 import xlsxwriter
 from docxtpl import DocxTemplate
-from .components import export_functions
+from .components import export_functions, fill_columns_names
 from spire.doc import *
 from spire.doc.common import *
 from django.shortcuts import render
@@ -106,16 +106,17 @@ class HeadViewSet(viewsets.ModelViewSet):
 
         # Проверка на наличие обязательных полей
         if not email or not password or not username:
-            print(email, password)
-            response = Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+            response = Response({"error": "required fields are not filled in"}, status=status.HTTP_400_BAD_REQUEST)
             response['ngrok-skip-browser-warning'] = 'skip-browser-warning'
             return response
         try:
             user = User.objects.create_user(username=username, email=email, password=password)
             response = Response({"message": "User  created successfully.", "user_id": user.id}, status=status.HTTP_201_CREATED)
             response['ngrok-skip-browser-warning'] = 'skip-browser-warning'
+            print('success')
             return response
         except Exception as e:
+            print('error')
             response = Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
             response['ngrok-skip-browser-warning'] = 'skip-browser-warning'
             return response
@@ -142,6 +143,19 @@ class HeadViewSet(viewsets.ModelViewSet):
         serializer.is_valid(raise_exception=True)
         serializer.save(user=user)
         return Response({"detail": "Пароль успешно изменен."}, status=status.HTTP_200_OK)
+    
+    
+class TableColumnNamesViewSet(viewsets.ModelViewSet):
+    queryset = TableColumnName.objects.all()
+    serializer_class = GetTableColumnNamesSerializer
+    
+    def list(self, request, *args, **kwargs):
+        fill_columns_names.fill_fact_table_names()
+        queryset = self.get_queryset()
+        serializer = self.get_serializer(queryset, many=True)
+
+        return Response(serializer.data)
+        
 
 
 def export_fact_excel(request):
