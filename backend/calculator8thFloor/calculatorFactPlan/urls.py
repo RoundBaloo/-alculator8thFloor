@@ -21,5 +21,5 @@ urlpatterns = [
     path('export/report/pdf', views.export_report_pdf),
     path('data/', include(routerData.urls)),
     path('fact-data/', views.fact_data_view, name='fact_data'),
-    path('names/', include(routerColumnNames.urls)),
+    path('', include(routerColumnNames.urls)),
 ]

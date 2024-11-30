@@ -73,7 +73,7 @@ class ChangePasswordSerializer(serializers.Serializer):
         user.save()
         
 
-class GetTableColumnNamesSerializer(serializers.Serializer):
+class GetTableColumnNamesSerializer(serializers.ModelSerializer):
     class Meta:
         model = TableColumnName
         fields = '__all__'

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import axios from 'axios';
-import { getToken } from '../tokenService';
+import { getToken } from './services/tokenService';
 import { Navigate, useSearchParams } from 'react-router-dom';
 import { ApiDirectory } from '../apiDir';
 import '../styles/styles.css';
@@ -12,6 +12,7 @@ import icon79h from '../img/h79.svg';
 import day from '../img/day.svg';
 import night from '../img/night.svg';
 import weekend from '../img/weekend.svg';
+import planTableService from './services/planTableService';
 
 
 const InputData = (props) => {
@@ -30,7 +31,6 @@ const InputData = (props) => {
     const [permittedLoad, setPermittedLoad] = useState();
     const [isCalculated, setIsCalculated] = useState(false);
     const [isError, setIsError] = useState(true);
-
 
     function getInputData(token) {
         axios.get(`${apiDir}/calculatorFactPlan/data/input/`,
@@ -201,6 +201,7 @@ const InputData = (props) => {
                             onClick={() => {
                                 setIsCalculated(true);
                                 callUpdateInputData('fact');
+                                planTableService.setPlanTable(false);
                             }}>Рассчитать факт
                     </button>
                     {/* <button type='button'
@@ -214,6 +215,7 @@ const InputData = (props) => {
                             onClick={() => {
                                 setIsCalculated(true);
                                 callUpdateInputData('both');
+                                planTableService.setPlanTable(true);
                             }}>Рассчитать факт и план
                     </button>
                 </div>

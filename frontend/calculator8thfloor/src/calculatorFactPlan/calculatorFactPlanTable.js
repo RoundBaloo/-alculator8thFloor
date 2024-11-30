@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { getToken } from '../tokenService';
+import { getToken } from './services/tokenService';
 import { Link } from 'react-router-dom';
 import { ApiDirectory } from '../apiDir';
 import '../styles/styles.css';
 import Logo from '../img/logo.svg'
+import adminService from './services/adminService';
+import planTableService from './services/planTableService';
 
 
 export default function CalculatorFactPlanTable(props) {
@@ -14,6 +16,7 @@ export default function CalculatorFactPlanTable(props) {
     const [factData, setFactData] = useState([]);
     const [planData, setPlanData] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
+    const [columnNames, setColumnNames] = useState();
 
 
     const handleDownloadFactExcel = () => {
@@ -186,9 +189,32 @@ export default function CalculatorFactPlanTable(props) {
     };
 
 
+    const getTableColumnNames = () => {
+        axios.get(`${apiDir}/calculatorFactPlan/names/`, {
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json',
+            }
+        })
+            .then(response => {
+                console.log(response.data[0])
+                setColumnNames(response.data[0])
+            })
+            .catch(error => {
+                if (error.response && (error.response.status === 401 || error.response.status === 403)) {
+                    setIsLoading(false);
+                    window.location.href = '/';
+                } else {
+                    console.error('ABOBA ERROR', error);
+                }
+            })
+    };
+
+
     useEffect(() => {
         getFactCalculatedData();
         getPlanCalculatedData();
+        getTableColumnNames();
     }, []);
 
     const renderFactTable = () => {
@@ -213,7 +239,6 @@ export default function CalculatorFactPlanTable(props) {
         return (
             <tbody className='fact-table-body'>
                 {factData.map((row, index) => {
-                    console.log(row.machine_name)
                     const is180hDay = row.machine_type.startsWith('180h_day');
                     const is168h = row.machine_type === '168h';
                     const is79h = row.machine_type === '79h';
@@ -476,48 +501,49 @@ export default function CalculatorFactPlanTable(props) {
                             <thead className="thead-dark">
                                 <tr>
                                     <th></th>
-                                    <th>Максимальное количество <br />файлов в месяц</th>
-                                    <th>Факт среднего кол-ва <br />файлов в месяц</th>
-                                    <th>Факт количества <br />машин</th>
-                                    <th>Факт максимального <br />количества файлов</th>
-                                    <th>Факт нагрузки в %</th>
-                                    <th>Факт нехватки машин</th>
+                                    <th>{columnNames['month_files']}</th>
+                                    <th>{columnNames['avg_fact_files_per_month']}</th>
+                                    <th>{columnNames['cnt_machines']}</th>
+                                    <th>{columnNames['max_files']}</th>
+                                    <th>{columnNames['load_fact']}</th>
+                                    <th>{columnNames['scarcity_fact']}</th>
                                 </tr>
                             </thead>
                             {renderFactTable()}
                         </table>
                     </div>
-
-                    <div className='table-container'>
-                        <div className='vertical-text'>
-                            <p>П</p>
-                            <p>Л</p>
-                            <p>А</p>
-                            <p>Н</p>
+                    {planTableService.getPlanTable() ? (
+                        <div className='table-container'>
+                            <div className='vertical-text'>
+                                <p>П</p>
+                                <p>Л</p>
+                                <p>А</p>
+                                <p>Н</p>
+                            </div>
+                            <table className="table plan-table">
+                                <thead className="thead-dark">
+                                    <tr>
+                                        <th></th>
+                                        <th>{columnNames['month_files']}</th>
+                                        <th>{columnNames['avg_fact_files_per_month']}</th>
+                                        <th>{columnNames['avg_fact_files_with_new']}</th>
+                                        <th>{columnNames['new_users_files']}</th>
+                                        <th>{columnNames['cnt_machines']}</th>
+                                        <th>{columnNames['cnt_UZ']}</th>
+                                        <th>{columnNames['load_plan']}</th>
+                                        <th>{columnNames['scarcity_plan']}</th>
+                                    </tr>
+                                </thead>
+                                {renderPlanTable()}
+                            </table>
                         </div>
-                        <table className="table plan-table">
-                            <thead className="thead-dark">
-                                <tr>
-                                    <th></th>
-                                    <th>Мах кол-во <br />файлов в месяц</th>
-                                    <th>Кол-во новых UZ</th>
-                                    <th>Факт среднего <br /> кол-ва файлов в месяц</th>
-                                    <th>С учетом новых UZ</th>
-                                    <th>Факт количества машин</th>
-                                    <th>Факт максимального <br /> кол-ва файлов</th>
-                                    <th>Планируемая нагрузка в %</th>
-                                    <th>Планируемая нехватки машин</th>
-                                </tr>
-                            </thead>
-                            {renderPlanTable()}
-                        </table>
-                    </div>
+                    ) : null}
                     
                     <div style={{marginLeft: "140px"}}>
                         <Link to='/inputForCalculatorFactPlan'>
                             <button className='calculator-type-button' type='button'>Ввести новые данные</button>
                         </Link>
-                        {props.isAdmin && (
+                        {adminService.getAdmin() && (
                             <Link to='/handleUsersPermisions'>
                                 <button className='calculator-type-button' type='button'>Управление доступом</button>
                             </Link>

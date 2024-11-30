@@ -1,11 +1,12 @@
 import React, { useState } from 'react'
 import { Navigate } from 'react-router-dom';
 import axios from 'axios';
-import { saveToken } from '../tokenService';
+import { saveToken } from '../calculatorFactPlan/services/tokenService';
 import { ApiDirectory } from '../apiDir';
 import '../styles/styles.css';
 import Logo from '../img/logo.svg';
-import SignIn from '../img/sign-in-icon.svg'
+import SignIn from '../img/sign-in-icon.svg';
+import adminService from '../calculatorFactPlan/services/adminService';
 
 
 const Login = (props) => {
@@ -32,10 +33,10 @@ const Login = (props) => {
                 }
             })
             .then(response => {
-                console.log(response.data.access)
                 saveToken(response.data.access)
                 setIsAuthenticated(true)
                 props.updateIsAdmin(response.data.role == 'admin' ? true : false)
+                adminService.setAdmin(response.data.role == 'admin' ? true : false);
             })
             .catch(error => {
                 console.error('ABOBA ERROR')

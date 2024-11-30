@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { getToken } from '../tokenService';
+import { getToken } from '../calculatorFactPlan/services/tokenService';
 import { Link } from 'react-router-dom';
 import { ApiDirectory } from '../apiDir';
 import '../styles/styles.css';
