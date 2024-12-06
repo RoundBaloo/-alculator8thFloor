@@ -118,6 +118,17 @@ const InputData = (props) => {
             })
     }
 
+    const handleCalculateButton = (isCalculated, table, isPlanTable) => {
+        if (!(isNaN(cnt180) || isNaN(cnt168) || isNaN(cnt79) || isNaN(files180d) 
+            || isNaN(files180n) || isNaN(files180w) || isNaN(cntUZ) || isNaN(permittedLoad)
+            || cnt180 === 0 || cnt168 === 0 || cnt79 === 0 || files180d === 0 
+            || files180n === 0 || files180w === 0 || cntUZ === 0 || permittedLoad == 0)) {
+                setIsCalculated(isCalculated);
+                callUpdateInputData(table);
+                planTableService.setPlanTable(isPlanTable);
+            }
+    }
+
 
     if (isCalculated && !isError) {
         return <Navigate to='/calculatorFactPlan' />
@@ -126,41 +137,30 @@ const InputData = (props) => {
 
     return (
         <>
-            <header>
-                <nav className='inputData-navigation'>
-                    <img src={Logo} width="50" height="50" style={{marginRight: "78px"}}></img>
-                    <ul>
-                    <Link to='/calculatorFactPlan'>
-                            <button className={`calculator-type-button ${props.currentCalculator !== 'calculatorFactPlan' ? 'nav-calculator-type-button' : ''}`} 
-                            type='button'>1 калькулятор</button>
-                        </Link>
-                        <Link to='/pupu1'>
-                            <button className={`calculator-type-button ${props.currentCalculator !== 'calculator1' ? 'nav-calculator-type-button' : ''}`}
-                            type='button'>2 калькулятор</button>
-                        </Link>
-                        <Link to='/pupu2'>
-                            <button className={`calculator-type-button ${props.currentCalculator !== 'calculator2' ? 'nav-calculator-type-button' : ''}`}
-                            type='button'>3 калькулятор</button>
-                        </Link>
-                    </ul>
-                </nav>
-            </header>
-
             <div className='input-data-main-form'>
                 <h1>Факт и план</h1>
 
                 <div className='input-container'>
                     <p>Факт наличия машин для времени работы</p>
                     <div className='input-wrapper'>
-                        <input type="number" value={cnt180} onChange={e => setCnt180(parseInt(e.target.value))}/>
+                        <input type="number" 
+                        style={isNaN(cnt180) || cnt180 === 0 ? { borderColor: 'red' } : {}} 
+                        value={cnt180} 
+                        onChange={e => setCnt180(parseInt(e.target.value))}/>
                         <img src={icon180h} className='input-icon'></img>
                     </div>
                     <div className='input-wrapper'>
-                        <input type="number" value={cnt168} onChange={e => setCnt168(parseInt(e.target.value))}/>
+                        <input type="number"
+                        style={isNaN(cnt168) || cnt168 === 0 ? { borderColor: 'red' } : {}}
+                         value={cnt168} 
+                         onChange={e => setCnt168(parseInt(e.target.value))}/>
                         <img src={icon160h} className='input-icon'></img>
                     </div>
                     <div className='input-wrapper'>
-                        <input type="number" value={cnt79} onChange={e => setCnt79(parseInt(e.target.value))}/>
+                        <input type="number" 
+                        style={isNaN(cnt79) || cnt79 === 0 ? { borderColor: 'red' } : {}}
+                        value={cnt79} 
+                        onChange={e => setCnt79(parseInt(e.target.value))}/>
                         <img src={icon79h} className='input-icon min-fact'></img>
                     </div>
                 </div>
@@ -168,7 +168,10 @@ const InputData = (props) => {
                 <div className='input-container'>
                     <p>Среднее количество файлов на месяц для времени работы</p>
                     <div className='input-wrapper'>
-                        <input type="number" value={files180d} onChange={e => {
+                        <input 
+                        type="number" 
+                        style={isNaN(files180d) || files180d === 0 ? { borderColor: 'red' } : {}}
+                        value={files180d} onChange={e => {
                             setFiles180d(parseInt(e.target.value));
                             setFiles168(parseInt(e.target.value));
                             setFiles79(parseInt(e.target.value));
@@ -176,32 +179,41 @@ const InputData = (props) => {
                         <img src={day} className='input-icon'></img>
                     </div>
                     <div className='input-wrapper'>
-                        <input type="number" value={files180w} onChange={e => setFiles180w(parseInt(e.target.value))}/>
+                        <input type="number" 
+                        style={isNaN(files180w) || files180w === 0 ? { borderColor: 'red' } : {}}
+                        value={files180w} 
+                        onChange={e => setFiles180w(parseInt(e.target.value))}/>
                         <img src={night} className='input-icon night'></img>
                     </div>
                     <div className='input-wrapper'>
-                        <input type="number" value={files180n} onChange={e => setFiles180n(parseInt(e.target.value))}/>
+                        <input type="number" style={isNaN(files180n) || files180n === 0 ? { borderColor: 'red' } : {}}
+                        value={files180n} 
+                        onChange={e => setFiles180n(parseInt(e.target.value))}/>
                         <img src={weekend} className='input-icon'></img>
                     </div>
                 </div>
 
                 <div className='input-container'>
                     <p>Кол-во новых пользователей</p>
-                    <input type="number" value={cntUZ} onChange={e => setCntUZ(parseInt(e.target.value))}/>
+                    <input type="number" 
+                    style={isNaN(cntUZ) || cntUZ === 0 ? { borderColor: 'red' } : {}}
+                    value={cntUZ} 
+                    onChange={e => setCntUZ(parseInt(e.target.value))}/>
                 </div>
 
                 <div className='input-container'>
                     <p>Разрешенная нагрузка</p>
-                    <input type="number" value={permittedLoad} onChange={e => setPermittedLoad(parseInt(e.target.value))}/>
+                    <input type="number" 
+                    style={isNaN(permittedLoad) || permittedLoad === 0 ? { borderColor: 'red' } : {}}
+                    value={permittedLoad} 
+                    onChange={e => setPermittedLoad(parseInt(e.target.value))}/>
                 </div>
 
                 <div className='calculate-buttons'>
                     <button type='button'
                             className='calculate-button'
                             onClick={() => {
-                                setIsCalculated(true);
-                                callUpdateInputData('fact');
-                                planTableService.setPlanTable(false);
+                                handleCalculateButton(true, 'fact', false);
                             }}>Рассчитать факт
                     </button>
                     {/* <button type='button'
@@ -213,9 +225,7 @@ const InputData = (props) => {
                     <button type='button'
                             className='calculate-button second'
                             onClick={() => {
-                                setIsCalculated(true);
-                                callUpdateInputData('both');
-                                planTableService.setPlanTable(true);
+                                handleCalculateButton(true, 'both', true);
                             }}>Рассчитать факт и план
                     </button>
                 </div>

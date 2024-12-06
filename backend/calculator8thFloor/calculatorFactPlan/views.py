@@ -154,7 +154,9 @@ class TableColumnNamesViewSet(viewsets.ModelViewSet):
         queryset = self.get_queryset()
         serializer = self.get_serializer(queryset, many=True)
 
-        return Response(serializer.data)
+        response = Response(serializer.data)
+        response['ngrok-skip-browser-warning'] = 'skip-browser-warning'
+        return response
         
 
 
