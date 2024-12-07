@@ -519,3 +519,20 @@ input[type="number"]::-webkit-inner-spin-button {
     width: 1200px;
 }
 
+.forbidden:hover {
+    pointer-events: none; 
+    cursor: not-allowed; 
+}
+
+/* temp styles */
+
+.temp-p {
+    color: white;
+    font-size: 100px;
+    text-align: center;
+}
+
+.temp-div {
+    margin-right: auto;
+    margin-left: auto;
+}

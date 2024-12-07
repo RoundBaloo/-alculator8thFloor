@@ -4,7 +4,6 @@ import { getToken } from './services/tokenService';
 import { Link } from 'react-router-dom';
 import { ApiDirectory } from '../apiDir';
 import '../styles/styles.css';
-import Logo from '../img/logo.svg'
 import adminService from './services/adminService';
 import planTableService from './services/planTableService';
 
@@ -17,6 +16,13 @@ export default function CalculatorFactPlanTable(props) {
     const [planData, setPlanData] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [columnNames, setColumnNames] = useState();
+
+
+    useEffect(() => {
+        getFactCalculatedData();
+        getPlanCalculatedData();
+        getTableColumnNames();
+    }, []);
 
 
     const handleDownloadFactExcel = () => {
@@ -149,7 +155,6 @@ export default function CalculatorFactPlanTable(props) {
             }
         })
             .then(response => {
-                console.log(response)
                 setFactData(response.data);
                 setIsLoading(false);
             })
@@ -174,7 +179,6 @@ export default function CalculatorFactPlanTable(props) {
             }
         })
             .then(response => {
-                console.log(response)
                 setPlanData(response.data);
                 setIsLoading(false);
             })
@@ -194,28 +198,22 @@ export default function CalculatorFactPlanTable(props) {
             headers: {
                 'Authorization': `Bearer ${token}`,
                 'Content-Type': 'application/json',
+                'ngrok-skip-browser-warning': 'awd',
             }
         })
-            .then(response => {
-                console.log(response.data[0])
-                setColumnNames(response.data[0])
-            })
-            .catch(error => {
-                if (error.response && (error.response.status === 401 || error.response.status === 403)) {
-                    setIsLoading(false);
-                    window.location.href = '/';
-                } else {
-                    console.error('ABOBA ERROR', error);
-                }
-            })
+        .then(response => {
+            console.log(response);
+            setColumnNames(response.data[0])
+        })
+        .catch(error => {
+            if (error.response && (error.response.status === 401 || error.response.status === 403)) {
+                setIsLoading(false);
+                window.location.href = '/';
+            } else {
+                console.error('ABOBA ERROR', error);
+            }
+        })
     };
-
-
-    useEffect(() => {
-        getFactCalculatedData();
-        getPlanCalculatedData();
-        getTableColumnNames();
-    }, []);
 
     const renderFactTable = () => {
         if (isLoading) {
@@ -429,30 +427,62 @@ export default function CalculatorFactPlanTable(props) {
 
     return (
         <>
-            <header>
-                <nav className='inputData-navigation'>
-                    <img src={Logo} width="50" height="50" style={{ marginRight: "78px" }}></img>
-                    <ul className={'headerButtons'}>
-                        <Link to='/calculatorFactPlan'>
-                            <button
-                                className={`calculator-type-button ${props.currentCalculator !== 'calculatorFactPlan' ? 'nav-calculator-type-button' : ''}`}
-                                type='button'>1 калькулятор
-                            </button>
-                        </Link>
-                        <Link to='/pupu1'>
-                            <button
-                                className={`calculator-type-button ${props.currentCalculator !== 'calculator1' ? 'nav-calculator-type-button' : ''}`}
-                                type='button'>2 калькулятор
-                            </button>
-                        </Link>
-                        <Link to='/pupu2'>
-                            <button
-                                className={`calculator-type-button ${props.currentCalculator !== 'calculator2' ? 'nav-calculator-type-button' : ''}`}
-                                type='button'>3 калькулятор
-                            </button>
-                        </Link>
+            <body>
+            <div className='body-container'>
 
-
+                <div className='table-container'>
+                    <div className='vertical-text'>
+                        <p>Ф</p>
+                        <p>А</p>
+                        <p>К</p>
+                        <p>Т</p>
+                    </div>
+                        <table className="table fact-table">
+                            <thead className="thead-dark">
+                                <tr>
+                                    <th></th>
+                                    <th>{columnNames ? columnNames['month_files'] : "Loading..."}</th>
+                                    <th>{columnNames ? columnNames['avg_fact_files_per_month'] : "Loading..."}</th>
+                                    <th>{columnNames ? columnNames['cnt_machines'] : "Loading..."}</th>
+                                    <th>{columnNames ? columnNames['max_files'] : "Loading..."}</th>
+                                    <th>{columnNames ? columnNames['load_fact'] : "Loading..."}</th>
+                                    <th>{columnNames ? columnNames['scarcity_fact'] : "Loading..."}</th>
+                                </tr>
+                            </thead>
+                            {renderFactTable()}
+                        </table>
+                    </div>
+                    {planTableService.getPlanTable() ? (
+                        <div className='table-container'>
+                            <div className='vertical-text'>
+                                <p>П</p>
+                                <p>Л</p>
+                                <p>А</p>
+                                <p>Н</p>
+                            </div>
+                            <table className="table plan-table">
+                                <thead className="thead-dark">
+                                    <tr>
+                                        <th></th>
+                                        <th>{columnNames ? columnNames['month_files'] : "Loading..."}</th>
+                                        <th>{columnNames ? columnNames['cnt_UZ'] : "Loading..."}</th>
+                                        <th>{columnNames ? columnNames['avg_fact_files_per_month'] : "Loading..."}</th>
+                                        <th>{columnNames ? columnNames['avg_fact_files_with_new'] : "Loading..."}</th>
+                                        <th>{columnNames ? columnNames['cnt_machines'] : "Loading..."}</th>
+                                        <th>{columnNames ? columnNames['max_files'] : "Loading..."}</th>
+                                        <th>{columnNames ? columnNames['load_plan'] : "Loading..."}</th>
+                                        <th>{columnNames ? columnNames['scarcity_plan'] : "Loading..."}</th>
+                                    </tr>
+                                </thead>
+                                {renderPlanTable()}
+                            </table>
+                        </div>
+                    ) : null}
+                    
+                    <div style={{marginLeft: "140px"}}>
+                        <Link to='/inputForCalculatorFactPlan'>
+                            <button className='calculator-type-button' type='button'>Ввести новые данные</button>
+                        </Link>
                         <button className={`calculator-type-button-export ${showAllButtons ? 'active' : ''}`}
                                 type='button' onClick={handleFirstButtonClick}>Экспорт
                         </button>
@@ -482,71 +512,6 @@ export default function CalculatorFactPlanTable(props) {
                                 }}>Pdf
                                 </button>
                             </>
-                        )}
-                    </ul>
-                </nav>
-            </header>
-
-            <body>
-            <div className='body-container'>
-
-                <div className='table-container'>
-                    <div className='vertical-text'>
-                        <p>Ф</p>
-                        <p>А</p>
-                        <p>К</p>
-                        <p>Т</p>
-                    </div>
-                        <table className="table fact-table">
-                            <thead className="thead-dark">
-                                <tr>
-                                    <th></th>
-                                    <th>{columnNames['month_files']}</th>
-                                    <th>{columnNames['avg_fact_files_per_month']}</th>
-                                    <th>{columnNames['cnt_machines']}</th>
-                                    <th>{columnNames['max_files']}</th>
-                                    <th>{columnNames['load_fact']}</th>
-                                    <th>{columnNames['scarcity_fact']}</th>
-                                </tr>
-                            </thead>
-                            {renderFactTable()}
-                        </table>
-                    </div>
-                    {planTableService.getPlanTable() ? (
-                        <div className='table-container'>
-                            <div className='vertical-text'>
-                                <p>П</p>
-                                <p>Л</p>
-                                <p>А</p>
-                                <p>Н</p>
-                            </div>
-                            <table className="table plan-table">
-                                <thead className="thead-dark">
-                                    <tr>
-                                        <th></th>
-                                        <th>{columnNames['month_files']}</th>
-                                        <th>{columnNames['avg_fact_files_per_month']}</th>
-                                        <th>{columnNames['avg_fact_files_with_new']}</th>
-                                        <th>{columnNames['new_users_files']}</th>
-                                        <th>{columnNames['cnt_machines']}</th>
-                                        <th>{columnNames['cnt_UZ']}</th>
-                                        <th>{columnNames['load_plan']}</th>
-                                        <th>{columnNames['scarcity_plan']}</th>
-                                    </tr>
-                                </thead>
-                                {renderPlanTable()}
-                            </table>
-                        </div>
-                    ) : null}
-                    
-                    <div style={{marginLeft: "140px"}}>
-                        <Link to='/inputForCalculatorFactPlan'>
-                            <button className='calculator-type-button' type='button'>Ввести новые данные</button>
-                        </Link>
-                        {adminService.getAdmin() && (
-                            <Link to='/handleUsersPermisions'>
-                                <button className='calculator-type-button' type='button'>Управление доступом</button>
-                            </Link>
                         )}
                     </div>
                 </div>

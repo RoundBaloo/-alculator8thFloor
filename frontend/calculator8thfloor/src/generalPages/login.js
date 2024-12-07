@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Navigate } from 'react-router-dom';
 import axios from 'axios';
 import { saveToken } from '../calculatorFactPlan/services/tokenService';
@@ -15,6 +15,10 @@ const Login = (props) => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+    useEffect(() => {
+        props.setIsLoginPage(true);
+    }, []);
 
     const authenticate = () => {
         // const inputData = {
@@ -37,6 +41,7 @@ const Login = (props) => {
                 setIsAuthenticated(true)
                 props.updateIsAdmin(response.data.role == 'admin' ? true : false)
                 adminService.setAdmin(response.data.role == 'admin' ? true : false);
+                props.setIsLoginPage(false);
             })
             .catch(error => {
                 console.error('ABOBA ERROR')

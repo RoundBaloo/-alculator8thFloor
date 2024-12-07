@@ -64,6 +64,7 @@ class DataUpdater:
             avg_fact_files_per_month[3], 
             avg_fact_files_per_month[4], 
             self.input_data['cnt_UZ'])
+        new_users_files = self.calculator.get_new_users_files(self.input_data['cnt_UZ'])
 
         for obj in Data.objects.all():
             obj.month_files = month_files[f'{obj.machine_type}']
@@ -73,6 +74,7 @@ class DataUpdater:
                 obj.scarcity_fact = scarcity_fact[f'{obj.machine_type}']
             if (table == 'plan' or table == 'both'):
                 obj.avg_fact_files_with_new = avg_fact_files_with_new[f'{obj.machine_type}']
+                obj.new_users_files = new_users_files[f'{obj.machine_type}']
                 obj.load_plan = load_plan[f'{obj.machine_type}']
                 obj.scarcity_plan = scarcity_plan[f'{obj.machine_type}']
             obj.save()
