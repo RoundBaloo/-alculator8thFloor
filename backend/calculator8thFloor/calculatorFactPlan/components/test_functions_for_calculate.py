@@ -4,6 +4,12 @@ from functions_for_calculate import Calculator
 
 @pytest.fixture
 def calculator1():
+    """
+    создает калькулятор с первым набором аргументов
+
+    Returns:
+        Calculator: калькулятор с первым набором аргументов
+    """
     kwargs = {'180h': 2, '168h': 3, '79h': 1}
     calculator = Calculator(kwargs)
     return calculator
@@ -11,6 +17,12 @@ def calculator1():
 
 @pytest.fixture
 def calculator2():
+    """
+    создает калькулятор со вторым набором аргументов
+
+    Returns:
+        Calculator: калькулятор со вторым набором аргументов
+    """
     kwargs = {'180h': 5, '168h': 0, '79h': 2}
     calculator = Calculator(kwargs)
     return calculator
@@ -21,8 +33,8 @@ def test_get_machines_month_files(calculator1, calculator2):
     Проверка функции get_machines_month_files
 
     Args:
-        calculator1 (func): инициализатор калькулятора с определенными аргументами
-        calculator1 (func): инициализатор калькулятора с другими определенными аргументами
+        calculator1 (func): калькулятор с первым набором аргументов
+        calculator2 (func): калькулятор со вторым набором аргументов
     """
     expected = {
         '180h_day': 870,
@@ -43,7 +55,8 @@ def test_get_machines_max_files(calculator1, calculator2):
     Проверка функции get_machines_max_files
 
     Args:
-        calculator1 (func): инициализатор калькулятора с определенными аргументами
+        calculator1 (func): калькулятор с первым набором аргументов
+        calculator2 (func): калькулятор со вторым набором аргументов
     """
     expected1 = {
         '180h_day': 1740,
@@ -71,7 +84,8 @@ def test_get_new_users_files(calculator1, calculator2):
     Проверка функции get_new_users_files
 
     Args:
-        setup_calculator (func): инициализатор калькулятора с определенными аргументами
+        calculator1 (func): калькулятор с первым набором аргументов
+        calculator2 (func): калькулятор со вторым набором аргументов
     """
     new_users_number = 6000
 
@@ -94,7 +108,8 @@ def test_get_new_avg_files(calculator1, calculator2):
     Проверка функции get_new_avg_files
 
     Args:
-        setup_calculator (func): инициализатор калькулятора с определенными аргументами
+        calculator1 (func): калькулятор с первым набором аргументов
+        calculator2 (func): калькулятор со вторым набором аргументов
     """
     avg_day_files = 6000
     avg_weekends_files = 2000
@@ -120,7 +135,8 @@ def test_get_fact_workloads(calculator1, calculator2):
     Проверка функции get_workloads для расчета ФАКТа
 
     Args:
-        setup_calculator (func): инициализатор калькулятора с определенными аргументами
+        calculator1 (func): калькулятор с первым набором аргументов
+        calculator2 (func): калькулятор со вторым набором аргументов
     """
     avg_day_files = 6000
     avg_weekends_files = 2000
@@ -160,7 +176,8 @@ def test_get_plan_workloads(calculator1, calculator2):
     Проверка функции get_workloads для расчета ПЛАНа
 
     Args:
-        setup_calculator (func): инициализатор калькулятора с определенными аргументами
+        calculator1 (func): калькулятор с первым набором аргументов
+        calculator2 (func): калькулятор со вторым набором аргументов
     """
     avg_day_files = 6000
     avg_weekends_files = 2000
@@ -200,7 +217,8 @@ def test_get_fact_machines_scarcity(calculator1, calculator2):
     Проверка функции get_machines_scarcity для расчета ФАКТа
 
     Args:
-        setup_calculator (func): инициализатор калькулятора с определенными аргументами
+        calculator1 (func): калькулятор с первым набором аргументов
+        calculator2 (func): калькулятор со вторым набором аргументов
     """
     avg_day_files = 6000
     avg_weekends_files = 2000
@@ -241,7 +259,8 @@ def test_get_plan_machines_scarcity(calculator1, calculator2):
     Проверка функции get_machines_scarcity для расчета ПЛАНа
 
     Args:
-        setup_calculator (func): инициализатор калькулятора с определенными аргументами
+        calculator1 (func): калькулятор с первым набором аргументов
+        calculator2 (func): калькулятор со вторым набором аргументов
     """
     avg_day_files = 6000
     avg_weekends_files = 2000
