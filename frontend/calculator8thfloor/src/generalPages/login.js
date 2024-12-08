@@ -15,9 +15,11 @@ const Login = (props) => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [isAuthenticated, setIsAuthenticated] = useState(false);
+    const [isCorrectLoginData, setIsCorrectLoginData] = useState(true);
 
     useEffect(() => {
         props.setIsLoginPage(true);
+        setIsCorrectLoginData(true);
     }, []);
 
     const authenticate = () => {
@@ -45,6 +47,7 @@ const Login = (props) => {
             })
             .catch(error => {
                 console.error('ABOBA ERROR')
+                setIsCorrectLoginData(false);
             })
     }
 
@@ -66,14 +69,22 @@ const Login = (props) => {
                             className='login-input'
                             placeholder='Логин' 
                             value={username}
-                            onChange={(e) => setUsername(e.target.value)}
+                            style={!isCorrectLoginData ? {borderColor: 'red'} : {}}
+                            onChange={(e) => {
+                                setUsername(e.target.value);
+                                setIsCorrectLoginData(true);
+                            }}
                             />
                             <input
                             className='password-input' 
                             type='password' 
                             placeholder='Пароль'
                             value={password}
-                            onChange={(e) => setPassword(e.target.value)}
+                            style={!isCorrectLoginData ? {borderColor: 'red'} : {}}
+                            onChange={(e) => {
+                                setPassword(e.target.value);
+                                setIsCorrectLoginData(true);
+                            }}
                             />
                         </div>
                         <button className='sign-in-button' type='button' onClick={authenticate}><img src={SignIn}></img></button>

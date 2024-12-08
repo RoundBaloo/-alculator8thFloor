@@ -369,7 +369,7 @@ export default function CalculatorFactPlanTable(props) {
                                 // Для 168h и 79h ничего не выводим
                                 null
                             ) : is180hWeekendOrNight ? (
-                                <td>{row.avg_fact_files_per_month}</td>
+                                <td>{row.avg_fact_files_with_new}</td>
                             ) : (
                                 <td>&nbsp;</td>
                             )}

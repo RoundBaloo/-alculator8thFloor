@@ -1,6 +1,6 @@
 export class ApiDirectory {
     constructor() {
-        this.baseUrl = 'https://6ed4-5-2-55-75.ngrok-free.app'; // Основной URL вашего бэкенда
+        this.baseUrl = 'http://127.0.0.1:8000/'; // Основной URL вашего бэкенда
     }
 
     // Метод для получения полного URL для конкретного эндпоинта
