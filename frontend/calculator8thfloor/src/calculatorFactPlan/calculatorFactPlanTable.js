@@ -246,7 +246,13 @@ export default function CalculatorFactPlanTable(props) {
                 
                     return (
                         <tr key={index}>
-                            <td>{row.machine_name}</td>
+                            {is180hDay ? (
+                                <td className={'day'}>{row.machine_name}</td>
+                            ) : is180hWeekend ? (
+                                <td className={'weekend'}>{row.machine_name}</td>
+                            ) : is180hNight ?(
+                                <td className={'night'}>{row.machine_name}</td>
+                            ) : <td>{row.machine_name}</td>}
                             {is180hNight ? (
                                 null
                             ) : is180hWeekend ? (
@@ -334,10 +340,16 @@ export default function CalculatorFactPlanTable(props) {
 
                     return (
                         <tr key={index}>
-                            <td>{row.machine_name}</td>
-                            
-                            {is180hNight ? (
-                                null
+                            {is180hDay ? (
+                                <td className={'day'}>{row.machine_name}</td>
+                            ) : is180hWeekend ? (
+                                <td className={'weekend'}>{row.machine_name}</td>
+                            ) : is180hNight ?(
+                                <td className={'night'}>{row.machine_name}</td>
+                            ) : <td>{row.machine_name}</td>}
+
+                {is180hNight ? (
+                    null
                             ) : is180hWeekend ? (
                                 <td rowSpan={2}>{row.month_files}</td>
                             ) : (
@@ -481,7 +493,7 @@ export default function CalculatorFactPlanTable(props) {
                     
                     <div style={{marginLeft: "140px"}}>
                         <Link to='/inputForCalculatorFactPlan'>
-                            <button className='calculator-type-button' type='button'>Ввести новые данные</button>
+                            <button className='calculator-type-button-newdata' type='button'>Ввести новые данные</button>
                         </Link>
                         <button className={`calculator-type-button-export ${showAllButtons ? 'active' : ''}`}
                                 type='button' onClick={handleFirstButtonClick}>Экспорт

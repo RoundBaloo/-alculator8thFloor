@@ -1,0 +1,222 @@
+Metadata-Version: 2.1
+Name: Spire.Doc
+Version: 12.7.1
+Summary: A 100% standalone Word Python API for Processing Word Files
+Home-page: https://www.e-iceblue.com
+Author: E-iceblue
+Author-email: sales@e-iceblue.com
+License: UNKNOWN
+Platform: UNKNOWN
+Classifier: Programming Language :: Python :: 3.6
+Classifier: License :: Free To Use But Restricted
+Classifier: License :: Other/Proprietary License
+Classifier: Operating System :: Microsoft :: Windows
+Classifier: Operating System :: POSIX :: Linux
+Classifier: Operating System :: Unix
+Requires-Python: >=3.7
+Description-Content-Type: text/markdown
+Requires-Dist: plum-dispatch (==1.7.4)
+
+
+
+## Python API for Creating, Reading, Manipulating, and Converting Word Documents
+![Spire.Doc for Python](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/n9t5997e1t9h88ginmss.png)
+
+[Product Page](https://www.e-iceblue.com/Introduce/doc-for-python.html) | [Documentation](https://www.e-iceblue.com/Tutorials/Python/Spire.Doc-for-Python/Program-Guide/Spire.Doc-for-Python-Program-Guide-Content.html) | [Examples](https://github.com/eiceblue/Spire.Doc-for-Python/tree/main/Python%20Examples) | [Forum](https://www.e-iceblue.com/forum/spire-doc-f6.html) | [Temporary License](https://www.e-iceblue.com/TemLicense.html) | [Customized Demo](https://www.e-iceblue.com/Misc/customized-demo.html)
+
+[Spire.Doc for Python](https://www.e-iceblue.com/Introduce/doc-for-python.html) is a powerful and easy-to-use Word document processing library. It empowers developers to create, read, modify, and convert Word documents in Python applications **without** the need for Microsoft Word or any other third-party software.
+
+## Supported Word Versions
+The following are the Word versions supported by Spire.Doc for Python:
+ - Word 97-03 
+ - Word 2007 
+ - Word 2010 
+ - Word 2013 
+ - Word 2016 
+ - Word 2019
+
+## Supported Operating Systems
+The following are the operating systems supported by Spire.Doc for Python:
+ - Windows
+ - Linux
+ - MacOS
+
+## Key Features of Spire.Doc for Python
+Spire.Doc for Python provides a comprehensive set of features for working with various Word formats including **DOC**, **DOCX**, **DOCM**, **DOT**, **DOTX**, **DOTM,** and more.
+
+The following list shows some key features offered by Spire.Doc for Python:
+1.  **Document Conversion:**
+	 - [Convert Word to PDF](https://www.e-iceblue.com/Tutorials/Python/Spire.Doc-for-Python/Program-Guide/Conversion/Python-Convert-Word-to-PDF.html) 	
+	 - [Convert Text to Word or Word to Text](https://www.e-iceblue.com/Tutorials/Python/Spire.Doc-for-Python/Program-Guide/Conversion/Python-Convert-Text-to-Word-or-Word-to-Text.html)
+	 - [Convert Word to Images (PNG, JPEG, BMP, SVG)](https://www.e-iceblue.com/Tutorials/Python/Spire.Doc-for-Python/Program-Guide/Conversion/Python-Convert-Word-to-Images.html)
+	 - [Convert Word to HTML](https://www.e-iceblue.com/Tutorials/Python/Spire.Doc-for-Python/Program-Guide/Conversion/Python-Convert-Word-to-HTML.html)
+	 - [Convert HTML to Word](https://www.e-iceblue.com/Tutorials/Python/Spire.Doc-for-Python/Program-Guide/Conversion/Python-Convert-HTML-to-Word.html)
+	 - [Convert Word to RTF or RTF to Word](https://www.e-iceblue.com/Tutorials/Python/Spire.Doc-for-Python/Program-Guide/Conversion/Python-Convert-Word-to-RTF-and-Vice-Versa.html)
+	 - [Convert RTF to PDF, HTML](https://www.e-iceblue.com/Tutorials/Python/Spire.Doc-for-Python/Program-Guide/Conversion/Python-Convert-RTF-to-PDF-HTML.html) 
+	 - [Convert Word to EPUB](https://www.e-iceblue.com/Tutorials/Python/Spire.Doc-for-Python/Program-Guide/Conversion/Python-Convert-Word-to-EPUB.html)
+	 - [Convert HTML to PDF](https://www.e-iceblue.com/Tutorials/Python/Spire.Doc-for-Python/Program-Guide/Conversion/Python-Convert-HTML-to-PDF.html)
+	 - [Convert HTML to Images](https://www.e-iceblue.com/Tutorials/Python/Spire.Doc-for-Python/Program-Guide/Conversion/Python-Convert-HTML-to-Image.html)
+	 - [Convert Word to XPS, PostScript, or OFD](https://www.e-iceblue.com/Tutorials/Python/Spire.Doc-for-Python/Program-Guide/Conversion/Python-Convert-Word-to-XPS-PostScript-or-OFD.html)
+
+2.  **Document Creation and Manipulation:**
+	 - [Create, Read, or Update Word Documents](https://www.e-iceblue.com/Tutorials/Python/Spire.Doc-for-Python/Program-Guide/Document-Operation/Python-Create-Read-or-Update-a-Word-Document.html)
+	 - [Merge Word Documents](https://www.e-iceblue.com/Tutorials/Python/Spire.Doc-for-Python/Program-Guide/Document-Operation/Python-Merge-Word-Documents.html)
+	 - [Split Word Documents](https://www.e-iceblue.com/Tutorials/Python/Spire.Doc-for-Python/Program-Guide/Document-Operation/Python-Split-Word-Documents.html)
+	 - [Compare Word Documents](https://www.e-iceblue.com/Tutorials/Python/Spire.Doc-for-Python/Program-Guide/Document-Operation/Python-Compare-Two-Versions-of-a-Word-Document.html)
+	 - [Add Background Color or Picture to Word Documents](https://www.e-iceblue.com/Tutorials/Python/Spire.Doc-for-Python/Program-Guide/Page-Background/Python-Add-Background-Color-or-Picture-to-Word-Documents.html)
+	 - Add, Read, or Remove Document Properties in Word
+	 - Accept or Reject Tracked Changes in Word
+
+3. **Document Protection:**
+	 - [Encrypt or Decrypt Word Documents](https://www.e-iceblue.com/Tutorials/Python/Spire.Doc-for-Python/Program-Guide/Security/Python-Encrypt-or-Decrypt-Word-Documents.html)
+	 - [Set or Remove Word Document Editing Restrictions](https://www.e-iceblue.com/Tutorials/Python/Spire.Doc-for-Python/Program-Guide/Security/Python-Set-or-Remove-Word-Document-Editing-Restrictions.html)
+4. **Mail Merge:**
+	 - Perform Mail Merge in Word
+5. **Text Manipulation:**
+	 - [Find and Replace Text in Word](https://www.e-iceblue.com/Tutorials/Python/Spire.Doc-for-Python/Program-Guide/Text/Python-Find-and-Replace-Text-in-Word.html)
+	 - [Find and Highlight Text in Word](https://www.e-iceblue.com/Tutorials/Python/Spire.Doc-for-Python/Program-Guide/Text/Python-Find-and-Highlight-Text-in-Word.html)
+	 - [Extract Text from Word](https://www.e-iceblue.com/Tutorials/Python/Spire.Doc-for-Python/Program-Guide/Text/Python-Extract-Text-and-Images-from-Word-Documents.html)
+6. **Image and Shape Manipulation:**
+	 - [Insert Images in Word](https://www.e-iceblue.com/Tutorials/Python/Spire.Doc-for-Python/Program-Guide/Image-and-Shape/Python-Insert-Images-in-Word.html)
+	 - [Replace Images in Word](https://www.e-iceblue.com/Tutorials/Python/Spire.Doc-for-Python/Program-Guide/Image-and-Shape/Python-Replace-Images-in-Word.html)
+	 - [Extract Images from Word](https://www.e-iceblue.com/Tutorials/Python/Spire.Doc-for-Python/Program-Guide/Text/Python-Extract-Text-and-Images-from-Word-Documents.html)
+	 - Add or Remove Shapes in Word
+7. **Table Creation and Manipulation:**
+	 - [Create Tables in Word](https://www.e-iceblue.com/Tutorials/Python/Spire.Doc-for-Python/Program-Guide/Table/Python-Create-Tables-in-a-Word-Document.html)
+	 - [Add or Delete Table Rows and Columns in Word](https://www.e-iceblue.com/Tutorials/Python/Spire.Doc-for-Python/Program-Guide/Table/Python-Add-or-Delete-Table-Rows-and-Columns-in-Word.html)
+	 - [Insert or Extract Images in Word Tables](https://www.e-iceblue.com/Tutorials/Python/Spire.Doc-for-Python/Program-Guide/Table/Python-Insert-or-Extract-Images-in-Word-Tables.html)
+8. **Hyperlink Manipulation:**
+	 - [Add or Remove Hyperlinks in Word Documents](https://www.e-iceblue.com/Tutorials/Python/Spire.Doc-for-Python/Program-Guide/Hyperlink/Python-Add-or-Remove-Hyperlinks-in-Word-Documents.html)
+	 - [Update or Change Hyperlinks in Word](https://www.e-iceblue.com/Tutorials/Python/Spire.Doc-for-Python/Program-Guide/Hyperlink/Python-Update-or-Change-Hyperlinks-in-Word.html)
+9. **Header and Footer Manipulation:**
+	 - [Insert Headers and Footers in Word](https://www.e-iceblue.com/Tutorials/Python/Spire.Doc-for-Python/Program-Guide/Header-and-Footer/Python-Insert-Headers-and-Footers-in-Word.html)
+10. **Watermark Manipulation:**
+	 - [Insert Watermarks in Word](https://www.e-iceblue.com/Tutorials/Python/Spire.Doc-for-Python/Program-Guide/Watermark/Python-Insert-Watermarks-in-Word.html)
+	 - [Remove Watermarks from Word Documents](https://www.e-iceblue.com/Tutorials/Python/Spire.Doc-for-Python/Program-Guide/Watermark/Python-Remove-Watermarks-from-Word-Documents.html)
+11. **Bookmark Manipulation:**
+	 - [Add Bookmarks to Word Documents](https://www.e-iceblue.com/Tutorials/Python/Spire.Doc-for-Python/Program-Guide/Bookmark/Python-Add-Bookmarks-to-a-Word-Document.html)
+12. **List Manipulation:**
+	 - [Create Various Types of Lists in Word](https://www.e-iceblue.com/Tutorials/Python/Spire.Doc-for-Python/Program-Guide/List/Python-Create-Various-Types-of-Lists-in-a-Word-Document.html)
+13. **Comment Manipulation:**
+	 - [Add, Delete, or Reply to Comments in Word Documents](https://www.e-iceblue.com/Tutorials/Python/Spire.Doc-for-Python/Program-Guide/Comments/Python-Add-Delete-or-Reply-to-Comments-in-Word-Documents.html)
+14. **Form Field Manipulation:**
+	 - [Create a Fillable Form in Word](https://www.e-iceblue.com/Tutorials/Python/Spire.Doc-for-Python/Program-Guide/Form-Field/Python-Create-a-Fillable-Form-in-Word.html)
+15. **Text and Paragraph Formatting:**
+	 - [Change the Font of Word Documents](https://www.e-iceblue.com/Tutorials/Python/Spire.Doc-for-Python/Program-Guide/Font/Python-Change-the-Font-of-a-Word-Document.html)
+	 - [Set Background Colors for Word Paragraphs or Text](https://www.e-iceblue.com/Tutorials/Python/Spire.Doc-for-Python/Program-Guide/Paragraph/Python-Set-Background-Colors-for-Word-Paragraphs-or-Text.html)
+	 - [Set Paragraph Spacing and Line Spacing in Word](https://www.e-iceblue.com/Tutorials/Python/Spire.Doc-for-Python/Program-Guide/Paragraph/Python-Set-Paragraph-Spacing-and-Line-Spacing-in-Word.html)
+16. **Page Setup:**
+	 - [Set Page Margins for Word Documents](https://www.e-iceblue.com/Tutorials/Python/Spire.Doc-for-Python/Program-Guide/Page-Setup/Python-Set-Page-Margins-for-Word-Documents.html)
+	 - [Insert Page Break into Word Documents](https://www.e-iceblue.com/Tutorials/Python/Spire.Doc-for-Python/Program-Guide/Page-Setup/Python-Insert-Page-Break-into-Word-Documents.html)
+	 - [Adjust the Page Size of Word Documents](https://www.e-iceblue.com/Tutorials/Python/Spire.Doc-for-Python/Program-Guide/Page-Setup/Python-Adjust-the-Page-Size-of-a-Word-Document.html)
+17. **Textbox and OLE Manipulation:**
+	 - [Add or Remove Textboxes in Word](https://www.e-iceblue.com/Tutorials/Python/Spire.Doc-for-Python/Program-Guide/Textbox/Python-Add-or-Remove-Textboxes-in-a-Word-Document.html)
+	 - [Insert or Extract OLE Objects in Word](https://www.e-iceblue.com/Tutorials/Python/Spire.Doc-for-Python/Program-Guide/Others/Python-Insert-or-Extract-OLE-Objects-in-Word.html)
+18. **Footnote and Endnote Manipulation:**
+	 - [Insert or Remove Footnotes in Word](https://www.e-iceblue.com/Tutorials/Python/Spire.Doc-for-Python/Program-Guide/Footnote/Python-Insert-or-Remove-Footnotes-in-Word.html)
+	 - Insert or Remove Endnotes in Word
+
+## Examples
+
+### Create a Word Document from Scratch in Python
+
+The following code shows how to create a Word document from scratch and add content to it using Python and Spire.Doc for Python:
+```python
+from spire.doc import *	
+from spire.doc.common import *
+
+# Create a Document object
+doc = Document()
+
+# Add a section
+section = doc.AddSection()
+
+# Set the page margins
+section.PageSetup.Margins.All = 40
+
+# Add a title
+titleParagraph = section.AddParagraph()
+titleParagraph.AppendText("Introduction of Spire.Doc for Python")
+
+# Add two paragraphs
+bodyParagraph_1 = section.AddParagraph()
+bodyParagraph_1.AppendText("Spire.Doc for Python is a professional Python library designed for developers to " +
+                           "create, read, write, convert, compare and print Word documents in any Python application " +
+                           "with fast and high-quality performance.")
+
+bodyParagraph_2 = section.AddParagraph()
+bodyParagraph_2.AppendText("As an independent Word Python API, Spire.Doc for Python doesn't need Microsoft Word to " +
+                           "be installed on neither the development nor target systems. However, it can incorporate Microsoft Word " +
+                           "document creation capabilities into any developers' Python applications.")
+
+# Apply heading1 to the title
+titleParagraph.ApplyStyle(BuiltinStyle.Heading1)
+
+# Create a style for the paragraphs
+style2 = ParagraphStyle(doc)
+style2.Name = "paraStyle"
+style2.CharacterFormat.FontName = "Arial"
+style2.CharacterFormat.FontSize = 13
+doc.Styles.Add(style2)
+bodyParagraph_1.ApplyStyle("paraStyle")
+bodyParagraph_2.ApplyStyle("paraStyle")
+
+# Set the horizontal alignment of the paragraphs
+titleParagraph.Format.HorizontalAlignment = HorizontalAlignment.Center
+bodyParagraph_1.Format.HorizontalAlignment = HorizontalAlignment.Left
+bodyParagraph_2.Format.HorizontalAlignment = HorizontalAlignment.Left
+
+# Set the after spacing
+titleParagraph.Format.AfterSpacing = 10
+bodyParagraph_1.Format.AfterSpacing = 10
+
+# Save to file
+doc.SaveToFile("output/WordDocument.docx", FileFormat.Docx2019)
+```
+
+### Convert a Word Document to PDF in Python
+
+The following code shows how to convert a Word document to PDF using Python and Spire.Doc for Python:
+```python
+from spire.doc import *
+from spire.doc.common import *
+
+# Create word document
+document = Document()
+
+# Load a doc or docx file
+document.LoadFromFile("C:\\Users\\Administrator\\Desktop\\input.docx")
+
+#Save the document to PDF
+document.SaveToFile("output/ToPDF.pdf", FileFormat.PDF)
+document.Close()
+```
+
+### Convert a Word Document to Images in Python
+
+The following code shows how to convert a Word document to images using Python and Spire.Doc for Python:
+```python
+from spire.doc import *
+from spire.doc.common import *
+
+# Create a Document object
+document = Document()
+
+# Load a Word file
+document.LoadFromFile("C:\\Users\\Administrator\\Desktop\\input.docx")
+
+# Loop through the pages in the document
+for i in range(document.GetPageCount()):
+
+    # Convert a specific page to bitmap image
+    imageStream = document.SaveImageToStreams(i, ImageType.Bitmap)
+
+    # Save the bitmap to a PNG file
+    with open('Output/ToImage-{0}.png'.format(i),'wb') as imageFile:
+        imageFile.write(imageStream.ToArray())
+
+document.Close()
+```
+
+[Product Page](https://www.e-iceblue.com/Introduce/doc-for-python.html) | [Documentation](https://www.e-iceblue.com/Tutorials/Python/Spire.Doc-for-Python/Program-Guide/Spire.Doc-for-Python-Program-Guide-Content.html) | [Examples](https://github.com/eiceblue/Spire.Doc-for-Python/tree/main/Python%20Examples) | [Forum](https://www.e-iceblue.com/forum/spire-doc-f6.html) | [Temporary License](https://www.e-iceblue.com/TemLicense.html) | [Customized Demo](https://www.e-iceblue.com/Misc/customized-demo.html)
+

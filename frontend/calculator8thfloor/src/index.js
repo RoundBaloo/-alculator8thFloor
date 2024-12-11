@@ -56,12 +56,12 @@ function App() {
                   </Link>
                   {adminService.getAdmin() && (
                             <Link to='/handleUsersPermisions'>
-                                <button className='calculator-type-button' type='button'>Управление доступом</button>
+                                <button className='calculator-type-button wide' type='button'>Управление доступом</button>
                             </Link>
                         )}
                   <Link to='/'>
                       <button
-                          className={`calculator-type-button`}
+                          className={`calculator-type-button-quit`}
                           type='button'
                           onClick={() => {
                             removeToken();

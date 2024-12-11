@@ -1,4 +1,5 @@
 backend/venv/
+backend/.venv/
 **/__pycache__/
 backend\calculator8thFloor\calculatorFactPlan\__pycache__
 backend\calculator8thFloor\calculatorFactPlan\components\__pycache__

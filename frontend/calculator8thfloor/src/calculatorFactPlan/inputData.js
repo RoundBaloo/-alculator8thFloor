@@ -183,7 +183,7 @@ const InputData = (props) => {
                         style={isNaN(files180w) || files180w === 0 ? { borderColor: 'red' } : {}}
                         value={files180w} 
                         onChange={e => setFiles180w(parseInt(e.target.value))}/>
-                        <img src={night} className='input-icon night'></img>
+                        <img src={night} className='input-icon'></img>
                     </div>
                     <div className='input-wrapper'>
                         <input type="number" style={isNaN(files180n) || files180n === 0 ? { borderColor: 'red' } : {}}
