@@ -17,8 +17,8 @@ class DataUpdater:
         for obj in Data.objects.all():
             obj.cnt_machines = self.input_data['cnt_machines'][f'{obj.machine_type}'.split('_')[0]]
             obj.avg_fact_files_per_month = self.input_data['avg_fact_files_per_month'][f'{obj.machine_type}']
+            obj.cnt_UZ = self.input_data['cnt_UZ']
             if (table == 'plan' or table == 'both'):
-                obj.cnt_UZ = self.input_data['cnt_UZ']
                 obj.permitted_load = self.input_data['permitted_load']
             obj.save()
         self.update_calculated_fact_data(table)
@@ -34,31 +34,31 @@ class DataUpdater:
         month_files = self.calculator.get_machines_month_files()
         max_files = self.calculator.get_machines_max_files()
         load_fact = self.calculator.get_workloads(
-                'fact', 
-                avg_fact_files_per_month[0], 
-                avg_fact_files_per_month[3], 
-                avg_fact_files_per_month[4], 
-                self.input_data['cnt_UZ'])
+            'fact', 
+            avg_fact_files_per_month[0], 
+            avg_fact_files_per_month[3], 
+            avg_fact_files_per_month[4], 
+            self.input_data['cnt_UZ'])
         scarcity_fact = self.calculator.get_machines_scarcity(
-                'fact', 
-                avg_fact_files_per_month[0], 
-                avg_fact_files_per_month[3], 
-                avg_fact_files_per_month[4], 
-                self.input_data['cnt_UZ'],
-                self.input_data['permitted_load'] / 100)
+            'fact', 
+            avg_fact_files_per_month[0], 
+            avg_fact_files_per_month[3], 
+            avg_fact_files_per_month[4], 
+            self.input_data['cnt_UZ'],
+            self.input_data['permitted_load'] / 100)
         load_plan = self.calculator.get_workloads(
-                'plan', 
-                avg_fact_files_per_month[0], 
-                avg_fact_files_per_month[3], 
-                avg_fact_files_per_month[4], 
-                self.input_data['cnt_UZ'])
+            'plan', 
+            avg_fact_files_per_month[0], 
+            avg_fact_files_per_month[3], 
+            avg_fact_files_per_month[4], 
+            self.input_data['cnt_UZ'])
         scarcity_plan = self.calculator.get_machines_scarcity(
-                'plan', 
-                avg_fact_files_per_month[0], 
-                avg_fact_files_per_month[3], 
-                avg_fact_files_per_month[4], 
-                self.input_data['cnt_UZ'],
-                self.input_data['permitted_load'] / 100)
+            'plan', 
+            avg_fact_files_per_month[0], 
+            avg_fact_files_per_month[3], 
+            avg_fact_files_per_month[4], 
+            self.input_data['cnt_UZ'],
+            self.input_data['permitted_load'] / 100)
         avg_fact_files_with_new = self.calculator.get_new_avg_files(
             avg_fact_files_per_month[0], 
             avg_fact_files_per_month[3], 

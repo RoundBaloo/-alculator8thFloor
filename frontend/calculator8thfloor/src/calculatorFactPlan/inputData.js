@@ -31,6 +31,7 @@ const InputData = (props) => {
     const [permittedLoad, setPermittedLoad] = useState();
     const [isCalculated, setIsCalculated] = useState(false);
     const [isError, setIsError] = useState(true);
+    const [isCntUzError, setIsCntUzError] = useState(false);
 
     function getInputData(token) {
         axios.get(`${apiDir}/calculatorFactPlan/data/input/`,
@@ -79,7 +80,7 @@ const InputData = (props) => {
                 '180h_weekend': files180w,
                 '180h_night': files180n,
             },
-            'cnt_UZ': cntUZ,
+            'cnt_UZ': isNaN(cntUZ) ? 0 : cntUZ,
             'permitted_load': permittedLoad,
         }, apiDir, table);
     }
@@ -118,16 +119,35 @@ const InputData = (props) => {
             })
     }
 
-    const handleCalculateButton = (isCalculated, table, isPlanTable) => {
+    const handleFactCalculateButton = (isCalculated, table, isPlanTable) => {
+        console.log("dura")
         if (!(isNaN(cnt180) || isNaN(cnt168) || isNaN(cnt79) || isNaN(files180d) 
-            || isNaN(files180n) || isNaN(files180w) || isNaN(cntUZ) || isNaN(permittedLoad)
-            || cnt180 === 0 || cnt168 === 0 || cnt79 === 0 || files180d === 0 
-            || files180n === 0 || files180w === 0 || cntUZ === 0 || permittedLoad == 0)) {
+            || isNaN(files180n) || isNaN(files180w) || isNaN(permittedLoad)
+            || files180d === 0 
+            || files180n === 0 || files180w === 0 || permittedLoad == 0)) {
+                console.log("все хорошо факт");
                 setIsCalculated(isCalculated);
                 callUpdateInputData(table);
                 planTableService.setPlanTable(isPlanTable);
             }
     }
+
+
+    const handlePlanCalculateButton = (isCalculated, table, isPlanTable) => {
+        if (isNaN(cntUZ)) {
+            setIsCntUzError(true);
+        } else {
+            if (!(isNaN(cnt180) || isNaN(cnt168) || isNaN(cnt79) || isNaN(files180d) 
+                || isNaN(files180n) || isNaN(files180w) || isNaN(cntUZ) || isNaN(permittedLoad)
+                || files180d === 0 
+                || files180n === 0 || files180w === 0 || cntUZ === 0 || permittedLoad == 0)) {
+                    console.log("все хорошо план");
+                    setIsCalculated(isCalculated);
+                    callUpdateInputData(table);
+                    planTableService.setPlanTable(isPlanTable);
+                }
+        }
+    }    
 
 
     if (isCalculated && !isError) {
@@ -144,21 +164,21 @@ const InputData = (props) => {
                     <p>Факт наличия машин для времени работы</p>
                     <div className='input-wrapper'>
                         <input type="number" 
-                        style={isNaN(cnt180) || cnt180 === 0 ? { borderColor: 'red' } : {}} 
+                        style={isNaN(cnt180) ? { borderColor: 'red' } : {}} 
                         value={cnt180} 
                         onChange={e => setCnt180(parseInt(e.target.value))}/>
                         <img src={icon180h} className='input-icon'></img>
                     </div>
                     <div className='input-wrapper'>
                         <input type="number"
-                        style={isNaN(cnt168) || cnt168 === 0 ? { borderColor: 'red' } : {}}
+                        style={isNaN(cnt168) ? { borderColor: 'red' } : {}}
                          value={cnt168} 
                          onChange={e => setCnt168(parseInt(e.target.value))}/>
                         <img src={icon160h} className='input-icon'></img>
                     </div>
                     <div className='input-wrapper'>
                         <input type="number" 
-                        style={isNaN(cnt79) || cnt79 === 0 ? { borderColor: 'red' } : {}}
+                        style={isNaN(cnt79) ? { borderColor: 'red' } : {}}
                         value={cnt79} 
                         onChange={e => setCnt79(parseInt(e.target.value))}/>
                         <img src={icon79h} className='input-icon min-fact'></img>
@@ -196,9 +216,12 @@ const InputData = (props) => {
                 <div className='input-container'>
                     <p>Кол-во новых пользователей</p>
                     <input type="number" 
-                    style={isNaN(cntUZ) || cntUZ === 0 ? { borderColor: 'red' } : {}}
+                    style={isCntUzError ? { borderColor: 'red' } : {}}
                     value={cntUZ} 
-                    onChange={e => setCntUZ(parseInt(e.target.value))}/>
+                    onChange={e => {
+                        setCntUZ(parseInt(e.target.value));
+                        setIsCntUzError(false);
+                        }}/>
                 </div>
 
                 <div className='input-container'>
@@ -213,7 +236,7 @@ const InputData = (props) => {
                     <button type='button'
                             className='calculate-button'
                             onClick={() => {
-                                handleCalculateButton(true, 'fact', false);
+                                handleFactCalculateButton(true, 'fact', false);
                             }}>Рассчитать факт
                     </button>
                     {/* <button type='button'
@@ -225,7 +248,7 @@ const InputData = (props) => {
                     <button type='button'
                             className='calculate-button second'
                             onClick={() => {
-                                handleCalculateButton(true, 'both', true);
+                                handlePlanCalculateButton(true, 'both', true);
                             }}>Рассчитать факт и план
                     </button>
                 </div>

@@ -4,7 +4,7 @@ def fill_fact_table_names():
     names = {
         'month_files': 'Максимальное кол-во файлов в месяц',
         'avg_fact_files_per_month': 'Факт среднего кол-ва файлов в месяц',
-        'avg_fact_files_with_new': 'С учетом новых УЗ',
+        'avg_fact_files_with_new': 'Кол-во файлов с учетом новых УЗ',
         'new_users_files': 'Кол-во файлов новых пользователей',
         'cnt_machines': 'Факт кол-ва машин',
         'max_files': 'Факт максимального кол-ва файлов',
