@@ -23,7 +23,7 @@ class FactDataViewSet(viewsets.ModelViewSet):
     queryset = Data.objects.all()
     serializer_class = FactDataSerializer
 
-    # permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated]
 
     @swagger_auto_schema(operation_summary="Get all calculated data",
                          operation_description="Returns a list of all calculated data entries")
@@ -32,7 +32,7 @@ class FactDataViewSet(viewsets.ModelViewSet):
         serializer = self.get_serializer(queryset, many=True)
 
         response = Response(serializer.data)
-        response['ngrok-skip-browser-warning'] = 'skip-browser-warning'
+        response['ngrok-skip-browser-warning'] = 'skip-browser-warning'  #нужен исключительно для хоста через ngrok
         return response
 
 
@@ -49,7 +49,7 @@ class PlanDataViewSet(viewsets.ModelViewSet):
         serializer = self.get_serializer(queryset, many=True)
 
         response = Response(serializer.data)
-        response['ngrok-skip-browser-warning'] = 'skip-browser-warning'
+        response['ngrok-skip-browser-warning'] = 'skip-browser-warning'  #нужен исключительно для хоста через ngrok
         return response
 
 
@@ -57,7 +57,7 @@ class InputedDataViewSet (viewsets.ModelViewSet):
     queryset = Data.objects.all()
     serializer_class = InputedFieldsDataSerializer
 
-    permission_classes = [IsAuthenticated]
+    # permission_classes = [IsAuthenticated]
 
     @swagger_auto_schema(operation_summary="Get data that user can input",
                          operation_description="Returns a list of input data")
@@ -66,19 +66,32 @@ class InputedDataViewSet (viewsets.ModelViewSet):
         serializer = self.get_serializer(queryset, many=True)
 
         response = Response(serializer.data)
-        response['ngrok-skip-browser-warning'] = 'skip-browser-warning'
+        response['ngrok-skip-browser-warning'] = 'skip-browser-warning'  #нужен исключительно для хоста через ngrok
         return response
 
     def create(self, request, *args, **kwargs):
         # Получаем данные из запроса
         data = json.loads(request.GET.get('data'))
-        print(data['cnt_UZ'])
+        if (
+            data['cnt_machines']['180h'] <= 0
+            or data['cnt_machines']['168h'] < 0
+            or data['cnt_machines']['79h'] < 0
+            or data['avg_fact_files_per_month']['180h_day'] < 0
+            or data['avg_fact_files_per_month']['168h'] < 0
+            or data['avg_fact_files_per_month']['79h'] < 0
+            or data['avg_fact_files_per_month']['180h_weekend'] < 0
+            or data['avg_fact_files_per_month']['180h_night'] < 0
+            or data['cnt_UZ'] < 0
+            or data['permitted_load'] < 0
+        ):
+            return Response({'error': 'Invalid data'}, status=status.HTTP_400_BAD_REQUEST)
+        
         table = request.GET.get('table')
         data_updater = DataUpdater(data)
         data_updater.update_inputed_data(table)
 
         response = Response({"message": "All Data objects have been updated"}, status=status.HTTP_200_OK)
-        response['ngrok-skip-browser-warning'] = 'skip-browser-warning'
+        response['ngrok-skip-browser-warning'] = 'skip-browser-warning'  #нужен исключительно для хоста через ngrok
 
         return response
 
@@ -95,7 +108,7 @@ class HeadViewSet(viewsets.ModelViewSet):
         serializer = self.get_serializer(queryset, many=True)
 
         response = Response(serializer.data)
-        response['ngrok-skip-browser-warning'] = 'skip-browser-warning'
+        response['ngrok-skip-browser-warning'] = 'skip-browser-warning'  #нужен исключительно для хоста через ngrok
 
         return response
 
@@ -107,18 +120,18 @@ class HeadViewSet(viewsets.ModelViewSet):
         # Проверка на наличие обязательных полей
         if not email or not password or not username:
             response = Response({"error": "required fields are not filled in"}, status=status.HTTP_400_BAD_REQUEST)
-            response['ngrok-skip-browser-warning'] = 'skip-browser-warning'
+            response['ngrok-skip-browser-warning'] = 'skip-browser-warning'  #нужен исключительно для хоста через ngrok
             return response
         try:
             user = User.objects.create_user(username=username, email=email, password=password)
             response = Response({"message": "User  created successfully.", "user_id": user.id}, status=status.HTTP_201_CREATED)
-            response['ngrok-skip-browser-warning'] = 'skip-browser-warning'
+            response['ngrok-skip-browser-warning'] = 'skip-browser-warning'  #нужен исключительно для хоста через ngrok
             print('success')
             return response
         except Exception as e:
             print('error')
             response = Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
-            response['ngrok-skip-browser-warning'] = 'skip-browser-warning'
+            response['ngrok-skip-browser-warning'] = 'skip-browser-warning'  #нужен исключительно для хоста через ngrok
             return response
 
     def destroy(self, request, *args, **kwargs):
@@ -133,6 +146,8 @@ class HeadViewSet(viewsets.ModelViewSet):
             return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
     def update(self, request, pk=None, partial=False):
+        if not request.user.is_superuser:
+            return Response({"error": "У вас нет прав на изменение пользователей"}, status=status.HTTP_403_FORBIDDEN)
         try:
             user = self.queryset.get(id=pk)
         except User.DoesNotExist:
@@ -155,7 +170,7 @@ class TableColumnNamesViewSet(viewsets.ModelViewSet):
         serializer = self.get_serializer(queryset, many=True)
 
         response = Response(serializer.data)
-        response['ngrok-skip-browser-warning'] = 'skip-browser-warning'
+        response['ngrok-skip-browser-warning'] = 'skip-browser-warning'  #нужен исключительно для хоста через ngrok
         return response
         
 
@@ -169,7 +184,7 @@ def export_fact_excel(request):
     workbook.close()
 
     response = FileResponse(open('fact.xlsx', 'rb'))
-    response['ngrok-skip-browser-warning'] = 'skip-browser-warning'
+    response['ngrok-skip-browser-warning'] = 'skip-browser-warning'  #нужен исключительно для хоста через ngrok
 
     return FileResponse(open('fact.xlsx', 'rb'))
 
