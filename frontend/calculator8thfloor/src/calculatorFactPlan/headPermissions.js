@@ -1,10 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { getToken } from '../calculatorFactPlan/services/tokenService';
-import { Link } from 'react-router-dom';
-import { ApiDirectory } from '../apiDir';
+import { ApiUrl } from '../apiUrl';
 import '../styles/styles.css';
-import Logo from '../img/logo.svg';
 import DeleteMember from '../img/delete_member_icon.svg';
 import ChangeMember from '../img/change_member_icon.svg';
 import { switchButtons } from './stepaScripts/switchButtons';
@@ -16,55 +14,36 @@ import { showAddUserButton } from './stepaScripts/showAddUserButton';
 import { hideRegisterForm } from './stepaScripts/hideRegisterForm';
 
 
-
-const createUser = (token, createUserInformatiom, getUsersFunction, apiDir) => {
-    axios.post(`${apiDir}/calculatorFactPlan/head/`,
-        JSON.stringify({
-            "username": `${createUserInformatiom.username}`,
-            "email": `${createUserInformatiom.email}`,
-            "password": `${createUserInformatiom.password}`,
-        }), {
-        headers: {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json'
-        }
-    })
-        .then(response => {
-            getUsersFunction();
-        })
-        .catch(error => {
-            if (error.response && (error.response.status === 401 || error.response.status === 403)) {
-                window.location.href = '/';
-            } else {
-                console.error('ABOBA ERROR', error);
-            }
-        })
-}
-
-
 export default function HeadPermissions(props) {
-    const api = new ApiDirectory()
-    const apiDir = api.getApiUrl()
+    const api = new ApiUrl()
+    const apiUrl = api.getApiUrl()
     const token = getToken();
-    const [users, setUsers] = useState();
-    const [isLoading, setIsLoading] = useState(false);
-    const [username, setUsername] = useState('');
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const [confirmedPassword, setConfirmedPassword] = useState('');
-    const [isChangingPassword, setIsChangingPassword] = useState(false);
-    const [userIdToChange, setUserIdToChange] = useState(null);
-    const [newPassword, setNewPassword] = useState('');
-    const [confirmedNewPassword, setConfirmedNewPassword] = useState('');
-    const [currentUser, setCurrentUser] = useState();
-    const [isUsernameFilled, setIsUsernameFilled] = useState(true);
-    const [isPasswordFilled, setIsPasswordFilled] = useState(true);
-    const [isConfirmedPasswordFilled, setIsConfirmedPasswordFilled] = useState(true);
-    const [isEmailFilled, setIsEmailFilled] = useState(true);
+    const [users, setUsers] = useState();  // список пользователей
+    const [username, setUsername] = useState('');  // логин при добавлении пользователя
+    const [email, setEmail] = useState('');  // почта при добавлении пользователя
+    const [password, setPassword] = useState('');  // пароль при добавлении пользователя
+    const [confirmedPassword, setConfirmedPassword] = useState('');  // подтвержденеи пароля при добавлении пользователя
+    const [isChangingPassword, setIsChangingPassword] = useState(false);  // нужно ли отображать форму изменения пароля
+    const [userIdToChange, setUserIdToChange] = useState(null);  // ID юзера, которому меняют пароль
+    const [newPassword, setNewPassword] = useState('');  // пароль при изменении пароля
+    const [confirmedNewPassword, setConfirmedNewPassword] = useState('');  // подтверждение пароля при изменении пароля
+    const [currentUser, setCurrentUser] = useState();  // текущий пользователь
+    const [isUsernameFilled, setIsUsernameFilled] = useState(true);  // заполнено ли поле логина при добавлении пользователя
+    const [isPasswordFilled, setIsPasswordFilled] = useState(true);  // заполнено ли поле пароля при добавлении пользователя
+    const [isConfirmedPasswordFilled, setIsConfirmedPasswordFilled] = useState(true);  // заполнено ли поле подтверждения пароля при добавлении пользователя
+    const [isEmailFilled, setIsEmailFilled] = useState(true);  // заполнено ли поле эмейла при добавлении пользователя
+    const [isNewPasswordFilled, setIsNewPasswordFilled] = useState(true);  // заполнено ли поле пароля при изменении
+    const [isConfirmedNewPasswordFilled, setIsConfirmedNewPasswordFilled] = useState(true);  // заполнено ли поле подтверждения при изменении
 
+
+    useEffect(() => {
+        getUsers();
+    }, []);
+
+
+    /** Получает список пользователей */
     const getUsers = () => {
-        setIsLoading(true);
-        axios.get(`${apiDir}/calculatorFactPlan/head/`, {
+        axios.get(`${apiUrl}/calculatorFactPlan/head/`, {
             headers: {
                 'Authorization': `Bearer ${token}`,
                 'Content-Type': 'application/json',
@@ -74,22 +53,58 @@ export default function HeadPermissions(props) {
             .then(response => {
                 console.log('пользователи загружены')
                 setUsers(response.data);
-                setIsLoading(false);
                 console.log(response.data);
             })
             .catch(error => {
                 if (error.response && (error.response.status === 401 || error.response.status === 403)) {
-                    setIsLoading(false);
                     window.location.href = '/';
                 } else {
-                    console.error('ABOBA ERROR', error);
+                    console.error(error);
                 }
             })
     };
 
 
+    
+    /**
+     * Создает пользователя
+     *
+     * @param {str} token - Токен доступа
+     * @param {dict} createUserData - Данные для создания пользователя: логин, пароль и эмейл
+     * @param {func} getUsersFunction - Функция для обновления списка пользователей
+     */
+    const createUser = (token, createUserData, getUsersFunction) => {
+        axios.post(`${apiUrl}/calculatorFactPlan/head/`,
+            JSON.stringify({
+                "username": `${createUserData.username}`,
+                "email": `${createUserData.email}`,
+                "password": `${createUserData.password}`,
+            }), {
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            }
+        })
+            .then(response => {
+                getUsersFunction();
+            })
+            .catch(error => {
+                if (error.response && (error.response.status === 401 || error.response.status === 403)) {
+                    window.location.href = '/';
+                } else {
+                    console.error(error);
+                }
+            })
+    }
+
+    
+    /**
+     * Удалаяет определенного пользователя
+     *
+     * @param {int} id - ID пользователя, которого нужно удалить
+     */
     const deleteThisUser = (id) => {
-        axios.delete(`${apiDir}/calculatorFactPlan/head/${id}/`,
+        axios.delete(`${apiUrl}/calculatorFactPlan/head/${id}/`,
             {
                 headers: {
                     'Authorization': `Bearer ${token}`,
@@ -103,20 +118,29 @@ export default function HeadPermissions(props) {
                 if (error.response && (error.response.status === 401 || error.response.status === 403)) {
                     window.location.href = '/';
                 } else {
-                    console.error('ABOBA ERROR', error);
+                    console.error(error);
                 }
             })
     }
 
 
+    
+    /**
+     * Обрабатывает форму изменения пароля, включает отображение формы полей ввода для смены пароля
+     *
+     * @param {int} userId - ID пользователя, у которого нужно поменять пароль
+     */
     const handleChangePassword = (userId) => {
         setUserIdToChange(userId);
         setIsChangingPassword(true);
     };
 
+
+    
+    /** Отправка измененного пароля на сервер */
     const submitChangePassword = () => {
         if (newPassword === confirmedNewPassword) {
-            axios.patch(`${apiDir}/calculatorFactPlan/head/${userIdToChange}/`, {
+            axios.patch(`${apiUrl}/calculatorFactPlan/head/${userIdToChange}/`, {
                 new_password: newPassword,
                 confirm_password: confirmedNewPassword,
             }, {
@@ -131,7 +155,7 @@ export default function HeadPermissions(props) {
                     showAddUserButton();
                     setNewPassword('');
                     setConfirmedNewPassword('');
-                    getUsers(); // Обновляем список пользователей
+                    getUsers(); 
                 })
                 .catch(error => {
                     console.error('Ошибка при изменении пароля', error);
@@ -142,40 +166,15 @@ export default function HeadPermissions(props) {
     };
 
 
-    useEffect(() => {
-        getUsers();
-    }, []);
-
-
+    
+    /**
+     * Отрисовывает список пользователь
+     *
+     * @returns {*} - список пользователей
+     */
     const renderUsers = () => {
         if (users) {
             return (
-                // <div className="users">
-                //     <h3>Users:</h3>
-                //     <ul>
-                //         {users.map((user) => (
-                //             <li key={user.id} className='users-item'>
-                //                 <strong>Username:</strong> {user.username} <br />
-                //                 <strong>Email:</strong> {user.email} <br />
-                //                 <strong>Role:</strong> {user.is_superuser ? 'Руководитель' : 'Работник'}
-                //                 <button className='delete-button' type='button' onClick={() => {
-                //                     const confirmation = window.confirm('Вы уверены, что хотите удалить этого пользователя?');
-                //                     if (confirmation) {
-                //                         deleteThisUser(user.id)
-                //                     }
-                //                 }}>удалить</button>
-                //                 <button className='change-button' type='button' onClick={() => handleChangePassword(user.id)}>изменить пароль</button>
-                //                 {isChangingPassword && user.id === userIdToChange && (
-                //                     <div>
-                //                         <input type='password' placeholder='новый пароль' value={newPassword} onChange={e => setNewPassword(e.target.value)} />
-                //                         <input type='password' placeholder='подтвердите пароль' value={confirmedNewPassword} onChange={e => setConfirmedNewPassword(e.target.value)} />
-                //                         <button type='button' onClick={submitChangePassword}>Отправить</button>
-                //                     </div>
-                //                 )}
-                //             </li>
-                //         ))}
-                //     </ul>
-                // </div>
                 <>
                     <div className='table-wrapper'>
                         <table className='users'>
@@ -201,13 +200,6 @@ export default function HeadPermissions(props) {
                                                     setCurrentUser(user);
                                                     hideAddUserButton();
                                                 }}><img src={ChangeMember}></img></button>
-                                            {/* {isChangingPassword && user.id === userIdToChange && (
-                                                <div>
-                                                    <input type='password' placeholder='новый пароль' value={newPassword} onChange={e => setNewPassword(e.target.value)} />
-                                                    <input type='password' placeholder='подтвердите пароль' value={confirmedNewPassword} onChange={e => setConfirmedNewPassword(e.target.value)} />
-                                                    <button type='button' onClick={submitChangePassword}>Отправить</button>
-                                                </div>
-                                            )} */}
                                             <button
                                                 className='delete-button'
                                                 type='button'
@@ -230,29 +222,38 @@ export default function HeadPermissions(props) {
 
                         <div className="register">
                             <div className='input-inner'>
-                                <input type='text' value={username} onChange={e => (setUsername(e.target.value))} style={{
-                                    borderColor: !isUsernameFilled && 'red',
-                                }} />
+                                <input 
+                                    type='text' 
+                                    value={username} 
+                                    onChange={e => (setUsername(e.target.value))} 
+                                    style={{borderColor: !isUsernameFilled && 'red'}} />
                                 <small>Логин</small>
                             </div>
                             <div className='password-container'>
                                 <div className='input-inner'>
-                                    <input type='password' value={password} onChange={e => (setPassword(e.target.value))} style={{
-                                    borderColor: !isPasswordFilled && 'red',
-                                }} />
+                                    <input 
+                                        type='password' 
+                                        value={password} 
+                                        onChange={e => (setPassword(e.target.value))} 
+                                        style={{
+                                        borderColor: !isPasswordFilled && 'red'}} />
                                     <small>Пароль</small>
                                 </div>
                                 <div className='input-inner'>
-                                    <input type='password' value={confirmedPassword} onChange={e => (setConfirmedPassword(e.target.value))} style={{
-                                    borderColor: !isConfirmedPasswordFilled && 'red',
-                                }} />
+                                    <input 
+                                        type='password' 
+                                        value={confirmedPassword} 
+                                        onChange={e => (setConfirmedPassword(e.target.value))} 
+                                        style={{borderColor: !isConfirmedPasswordFilled && 'red'}} />
                                     <small>Подтвердите пароль</small>
                                 </div>
                             </div>
                             <div className='input-inner'>
-                                <input type='email' value={email} onChange={e => (setEmail(e.target.value))} style={{
-                                    borderColor: !isEmailFilled && 'red',
-                                }} />
+                                <input 
+                                    type='email' 
+                                    value={email} 
+                                    onChange={e => (setEmail(e.target.value))} 
+                                    style={{borderColor: !isEmailFilled && 'red'}} />
                                 <small>Почта</small>
                             </div>
                             <button type='button' className='confirm-add-user' onClick={() => {
@@ -278,7 +279,7 @@ export default function HeadPermissions(props) {
                                         "password": password,
                                     },
                                         getUsers,
-                                        apiDir);
+                                        apiUrl);
                                     hideRegisterForm();
                                     showAddUserButton();
                                     setUsername('');
@@ -299,33 +300,46 @@ export default function HeadPermissions(props) {
 
                         {isChangingPassword && currentUser.id === userIdToChange && (
                             <div className='change-password-container'>
-                                <div className='input-inner'>
-                                    <input type='text' onChange={e => (setUsername(e.target.value))} />
-                                    <small>Логин</small>
-                                </div>
-
                                 <div className='password-container'>
-                                    <input type='password' placeholder='новый пароль' value={newPassword} onChange={e => setNewPassword(e.target.value)} />
-                                    <input type='password' placeholder='подтвердите пароль' value={confirmedNewPassword} onChange={e => setConfirmedNewPassword(e.target.value)} />
-                                </div>
-
-                                <div className='input-inner'>
-                                    <input type='email' onChange={e => (setEmail(e.target.value))} />
-                                    <small>Почта</small>
+                                    <input 
+                                        type='password' 
+                                        placeholder='новый пароль' 
+                                        value={newPassword} 
+                                        onChange={e => {
+                                            setNewPassword(e.target.value);
+                                            setIsNewPasswordFilled(true);
+                                        }}
+                                        style={{borderColor: !isNewPasswordFilled && 'red'}} />
+                                    <input 
+                                        type='password' 
+                                        placeholder='подтвердите пароль' 
+                                        value={confirmedNewPassword} 
+                                        onChange={e => {
+                                            setConfirmedNewPassword(e.target.value);
+                                            setIsConfirmedNewPasswordFilled(true);
+                                        }}
+                                        style={{borderColor: !isConfirmedNewPasswordFilled && 'red'}} />
                                 </div>
                                 <button className='send-changed-password' type='button' onClick={() => {
-                                    submitChangePassword();
+                                    if (newPassword.length === 0) {
+                                        setIsNewPasswordFilled(false);
+                                    } else if (confirmedNewPassword.length === 0) {
+                                        setIsConfirmedNewPasswordFilled(false);
+                                    } else {
+                                        setIsNewPasswordFilled(true);
+                                        setIsConfirmedNewPasswordFilled(true);
+
+                                        submitChangePassword();
+                                    }
                                 }}>Отправить</button>
                                 <button type='button' className='confirm-add-user' onClick={() => {
-                                    setIsChangingPassword(false);
-                                    showAddUserButton();
+                                        setIsChangingPassword(false);
+                                        showAddUserButton();
                                 }}>
                                     Отменить
                                 </button>
                             </div>
                         )}
-
-
                     </div>
                 </>
             );
@@ -343,25 +357,7 @@ export default function HeadPermissions(props) {
 
     return (
         <>
-            {/* <div className="register">
-                <input type='text' placeholder='username' onChange={e => (setUsername(e.target.value))} />
-                <input type='email' placeholder='email' onChange={e => (setEmail(e.target.value))} />
-                <input type='password' placeholder='password' onChange={e => (setPassword(e.target.value))} />
-                <input type='password' placeholder='confirm password' onChange={e => (setConfirmedPassword(e.target.value))} />
-                <button type='button' onClick={() => {
-                    createUser(token, {
-                        "username": username,
-                        "email": email,
-                        "password": password,
-                    },
-                        getUsers,
-                        apiDir);
-                }}>добавить</button>
-            </div> */}
             {renderUsers()}
-            {/* <Link to='/calculatorFactPlan'>
-                <button className='calculator-type-button return-back' type='button'>назад</button>
-            </Link> */}
         </>
     )
 }

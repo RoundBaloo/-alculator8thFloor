@@ -2,20 +2,20 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { getToken } from './services/tokenService';
 import { Link } from 'react-router-dom';
-import { ApiDirectory } from '../apiDir';
+import { ApiUrl } from '../apiUrl';
 import '../styles/styles.css';
-import adminService from './services/adminService';
 import planTableService from './services/planTableService';
 
 
 export default function CalculatorFactPlanTable(props) {
-    const api = new ApiDirectory()
-    const apiDir = api.getApiUrl()
+    const api = new ApiUrl()
+    const apiUrl = api.getApiUrl()
     const token = getToken();
-    const [factData, setFactData] = useState([]);
-    const [planData, setPlanData] = useState([]);
-    const [isLoading, setIsLoading] = useState(true);
-    const [columnNames, setColumnNames] = useState();
+    const [factData, setFactData] = useState([]);  // данные для таблицы Факта
+    const [planData, setPlanData] = useState([]);  // данные для таблицы Плана
+    const [isLoading, setIsLoading] = useState(true);  // обработчик загрузки
+    const [columnNames, setColumnNames] = useState();  // названия для колонок
+    const [showAllButtons, setShowAllButtons] = useState(false);  // отображать ли все кнопки экспорта
 
 
     useEffect(() => {
@@ -25,8 +25,10 @@ export default function CalculatorFactPlanTable(props) {
     }, []);
 
 
+    
+    /** Обработка экспорта данных Факта в эксель */
     const handleDownloadFactExcel = () => {
-        axios.get(`${apiDir}/calculatorFactPlan/export/fact/excel`, {
+        axios.get(`${apiUrl}/calculatorFactPlan/export/fact/excel`, {
             headers: {
                 'ngrok-skip-browser-warning': 'skip-browser-warning',
             },
@@ -49,8 +51,9 @@ export default function CalculatorFactPlanTable(props) {
     };
 
 
+    /** Обработка экспорта данных Плана в эксель */
     const handleDownloadPlanExcel = () => {
-        axios.get(`${apiDir}/calculatorFactPlan/export/plan/excel`, {
+        axios.get(`${apiUrl}/calculatorFactPlan/export/plan/excel`, {
             headers: {
                 'ngrok-skip-browser-warning': 'skip-browser-warning',
             },
@@ -73,8 +76,9 @@ export default function CalculatorFactPlanTable(props) {
     };
 
 
+    /** Обработка экспорта данных Факта и Плана в эксель */
     const handleDownloadFactPlanExcel = () => {
-        axios.get(`${apiDir}/calculatorFactPlan/export/fact_plan/excel`, {
+        axios.get(`${apiUrl}/calculatorFactPlan/export/fact_plan/excel`, {
             headers: {
                 'ngrok-skip-browser-warning': 'skip-browser-warning',
             },
@@ -97,8 +101,9 @@ export default function CalculatorFactPlanTable(props) {
     };
 
 
+    /** Обработка экспорта данных Факта в ворд */
     const handleDownloadFactPlanWord = () => {
-        axios.get(`${apiDir}/calculatorFactPlan/export/report/docx`, {
+        axios.get(`${apiUrl}/calculatorFactPlan/export/report/docx`, {
             headers: {
                 'ngrok-skip-browser-warning': 'skip-browser-warning',
             },
@@ -121,8 +126,9 @@ export default function CalculatorFactPlanTable(props) {
     };
 
 
+    /** Обработка экспорта данных Факта в ПДФ */
     const handleDownloadFactPlanPDF = () => {
-        axios.get(`${apiDir}/calculatorFactPlan/export/report/pdf`, {
+        axios.get(`${apiUrl}/calculatorFactPlan/export/report/pdf`, {
             headers: {
                 'ngrok-skip-browser-warning': 'skip-browser-warning',
             },
@@ -145,9 +151,11 @@ export default function CalculatorFactPlanTable(props) {
     };
 
 
+    
+    /** Получает рассчитанные данные для Факта с сервера и сохраняет их в состояние */
     const getFactCalculatedData = () => {
         setIsLoading(true);
-        axios.get(`${apiDir}/calculatorFactPlan/data/fact/`, {
+        axios.get(`${apiUrl}/calculatorFactPlan/data/fact/`, {
             headers: {
                 'Authorization': `Bearer ${token}`,
                 'Content-Type': 'application/json',
@@ -169,9 +177,10 @@ export default function CalculatorFactPlanTable(props) {
     };
 
 
+    /** Получает рассчитанные данные для Плана с сервера и сохраняет их в состояние */
     const getPlanCalculatedData = () => {
         setIsLoading(true);
-        axios.get(`${apiDir}/calculatorFactPlan/data/plan/`, {
+        axios.get(`${apiUrl}/calculatorFactPlan/data/plan/`, {
             headers: {
                 'Authorization': `Bearer ${token}`,
                 'Content-Type': 'application/json',
@@ -193,8 +202,10 @@ export default function CalculatorFactPlanTable(props) {
     };
 
 
+    
+    /** Получает названия для колонок с сервера и сохраняет их в состояние */
     const getTableColumnNames = () => {
-        axios.get(`${apiDir}/calculatorFactPlan/names/`, {
+        axios.get(`${apiUrl}/calculatorFactPlan/names/`, {
             headers: {
                 'Authorization': `Bearer ${token}`,
                 'Content-Type': 'application/json',
@@ -215,6 +226,20 @@ export default function CalculatorFactPlanTable(props) {
         })
     };
 
+
+    
+    /** Обрабатывает нажатие на главную кнопку Экспорт */
+    const handleFirstButtonClick = () => {
+        setShowAllButtons(prevState => !prevState);
+    };
+
+
+    
+    /**
+     * Отрисовывает таблицу Факта
+     *
+     * @returns {*}
+     */
     const renderFactTable = () => {
         if (isLoading) {
             return (
@@ -309,6 +334,12 @@ export default function CalculatorFactPlanTable(props) {
     };
 
 
+    
+    /**
+     * Отрисовывает таблицу Плана
+     *
+     * @returns {*}
+     */
     const renderPlanTable = () => {
         if (isLoading) {
             return (
@@ -427,14 +458,6 @@ export default function CalculatorFactPlanTable(props) {
             </tbody>
         );       
     };
-
-    const [showAllButtons, setShowAllButtons] = useState(false);
-
-    const handleFirstButtonClick = () => {
-        console.log('нажал');
-        setShowAllButtons(prevState => !prevState);
-    };
-
 
 
     return (

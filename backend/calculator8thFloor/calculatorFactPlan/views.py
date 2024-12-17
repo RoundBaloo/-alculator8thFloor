@@ -1,11 +1,13 @@
 from django.contrib.auth.models import User
 from rest_framework import viewsets, status
 from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.mixins import ListModelMixin, CreateModelMixin, UpdateModelMixin, DestroyModelMixin
+from rest_framework.viewsets import GenericViewSet
 from .serializers import FactDataSerializer, PlanDataSerializer, InputedFieldsDataSerializer, UserSerializer, ChangePasswordSerializer, GetTableColumnNamesSerializer
 from .models import Data, TableColumnName
 from drf_yasg.utils import swagger_auto_schema
 from .components.data_updater import DataUpdater
-from rest_framework.permissions import IsAuthenticated
 import json
 from django.http import FileResponse
 import xlsxwriter
@@ -18,15 +20,18 @@ import requests
 # Create your views here.
 
 
-# таблица факта
-class FactDataViewSet(viewsets.ModelViewSet):
+class FactDataViewSet(ListModelMixin, GenericViewSet):
     queryset = Data.objects.all()
     serializer_class = FactDataSerializer
+    http_method_names = ['get']
 
     permission_classes = [IsAuthenticated]
 
-    @swagger_auto_schema(operation_summary="Get all calculated data",
-                         operation_description="Returns a list of all calculated data entries")
+    @swagger_auto_schema(operation_summary="Передает данные для таблицы Факта",
+                         operation_description="Возвращает список словарей. \
+                                Каждый словарь - отдельная строка в таблице. \
+                                    Ключ - название столбца из модели, значение - вычисленное значение",
+                         tags=["Fact Data"])
     def list(self, request, *args, **kwargs):
         queryset = self.get_queryset()
         serializer = self.get_serializer(queryset, many=True)
@@ -36,14 +41,17 @@ class FactDataViewSet(viewsets.ModelViewSet):
         return response
 
 
-class PlanDataViewSet(viewsets.ModelViewSet):
+class PlanDataViewSet(ListModelMixin, GenericViewSet):
     queryset = Data.objects.all()
     serializer_class = PlanDataSerializer
 
     permission_classes = [IsAuthenticated]
 
-    @swagger_auto_schema(operation_summary="Get all calculated data",
-                         operation_description="Returns a list of all calculated data entries")
+    @swagger_auto_schema(operation_summary="Передает данные для таблицы Плана",
+                         operation_description="Возвращает список словарей. \
+                                Каждый словарь - отдельная строка в таблице. \
+                                    Ключ - название столбца из модели, значение - вычисленное значение",
+                         tags=["Plan Data"])
     def list(self, request, *args, **kwargs):
         queryset = self.get_queryset()
         serializer = self.get_serializer(queryset, many=True)
@@ -53,14 +61,17 @@ class PlanDataViewSet(viewsets.ModelViewSet):
         return response
 
 
-class InputedDataViewSet (viewsets.ModelViewSet):
+class InputedDataViewSet (ListModelMixin, CreateModelMixin, GenericViewSet):
     queryset = Data.objects.all()
     serializer_class = InputedFieldsDataSerializer
 
-    # permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated]
 
-    @swagger_auto_schema(operation_summary="Get data that user can input",
-                         operation_description="Returns a list of input data")
+    @swagger_auto_schema(operation_summary="Передает вводимые данные",
+                         operation_description="Возвращает данные, которые заполняют поля для ввода. \
+                                 Эти данные используются для упрощения пользования приложением, \
+                                 например, чтобы по новой не вводить кол-во машин заново каждый раз.",
+                         tags=["Input Data"])
     def list(self, request, *args, **kwargs):
         queryset = self.get_queryset()
         serializer = self.get_serializer(queryset, many=True)
@@ -69,8 +80,12 @@ class InputedDataViewSet (viewsets.ModelViewSet):
         response['ngrok-skip-browser-warning'] = 'skip-browser-warning'  #нужен исключительно для хоста через ngrok
         return response
 
+    @swagger_auto_schema(operation_summary="Получает и обрабатывает данные",
+                         operation_description="Получает введенные данные и на их основе пересчитывает \
+                             все вычисляемые значения.\
+                             avg_fact_files_per_month переданный для 180h_day применяется и для 168h; 79h.",
+                         tags=["Input Data"])
     def create(self, request, *args, **kwargs):
-        # Получаем данные из запроса
         data = json.loads(request.GET.get('data'))
         if (
             data['cnt_machines']['180h'] <= 0
@@ -88,7 +103,7 @@ class InputedDataViewSet (viewsets.ModelViewSet):
         
         table = request.GET.get('table')
         data_updater = DataUpdater(data)
-        data_updater.update_inputed_data(table)
+        data_updater.handle_inputed_data(table)
 
         response = Response({"message": "All Data objects have been updated"}, status=status.HTTP_200_OK)
         response['ngrok-skip-browser-warning'] = 'skip-browser-warning'  #нужен исключительно для хоста через ngrok
@@ -96,11 +111,14 @@ class InputedDataViewSet (viewsets.ModelViewSet):
         return response
 
 
-class HeadViewSet(viewsets.ModelViewSet):
+class HeadViewSet(ListModelMixin, CreateModelMixin, UpdateModelMixin, DestroyModelMixin, GenericViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
+    
     permission_classes = [IsAuthenticated]
 
+    @swagger_auto_schema(operation_summary="Передает список всех пользователей приложения",
+                         tags=["Head features"])
     def list(self, request, *args, **kwargs):
         if not request.user.is_superuser:
             return Response(status=status.HTTP_404_NOT_FOUND)
@@ -112,6 +130,8 @@ class HeadViewSet(viewsets.ModelViewSet):
 
         return response
 
+    @swagger_auto_schema(operation_summary="Создает новых пользователей",
+                         tags=["Head features"])
     def create(self, request, *args, **kwargs):
         username = request.data.get('username')
         email = request.data.get('email')
@@ -134,6 +154,8 @@ class HeadViewSet(viewsets.ModelViewSet):
             response['ngrok-skip-browser-warning'] = 'skip-browser-warning'  #нужен исключительно для хоста через ngrok
             return response
 
+    @swagger_auto_schema(operation_summary="Удаляет пользователей",
+                         tags=["Head features"])
     def destroy(self, request, *args, **kwargs):
         if not request.user.is_superuser:
             return Response({"error": "У вас нет прав на удаление пользователей"}, status=status.HTTP_403_FORBIDDEN)
@@ -145,6 +167,8 @@ class HeadViewSet(viewsets.ModelViewSet):
         except Exception as e:
             return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
+    @swagger_auto_schema(operation_summary="Обновляет пароль пользователю",
+                         tags=["Head features"])
     def update(self, request, pk=None, partial=False):
         if not request.user.is_superuser:
             return Response({"error": "У вас нет прав на изменение пользователей"}, status=status.HTTP_403_FORBIDDEN)
@@ -160,10 +184,16 @@ class HeadViewSet(viewsets.ModelViewSet):
         return Response({"detail": "Пароль успешно изменен."}, status=status.HTTP_200_OK)
     
     
-class TableColumnNamesViewSet(viewsets.ModelViewSet):
+class TableColumnNamesViewSet(ListModelMixin, GenericViewSet):
     queryset = TableColumnName.objects.all()
     serializer_class = GetTableColumnNamesSerializer
     
+    permission_classes = [IsAuthenticated]
+    
+    @swagger_auto_schema(operation_summary="Передает названия колонок",
+                         operation_description="Возвращает словарь, где ключ - название переменной из модели \
+                             значение - название колонки, в которой будут отображаться данные из этой переменной.",
+                         tags=["Table names"])
     def list(self, request, *args, **kwargs):
         fill_columns_names.fill_fact_table_names()
         queryset = self.get_queryset()
@@ -173,8 +203,7 @@ class TableColumnNamesViewSet(viewsets.ModelViewSet):
         response['ngrok-skip-browser-warning'] = 'skip-browser-warning'  #нужен исключительно для хоста через ngrok
         return response
         
-
-
+        
 def export_fact_excel(request):
     workbook = xlsxwriter.Workbook('fact.xlsx')
     worksheet = workbook.add_worksheet()

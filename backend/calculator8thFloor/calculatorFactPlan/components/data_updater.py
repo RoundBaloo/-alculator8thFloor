@@ -13,7 +13,12 @@ class DataUpdater:
         })
         self.files = list(Data.objects.values_list('avg_fact_files_per_month', flat=True))
 
-    def update_inputed_data(self, table):
+    def handle_inputed_data(self, table):
+        """Обновляет записи в таблице на основе введенных
+
+        Args:
+            table (str): Какие таблицы следует обновить: fact - факт, plan - план, both - обе
+        """
         for obj in Data.objects.all():
             obj.cnt_machines = self.input_data['cnt_machines'][f'{obj.machine_type}'.split('_')[0]]
             obj.avg_fact_files_per_month = self.input_data['avg_fact_files_per_month'][f'{obj.machine_type}']
@@ -21,9 +26,14 @@ class DataUpdater:
             if (table == 'plan' or table == 'both'):
                 obj.permitted_load = self.input_data['permitted_load']
             obj.save()
-        self.update_calculated_fact_data(table)
+        self.update_calculated_data(table)
 
-    def update_calculated_fact_data(self, table):
+    def update_calculated_data(self, table):
+        """Передает введенные данные в класс для расчета, сохраняет новые расчитанные данные в БД
+
+        Args:
+            table (str): Какие таблицы следует обновить: fact - факт, plan - план, both - обе
+        """
         cnt_machines = Data.objects.values_list('cnt_machines', flat=True)
         self.calculator.set_new_machines_numbers({
             '180h': cnt_machines[0],

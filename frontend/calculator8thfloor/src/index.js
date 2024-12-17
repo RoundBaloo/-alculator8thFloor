@@ -21,8 +21,15 @@ function App() {
   const [currentCalculator, setCurrentCalculator] = useState('calculatorFactPlan')
   const [isLoginPage, setIsLoginPage] = useState(false);
 
-  const updateIsAdmin = (admin) => {
-    setIsAdmin(admin);
+
+  
+  /**
+   * Обновляет состояние: является ли аутентифицированный пользователь админом(руководителем)
+   *
+   * @param {bool} isAdmin - true, если админ, иначе false
+   */
+  const updateIsAdmin = (isAdmin) => {
+    setIsAdmin(isAdmin);
   }
 
   return (
@@ -56,7 +63,10 @@ function App() {
                   </Link>
                   {adminService.getAdmin() && (
                             <Link to='/handleUsersPermisions'>
-                                <button className='calculator-type-button wide' type='button'>Управление доступом</button>
+                                <button 
+                                className='calculator-type-button wide' 
+                                type='button'
+                                onClick={() => {setCurrentCalculator('none')}}>Управление доступом</button>
                             </Link>
                         )}
                   <Link to='/'>

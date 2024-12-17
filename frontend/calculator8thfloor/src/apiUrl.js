@@ -1,4 +1,4 @@
-export class ApiDirectory {
+export class ApiUrl {
     constructor() {
         this.baseUrl = 'http://127.0.0.1:8000'; // Основной URL вашего бэкенда
     }
