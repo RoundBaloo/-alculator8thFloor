@@ -77,6 +77,7 @@ class ChangePasswordSerializer(serializers.Serializer):
         return attrs
 
     def save(self, user):
+        
         self.user.set_password(self.validated_data['new_password'])
         self.user.save()
         
