@@ -61,16 +61,24 @@ class ChangePasswordSerializer(serializers.Serializer):
     new_password = serializers.CharField(required=True)
     confirm_password = serializers.CharField(required=True)
 
+    def set_user(self, user):
+        self.user = user
+    
     def validate(self, attrs):
         # Проверка совпадения нового пароля
         if attrs['new_password'] != attrs['confirm_password']:
             raise ValidationError({"confirm_password": "Пароли не совпадают."})
+        
+        if self.user.is_superuser and len(attrs['new_password']) < 13:
+            raise ValidationError({"new_password": "Пароль должен быть не менее 13 символов."})
+        if not(self.user.is_superuser) and len(attrs['new_password']) < 8:
+             raise ValidationError({"new_password": "Пароль должен быть не менее 8 символов."})
 
         return attrs
 
     def save(self, user):
-        user.set_password(self.validated_data['new_password'])
-        user.save()
+        self.user.set_password(self.validated_data['new_password'])
+        self.user.save()
         
 
 class GetTableColumnNamesSerializer(serializers.ModelSerializer):
