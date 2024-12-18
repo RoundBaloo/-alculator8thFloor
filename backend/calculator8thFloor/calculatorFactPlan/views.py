@@ -5,7 +5,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.mixins import ListModelMixin, CreateModelMixin, UpdateModelMixin, DestroyModelMixin
 from rest_framework.viewsets import GenericViewSet
 from .serializers import FactDataSerializer, PlanDataSerializer, InputedFieldsDataSerializer, UserSerializer, ChangePasswordSerializer, GetTableColumnNamesSerializer
-from .models import Data, TableColumnName
+from .models import Data, TableColumnName, LastPasswordChangeDate
 from drf_yasg.utils import swagger_auto_schema
 from .components.data_updater import DataUpdater
 import json
@@ -17,6 +17,7 @@ from spire.doc import *
 from spire.doc.common import *
 from django.shortcuts import render
 import requests
+from datetime import datetime
 # Create your views here.
 
 
@@ -144,6 +145,11 @@ class HeadViewSet(ListModelMixin, CreateModelMixin, UpdateModelMixin, DestroyMod
             return response
         try:
             user = User.objects.create_user(username=username, email=email, password=password)
+            last_password_change, created = LastPasswordChangeDate.objects.get_or_create(
+                username=user.username,
+                last_password_change_date=datetime.now()
+            )
+            last_password_change.save()
             response = Response({"message": "User  created successfully.", "user_id": user.id}, status=status.HTTP_201_CREATED)
             response['ngrok-skip-browser-warning'] = 'skip-browser-warning'  #нужен исключительно для хоста через ngrok
             print('success')
@@ -177,10 +183,17 @@ class HeadViewSet(ListModelMixin, CreateModelMixin, UpdateModelMixin, DestroyMod
         except User.DoesNotExist:
             return Response({"error": "Пользователь не найден"}, status=status.HTTP_404_NOT_FOUND)
 
-        print(user.username)
         serializer = ChangePasswordSerializer(data=request.data, context={'request': request})
+        serializer.set_user(user)
         serializer.is_valid(raise_exception=True)
         serializer.save(user=user)
+        
+        last_password_change, created = LastPasswordChangeDate.objects.get_or_create(
+            username=user.username,
+            last_password_change_date=datetime.now()
+        )
+        last_password_change.save()
+        
         return Response({"detail": "Пароль успешно изменен."}, status=status.HTTP_200_OK)
     
     

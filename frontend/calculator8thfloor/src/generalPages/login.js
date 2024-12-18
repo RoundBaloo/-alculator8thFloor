@@ -43,6 +43,10 @@ const Login = (props) => {
                 props.updateIsAdmin(response.data.role == 'admin' ? true : false)
                 adminService.setAdmin(response.data.role == 'admin' ? true : false);
                 props.setIsLoginPage(false);
+                console.log(response)
+                if (response.data.is_need_password_change) {
+                    alert( 'Вам необходимо сменить пароль! С последней смены прошло более 3-х месяцев!' );
+                }
             })
             .catch(error => {
                 console.error(error)
