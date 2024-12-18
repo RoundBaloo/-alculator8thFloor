@@ -1,5 +1,8 @@
 backend/venv/
 backend/.venv/
+.venv/
+venv
+.C:\Artemy\Programming\Сalculator8thFloor\-alculator8thFloor\backend\.venv
 **/__pycache__/
 backend\calculator8thFloor\calculatorFactPlan\__pycache__
 backend\calculator8thFloor\calculatorFactPlan\components\__pycache__
