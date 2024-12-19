@@ -76,6 +76,7 @@ function App() {
                           onClick={() => {
                             removeToken();
                             adminService.clearAdminStatus();
+                            setCurrentCalculator('calculatorFactPlan');
                           }}>Выйти из аккаунта
                       </button>
                   </Link>
