@@ -145,14 +145,13 @@ class HeadViewSet(ListModelMixin, CreateModelMixin, UpdateModelMixin, DestroyMod
             return response
         try:
             user = User.objects.create_user(username=username, email=email, password=password)
-            last_password_change, created = LastPasswordChangeDate.objects.get_or_create(
+            last_password_change = LastPasswordChangeDate.objects.create(
                 username=user.username,
                 last_password_change_date=datetime.now()
             )
             last_password_change.save()
             response = Response({"message": "User  created successfully.", "user_id": user.id}, status=status.HTTP_201_CREATED)
             response['ngrok-skip-browser-warning'] = 'skip-browser-warning'  #нужен исключительно для хоста через ngrok
-            print('success')
             return response
         except Exception as e:
             print('error')
@@ -188,10 +187,14 @@ class HeadViewSet(ListModelMixin, CreateModelMixin, UpdateModelMixin, DestroyMod
         serializer.is_valid(raise_exception=True)
         serializer.save(user=user)
         
-        last_password_change, created = LastPasswordChangeDate.objects.get_or_create(
-            username=user.username,
-            last_password_change_date=datetime.now()
-        )
+        try: 
+            last_password_change = LastPasswordChangeDate.objects.get(username=user.username)
+            last_password_change.last_password_change_date=datetime.now()
+        except:
+            last_password_change = LastPasswordChangeDate.objects.create(
+                username=user.username,
+                last_password_change_date=datetime.now()
+            )
         last_password_change.save()
         
         return Response({"detail": "Пароль успешно изменен."}, status=status.HTTP_200_OK)

@@ -1,4 +1,5 @@
 from ..models import Data
+from django.db.models import Sum
 
 
 class typography():
@@ -260,8 +261,12 @@ def get_context_dictionary():
     machine_180h_weekend = Data.objects.get(machine_type='180h_weekend')
 
     # Кол-во файлов, которое можем обработать в месяц
-    sum_max_files = sum(x.max_files for x in Data.objects.all())
+    # sum_max_files = sum(Data.objects.all()[0]['avg_day_files'] + Data.objects.all()[3]['avg_day_files'] + Data.objects.all()[4]['avg_day_files'])
 
+    objects = Data.objects.values('avg_fact_files_per_month')
+    print(objects[3]['avg_fact_files_per_month'])
+    sum_max_files = objects[0]['avg_fact_files_per_month'] + objects[3]['avg_fact_files_per_month'] + objects[4]['avg_fact_files_per_month']
+    print(sum_max_files)
     # Заполнение словаря всей нужной информацией
     context = {
         'sum_max_files': sum_max_files,
