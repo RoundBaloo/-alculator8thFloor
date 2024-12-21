@@ -14,11 +14,16 @@ routerColumnNames.register(r'names', views.TableColumnNamesViewSet, basename='co
 
 urlpatterns = [
     path('head/', include(routerHead.urls)),
-    path('export/fact/excel', views.export_fact_excel),
-    path('export/plan/excel', views.export_plan_excel),
-    path('export/fact_plan/excel', views.export_fact_plan_excel),
-    path('export/report/docx', views.export_report_docx),
-    path('export/report/pdf', views.export_report_pdf),
+    # экспорт таблицы ФАКТ xlsx
+    path('export/fact/excel/', views.export_fact_excel),
+    # экспорт таблицы ПЛАН xlsx
+    path('export/plan/excel/', views.export_plan_excel),
+    # экспорт общей таблицы ФАКТ и ПЛАН xlsx
+    path('export/fact_plan/excel/', views.export_fact_plan_excel),
+    # экспорт отчета docs
+    path('export/report/docx/', views.export_report_docx),
+    # экспорт отчета pdf
+    path('export/report/pdf/', views.export_report_pdf),
     path('data/', include(routerData.urls)),
     path('fact-data/', views.fact_data_view, name='fact_data'),
     path('', include(routerColumnNames.urls)),

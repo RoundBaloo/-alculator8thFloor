@@ -101,7 +101,7 @@ class InputedDataViewSet (ListModelMixin, CreateModelMixin, GenericViewSet):
             or data['permitted_load'] < 0
         ):
             return Response({'error': 'Invalid data'}, status=status.HTTP_400_BAD_REQUEST)
-        
+
         table = request.GET.get('table')
         data_updater = DataUpdater(data)
         data_updater.handle_inputed_data(table)
@@ -115,7 +115,7 @@ class InputedDataViewSet (ListModelMixin, CreateModelMixin, GenericViewSet):
 class HeadViewSet(ListModelMixin, CreateModelMixin, UpdateModelMixin, DestroyModelMixin, GenericViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
-    
+
     permission_classes = [IsAuthenticated]
 
     @swagger_auto_schema(operation_summary="Передает список всех пользователей приложения",
@@ -186,26 +186,26 @@ class HeadViewSet(ListModelMixin, CreateModelMixin, UpdateModelMixin, DestroyMod
         serializer.set_user(user)
         serializer.is_valid(raise_exception=True)
         serializer.save(user=user)
-        
-        try: 
+
+        try:
             last_password_change = LastPasswordChangeDate.objects.get(username=user.username)
-            last_password_change.last_password_change_date=datetime.now()
+            last_password_change.last_password_change_date = datetime.now()
         except:
             last_password_change = LastPasswordChangeDate.objects.create(
                 username=user.username,
                 last_password_change_date=datetime.now()
             )
         last_password_change.save()
-        
+
         return Response({"detail": "Пароль успешно изменен."}, status=status.HTTP_200_OK)
-    
-    
+
+
 class TableColumnNamesViewSet(ListModelMixin, GenericViewSet):
     queryset = TableColumnName.objects.all()
     serializer_class = GetTableColumnNamesSerializer
-    
+
     permission_classes = [IsAuthenticated]
-    
+
     @swagger_auto_schema(operation_summary="Передает названия колонок",
                          operation_description="Возвращает словарь, где ключ - название переменной из модели \
                              значение - название колонки, в которой будут отображаться данные из этой переменной.",
@@ -218,25 +218,44 @@ class TableColumnNamesViewSet(ListModelMixin, GenericViewSet):
         response = Response(serializer.data)
         response['ngrok-skip-browser-warning'] = 'skip-browser-warning'  #нужен исключительно для хоста через ngrok
         return response
-        
-        
+
+
 def export_fact_excel(request):
+    """
+    создает и заполняет xlsx файл данными, рассчитанными для таблицы ФАКТ
+
+    Args:
+        request (Request): запрос
+
+    Returns:
+        FileResponse: xlsx-файл, заполненный данными, рассчитанными для таблицы ФАКТ
+    """
+    # создание xlsx-файла
     workbook = xlsxwriter.Workbook('fact.xlsx')
     worksheet = workbook.add_worksheet()
+    # заполнение xlsx-файла данными
     export_functions.create_fact_excel_table(workbook, worksheet)
     worksheet.title = 'Fact Table'
 
     workbook.close()
 
-    response = FileResponse(open('fact.xlsx', 'rb'))
-    response['ngrok-skip-browser-warning'] = 'skip-browser-warning'  #нужен исключительно для хоста через ngrok
-
     return FileResponse(open('fact.xlsx', 'rb'))
 
 
 def export_plan_excel(request):
+    """
+    создает и заполняет xlsx файл данными, рассчитанными для таблицы ПЛАН
+
+    Args:
+        request (Request): запрос
+
+    Returns:
+        FileResponse: xlsx-файл, заполненный данными, рассчитанными для таблицы ПЛАН
+    """
+    # создание xlsx-файла
     workbook = xlsxwriter.Workbook('plan.xlsx')
     worksheet = workbook.add_worksheet()
+    # заполнение xlsx-файла данными
     export_functions.create_plan_excel_table(workbook, worksheet)
     worksheet.title = 'Plan Table'
 
@@ -246,8 +265,21 @@ def export_plan_excel(request):
 
 
 def export_fact_plan_excel(request):
+    """
+    создает и заполняет xlsx файл данными, рассчитанными для общей
+    таблицы ФАКТ и ПЛАН
+
+    Args:
+        request (Request): запрос
+
+    Returns:
+        FileResponse: xlsx-файл, заполненный данными,рассчитанными
+        для общей таблицы ФАКТ и ПЛАН
+    """
+    # создание xlsx-файла
     workbook = xlsxwriter.Workbook('fact_plan.xlsx')
     worksheet = workbook.add_worksheet()
+    # заполнение xlsx-файла данными
     export_functions.create_fact_plan_excel_table(workbook, worksheet)
     worksheet.title = 'Fact Plan Table'
 
@@ -257,9 +289,20 @@ def export_fact_plan_excel(request):
 
 
 def export_report_docx(request):
+    """
+    создает и заполняет docx файл данными, рассчитанными для отчета
+
+    Args:
+        request (Request): запрос
+
+    Returns:
+        FileResponse: docx-файл, заполненный данными, рассчитанными для отчета
+    """
+    # Создание docx-файла из шаблона с метками для подстановки данных
     doc = DocxTemplate('шаблон.docx')
+    # Получение словаря, где ключи - метки для подстановки данных, а значения - нужные данные
     context = export_functions.get_context_dictionary()
-    print(context)
+    # Подстановка нужных данных по меткам в docx-файле
     doc.render(context)
     doc.save('Report.docx')
 
@@ -267,26 +310,33 @@ def export_report_docx(request):
 
 
 def export_report_pdf(request):
+    """
+    создает и заполняет pdf-файл данными, рассчитанными для отчета
+
+    Args:
+        request (Request): запрос
+
+    Returns:
+        FileResponse: pdf-файл, заполненный данными, рассчитанными для отчета
+    """
+    # создание и сохранение docx-файла
     doc = DocxTemplate('шаблон.docx')
     context = export_functions.get_context_dictionary()
     print(context)
     doc.render(context)
     doc.save('Report.docx')
 
+    # Загружаем созданный docx-файл
     document = Document()
-    # Load a Doc or Docx file
     document.LoadFromFile('Report.docx')
 
-    # Create a ToPdfParameterList object
+    # Создание объекта ToPdfParameterList(параметры перевода в пдф)
     parameter = ToPdfParameterList()
 
-    # Disable hyperlinks in generated document
-    parameter.DisableLink = True
-
-    # Embed fonts in generated document
+    # Встраивание шрифтов в сгенерированный документ
     parameter.IsEmbeddedAllFonts = True
 
-    # Save the Word document to PDF
+    # Сохранить docx-файл в PDF-файл
     document.SaveToFile("Report.pdf", parameter)
     document.Close()
 
